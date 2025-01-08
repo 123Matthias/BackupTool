@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import impl.org.controlsfx.skin.GridRow?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
+<StackPane fx:controller="my.backup.backuptool.Controller.MainController" xmlns:fx="http://javafx.com/fxml/1">
+
+      <!-- GridPane für die Buttons, jetzt über den gesamten Bildschirm -->
+      <GridPane styleClass="gridPane">
+         <!-- Spaltenkonfiguration (6 Spalten) -->
+         <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="0" percentWidth="20" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="0" percentWidth="20" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="0" percentWidth="20" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="0" percentWidth="20" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="0" percentWidth="20" />
+
+         </columnConstraints>
+
+         <rowConstraints>
+            <RowConstraints vgrow="ALWAYS" minHeight="0" percentHeight="20" />
+            <RowConstraints vgrow="ALWAYS" minHeight="0" percentHeight="20" />
+            <RowConstraints vgrow="ALWAYS" minHeight="0" percentHeight="20" />
+            <RowConstraints vgrow="ALWAYS" minHeight="0" percentHeight="20" />
+            <RowConstraints vgrow="ALWAYS" minHeight="0" percentHeight="20" />
+
+         </rowConstraints>
+
+
+         <Button text="Help" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+        <!-- <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
+         <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton2" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+         <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton2" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+         <!--   <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
+           <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton2" GridPane.rowIndex="2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+        <!--    <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="2" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
+           <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton2" GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+           <Button text="Settings" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+         <!--   <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
+        <!--    <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
+           <Button text="Full Backup" wrapText="true" textAlignment="CENTER" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+           <Button text="Merge Backup" wrapText="true" textAlignment="CENTER" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="4" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+
+
+
+           <!-- Weitere Buttons bis zu Button 36 -->
+      </GridPane>
+
+   <!-- Bild im StackPane -->
+   <ImageView styleClass="imageFee" preserveRatio="true" fitHeight="180" >
+      <image>
+         <Image url="@img/FeeMainPage.png" />
+      </image>
+   </ImageView>
+</StackPane>

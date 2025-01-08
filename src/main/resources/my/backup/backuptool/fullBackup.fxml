@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="791.0" prefWidth="779.0" style="-fx-background-color: none;">
+         <children>
+            <Text fill="#721e80" strokeType="OUTSIDE" strokeWidth="0.0" text="new Full Backup" wrappingWidth="166.60888671875">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="30.0" />
+               </VBox.margin>
+            </Text>
+            <CheckBox mnemonicParsing="false" text="Enable">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox mnemonicParsing="false" text="make Backup with Pathing">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </CheckBox>
+            <Label text="Source Path" textFill="#721e80">
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <TextField alignment="CENTER" prefHeight="30.0" prefWidth="195.0" promptText="30" text="fbrtntrnrn">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </TextField>
+            <Label text="Target Path" textFill="#721e80">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Label>
+            <TextField alignment="CENTER" prefHeight="30.0" prefWidth="74.0" promptText="30" text="fbrtntrnrn">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </TextField>
+            <CheckBox mnemonicParsing="false" text="with Archiv Attribut">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </CheckBox>
+            <Text fill="#721e80" strokeType="OUTSIDE" strokeWidth="0.0" text="Timing" wrappingWidth="166.60888671875">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Text>
+            <CheckBox mnemonicParsing="false" text="Enable">
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </CheckBox>
+            <Label text="Start Date for Snapshot">
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <DatePicker prefHeight="25.0" prefWidth="377.0" promptText="01.01.1990">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </DatePicker>
+            <Text fill="#721e80" strokeType="OUTSIDE" strokeWidth="0.0" text="Intervall" wrappingWidth="166.60888671875">
+               <VBox.margin>
+                  <Insets left="10.0" top="15.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Label text="Days" textFill="#721e80">
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <TextField alignment="CENTER" prefHeight="30.0" prefWidth="78.0" promptText="30" text="30">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </TextField>
+            <Label text="Hours" textFill="#721e80">
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <TextField alignment="CENTER" prefHeight="30.0" prefWidth="78.0" promptText="30" text="24">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </TextField>
+            <Text fill="#721e80" strokeType="OUTSIDE" strokeWidth="0.0" text="System information" wrappingWidth="166.60888671875">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Text>
+            <CheckBox mnemonicParsing="false" text="remember installed Apps">
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </CheckBox>
+            <CheckBox mnemonicParsing="false" text="remember System Settings">
+               <VBox.margin>
+                  <Insets left="10.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <ProgressIndicator minHeight="-Infinity" minWidth="-Infinity" prefHeight="88.0" prefWidth="87.0" progress="0.0">
+                     <HBox.margin>
+                        <Insets right="60.0" />
+                     </HBox.margin>
+                  </ProgressIndicator>
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="35.0" prefWidth="172.0" text="Start" textAlignment="RIGHT" textFill="#1bb52f" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <effect>
+            <ColorAdjust />
+         </effect>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</Pane>
