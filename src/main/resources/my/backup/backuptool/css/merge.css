@@ -1,0 +1,12 @@
+Pane{
+   -fx-min-width: 800px;
+   -fx-min-height: 800px;
+   -fx-max-width: 800px;
+   -fx-max-height: 800px;
+}
+
+
+.path {
+
+    -fx-padding: 10px;
+}

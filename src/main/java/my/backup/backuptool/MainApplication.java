@@ -4,11 +4,15 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import java.io.IOException;
 
 public class MainApplication extends Application {
 
-    public static Stage mainStage; // Instanzvariable für die Stage
+    public static Stage mainStage;
+    public static Scene sceneMain;
+    public static Scene sceneMerge;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -18,12 +22,15 @@ public class MainApplication extends Application {
     private void setAndShowMainStage(Stage stage) throws IOException {
         MainApplication.mainStage = stage;
         FXMLLoader fxmlMain = new FXMLLoader(MainApplication.class.getResource("Main.fxml"));
-        Scene scene = new Scene(fxmlMain.load(), 800, 800);
+        FXMLLoader fxmlMerge = new FXMLLoader(MainApplication.class.getResource("merge.fxml"));
+        sceneMain = new Scene(fxmlMain.load(), 800, 800);
+        sceneMerge = new Scene(fxmlMerge.load(), 800, 800);
         mainStage.setTitle("Resurrection");
         mainStage.setMinWidth(800);
         mainStage.setMinHeight(800);
-        scene.getStylesheets().add(getClass().getResource("css/main.css").toString());
-        mainStage.setScene(scene);
+        sceneMain.getStylesheets().add(String.valueOf(getClass().getResource("css/main.css")));
+        sceneMerge.getStylesheets().add(String.valueOf(getClass().getResource("css/merge.css")));
+        mainStage.setScene(sceneMain);
         mainStage.show();
         }
 
