@@ -11,6 +11,14 @@
 <?import javafx.scene.layout.StackPane?>
 
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Spinner?>
+<?import com.sun.javafx.scene.control.DatePickerContent?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DateCell?>
+<?import com.sun.javafx.scene.control.DatePickerHijrahContent?>
+<?import impl.org.controlsfx.spreadsheet.HorizontalPicker?>
+<?import javafx.scene.text.Text?>
 <StackPane fx:controller="my.backup.backuptool.Controller.MergeController" xmlns:fx="http://javafx.com/fxml/1">
    <GridPane style="-fx-background-color: white;" hgap="10" vgap="10">
       <!-- Column for Full Width -->
@@ -48,14 +56,27 @@
          <Button text="Browse..." onAction="#openDirectoryChooser" />
       </VBox>
 
-      <!-- Target Path 1 -->
+      <!-- Target Path -->
       <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="3" GridPane.columnIndex="0">
          <Label text="Target Path" />
          <TextArea fx:id="targetPath" promptText="Enter target path..." disable="true"></TextArea>
       </VBox>
 
+      <!-- Checkbox -->
+      <HBox GridPane.rowIndex="5" GridPane.columnIndex="0">
+         <CheckBox fx:id="checkBoxStartDate" onAction="#toggleDate" />
+         <DatePicker fx:id="datePicker" prefHeight="25.0" prefWidth="377.0" promptText="01.01.1990" />
+      </HBox>
+      <HBox GridPane.rowIndex="6" GridPane.columnIndex="0">
+         <CheckBox fx:id="checkBoxIntervalDays" onAction="#toggleDays" />
+         <TextField fx:id="daysInterval" disable="true" editable="true" text="Days" />
+      </HBox>
+      <HBox GridPane.rowIndex="7" GridPane.columnIndex="0">
+         <CheckBox fx:id="checkBoxIntervalHours" onAction="#toggleHours" />
+         <TextField fx:id="hoursInterval" disable="true" editable="true" text="Hours" />
+      </HBox>
 
       <!-- Button -->
-      <Button text="Submit"  GridPane.rowIndex="5" GridPane.columnIndex="0" />
+      <Button text="Submit"  GridPane.rowIndex="10" GridPane.columnIndex="0" />
    </GridPane>
 </StackPane>

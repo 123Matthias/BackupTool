@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import my.backup.backuptool.MainApplication;
@@ -20,6 +22,24 @@ public class MergeController {
     private CheckBox checkBoxPathing;
 
     @FXML
+    private CheckBox checkBoxStartDate;
+
+    @FXML
+    private CheckBox checkBoxIntervalDays;
+
+    @FXML
+    private CheckBox checkBoxIntervalHours;
+
+    @FXML
+    private TextField daysInterval;
+
+    @FXML
+    private TextField hoursInterval;
+
+    @FXML
+    private DatePicker datePicker;
+
+    @FXML
     private TextArea sourcePath;
 
     @FXML
@@ -30,6 +50,24 @@ public class MergeController {
         boolean enable = checkBoxPathing.isSelected();
         sourcePath.setDisable(!enable);
         targetPath.setDisable(!enable);
+    }
+
+    @FXML
+    public void toggleDate() {
+        boolean enable = checkBoxStartDate.isSelected();
+        datePicker.setDisable(!enable);
+    }
+
+    @FXML
+    public void toggleDays() {
+        boolean enable = checkBoxIntervalDays.isSelected();
+        daysInterval.setDisable(!enable);
+    }
+
+    @FXML
+    public void toggleHours() {
+        boolean enable = checkBoxIntervalHours.isSelected();
+        hoursInterval.setDisable(!enable);
     }
 
     // Methode zum Öffnen des FileChoosers
