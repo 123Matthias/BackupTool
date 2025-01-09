@@ -10,3 +10,8 @@ Pane{
 
     -fx-padding: 10px;
 }
+
+TextArea:hover {
+    -fx-pref-height: 100;
+    -fx-border-color: lightblue;
+}

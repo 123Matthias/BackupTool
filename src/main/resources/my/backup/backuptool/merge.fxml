@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:controller="my.backup.backuptool.Controller.MainController" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.TextArea?>
+<StackPane fx:controller="my.backup.backuptool.Controller.MergeController" xmlns:fx="http://javafx.com/fxml/1">
    <GridPane style="-fx-background-color: white;" hgap="10" vgap="10">
       <!-- Column for Full Width -->
       <columnConstraints>
@@ -19,21 +20,16 @@
 
       <!-- 15 Rows -->
       <rowConstraints>
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
-         <RowConstraints minHeight="40" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
       </rowConstraints>
 
       <!-- Überschrift -->
@@ -41,29 +37,25 @@
 
       <!-- Checkbox -->
       <HBox alignment="CENTER" spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0">
-         <CheckBox />
+         <CheckBox fx:id="checkBoxPathing" onAction="#toggleTextAreas" />
          <Label text="Enable Pathing" />
       </HBox>
 
       <!-- Source Path -->
       <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="2" GridPane.columnIndex="0">
          <Label text="Source Path" />
-         <TextField promptText="Enter source path..." />
+         <TextArea fx:id="sourcePath" promptText="Enter source path..." disable="true"></TextArea>
+         <Button text="Browse..." onAction="#openDirectoryChooser" />
       </VBox>
 
       <!-- Target Path 1 -->
       <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="3" GridPane.columnIndex="0">
-         <Label text="Target Path 1" />
-         <TextField promptText="Enter target path..." />
+         <Label text="Target Path" />
+         <TextArea fx:id="targetPath" promptText="Enter target path..." disable="true"></TextArea>
       </VBox>
 
-      <!-- Target Path 2 -->
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="4" GridPane.columnIndex="0">
-         <Label text="Target Path 2" />
-         <TextField promptText="Enter target path..." />
-      </VBox>
 
       <!-- Button -->
-      <Button text="Submit" styleClass="btn btn-primary" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+      <Button text="Submit"  GridPane.rowIndex="5" GridPane.columnIndex="0" />
    </GridPane>
 </StackPane>

@@ -6,7 +6,6 @@ module my.backup.backuptool {
     requires org.controlsfx.controls;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
-    requires eu.hansolo.tilesfx;
 
     opens my.backup.backuptool to javafx.fxml;
     opens my.backup.backuptool.Controller to javafx.fxml;
