@@ -1,15 +1,12 @@
-package my.backup.backuptool.Controller;
+package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import my.backup.backuptool.MainApplication;
+import my.backup.backupTool.Main;
+import my.backup.backupTool.Service.MergeService;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,13 +40,40 @@ public class MergeController {
     private TextArea sourcePath;
 
     @FXML
+    private Button sourceButton;
+
+    @FXML
+    private Button targetButton;
+
+    @FXML
     private TextArea targetPath;
 
+    @FXML
+    private Button playButton;
+
+    private boolean isSourceButtonClicked = false;
+    private boolean isTargetButtonClicked = false;
+
+    @FXML
+    public void initialize() {
+        // Button-Event-Handler für den Source-Button
+        sourceButton.setOnAction(event -> {
+            isSourceButtonClicked = true;
+            openDirectoryChooser();
+        });
+
+        targetButton.setOnAction(event -> {
+            isTargetButtonClicked = true;
+            openDirectoryChooser();
+        });
+    }
     @FXML
     public void toggleTextAreas() {
         boolean enable = checkBoxPathing.isSelected();
         sourcePath.setDisable(!enable);
         targetPath.setDisable(!enable);
+        sourceButton.setDisable(!enable);
+        targetButton.setDisable(!enable);
     }
 
     @FXML
@@ -70,8 +94,6 @@ public class MergeController {
         hoursInterval.setDisable(!enable);
     }
 
-    // Methode zum Öffnen des FileChoosers
-    @FXML
     public void openDirectoryChooser() {
         // Erstelle ein FileChooser-Objekt
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -82,22 +104,39 @@ public class MergeController {
         File selectedFile = directoryChooser.showDialog(sourcePath.getScene().getWindow());
 
         // Wenn eine Datei ausgewählt wurde, setze den Pfad in das TextArea
-        if (selectedFile != null) {
+        if (selectedFile != null && isSourceButtonClicked) {
             sourcePath.setText(selectedFile.getAbsolutePath());
+            isSourceButtonClicked = false;
         }
+
+        else if (selectedFile != null && isTargetButtonClicked) {
+            targetPath.setText(selectedFile.getAbsolutePath());
+            isTargetButtonClicked = false;
+        }
+    }
+
+
+    @FXML
+    private void startMergeBackup(){
+        System.out.println("Source: " + sourcePath.getText());
+        System.out.println("Target" + targetPath.getText());
+        MergeService mergeService = new MergeService(sourcePath.getText(),targetPath.getText());
+        mergeService.mergeData();
     }
 
 
     @FXML
     private void handleBackButton() throws IOException {
 
-        FXMLLoader fxmlMergeBackup = new FXMLLoader(MainApplication.class.getResource("merge.fxml"));
+        FXMLLoader fxmlMergeBackup = new FXMLLoader(Main.class.getResource("merge.fxml"));
         Scene scene = new Scene(fxmlMergeBackup.load(), 800, 800);
-        MainApplication.mainStage.setTitle("Merge");
-        MainApplication.mainStage.setMinWidth(800);
-        MainApplication.mainStage.setMinHeight(800);
+        Main.mainStage.setTitle("Merge");
+        Main.mainStage.setMinWidth(800);
+        Main.mainStage.setMinHeight(800);
         scene.getStylesheets().add(String.valueOf(getClass().getResource("css/main.css")));
-        MainApplication.mainStage.setScene(scene);
-        MainApplication.mainStage.show();
+        Main.mainStage.setScene(scene);
+        Main.mainStage.show();
     }
+
+
 }

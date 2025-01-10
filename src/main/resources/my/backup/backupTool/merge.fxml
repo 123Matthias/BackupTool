@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Spinner?>
+<?import com.sun.javafx.scene.control.DatePickerContent?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DateCell?>
+<?import com.sun.javafx.scene.control.DatePickerHijrahContent?>
+<?import impl.org.controlsfx.spreadsheet.HorizontalPicker?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<StackPane fx:controller="my.backup.backupTool.Controller.MergeController" xmlns:fx="http://javafx.com/fxml/1">
+   <GridPane style="-fx-background-color: white;" hgap="10" vgap="10">
+      <!-- Column for Full Width -->
+      <columnConstraints>
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="10" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="90" />
+      </columnConstraints>
+
+      <!-- 15 Rows -->
+      <rowConstraints>
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+      </rowConstraints>
+
+      <!-- Überschrift -->
+      <Label text="Path Configuration" style="-fx-font-size: 24;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+      <!-- Checkbox -->
+      <CheckBox fx:id="checkBoxPathing" styleClass="shadow" onAction="#toggleTextAreas" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+
+      <!-- Source Path -->
+      <VBox spacing="10" style="-fx-padding: 10;" GridPane.rowIndex="2" GridPane.columnIndex="1">
+         <Label text="Source Path" />
+         <TextArea fx:id="sourcePath" promptText="Enter source path..." disable="true"></TextArea>
+         <Button fx:id="sourceButton" text="Browse..." disable="true" />         <Label text="Target Path" />
+         <TextArea fx:id="targetPath" promptText="Enter target path..." disable="true"></TextArea>
+         <Button fx:id="targetButton" text="Browse..." disable="true" />
+
+      </VBox>
+
+
+
+      <CheckBox GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="check-box, shadow" fx:id="checkBoxStartDate" onAction="#toggleDate" />
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="5" GridPane.columnIndex="1">
+         <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Start Date</Label>
+         <DatePicker disable="true" fx:id="datePicker" promptText="01.01.1990"/>
+      </VBox>
+
+      <CheckBox styleClass="shadow" fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="6" GridPane.columnIndex="1">
+         <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Days Interval</Label>
+         <TextField fx:id="daysInterval" disable="true" editable="true" text="Days" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+      </VBox>
+
+      <CheckBox styleClass="shadow" fx:id="checkBoxIntervalHours" onAction="#toggleHours" GridPane.rowIndex="7" GridPane.columnIndex="0" />
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="7" GridPane.columnIndex="1">
+         <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Days Interval</Label>
+         <TextField fx:id="hoursInterval" disable="true" editable="true" text="Hours"/>
+      </VBox>
+      <!-- Button -->
+      <HBox styleClass="playButtonBox" GridPane.rowIndex="8" GridPane.columnIndex="1">
+         <Button fx:id="playButton" styleClass="shadow" onAction="#startMergeBackup">
+            <graphic>
+               <ImageView fx:id="playIcon">
+                  <image>
+                     <Image url="@img/icons/play.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+         </Button>
+      </HBox>
+
+
+   </GridPane>
+</StackPane>

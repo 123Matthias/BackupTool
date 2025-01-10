@@ -7,9 +7,9 @@ module my.backup.backuptool {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens my.backup.backuptool to javafx.fxml;
-    opens my.backup.backuptool.Controller to javafx.fxml;
-    exports my.backup.backuptool;
-    exports my.backup.backuptool.Controller;
+    opens my.backup.backupTool to javafx.fxml;
+    opens my.backup.backupTool.Controller to javafx.fxml;
+    exports my.backup.backupTool;
+    exports my.backup.backupTool.Controller;
 }
 
