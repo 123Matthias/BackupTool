@@ -12,13 +12,7 @@
 
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Spinner?>
-<?import com.sun.javafx.scene.control.DatePickerContent?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.DateCell?>
-<?import com.sun.javafx.scene.control.DatePickerHijrahContent?>
-<?import impl.org.controlsfx.spreadsheet.HorizontalPicker?>
-<?import javafx.scene.text.Text?>
+
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <StackPane fx:controller="my.backup.backupTool.Controller.MergeController" xmlns:fx="http://javafx.com/fxml/1">
