@@ -1,4 +1,4 @@
-module my.backup.backuptool {
+module my.backup.backupTool {
     requires javafx.controls;
     requires javafx.fxml;
 
