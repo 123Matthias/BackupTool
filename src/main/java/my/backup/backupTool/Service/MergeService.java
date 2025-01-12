@@ -5,29 +5,23 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
 
 public class MergeService implements IMergeService {
 
     MergeModel mergeModel;
 
-    public MergeService(String source, String target) {
-
-        mergeModel = new MergeModel();
-        mergeModel.setSource(source);
-        mergeModel.setTarget(target);
-    }
 
     @Override
-    public void mergeData() {
-        File sourceDir = new File(mergeModel.getSource());
-        File targetDir = new File(mergeModel.getTarget());
+    public void mergeData(String source, String target) {
+        File sourceDir = new File(source);
+        File targetDir = new File(target);
 
         // Überprüfen, ob Quell- und Zielverzeichnisse existieren
         if (!sourceDir.exists() || !targetDir.exists()) {
             System.out.println("Source: " + sourceDir);
             System.out.println("Target" + targetDir);
             System.out.println("Quell- oder Zielordner existieren nicht.");
-
             return;
         }
 
@@ -37,13 +31,11 @@ public class MergeService implements IMergeService {
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                     // Deine Logik für Verzeichnisse
                     Path targetDirPath = Paths.get(mergeModel.getTarget(), dir.toString().substring(mergeModel.getSource().length()));
-
                     // Zielverzeichnis erstellen, falls es noch nicht existiert
                     if (!Files.exists(targetDirPath)) {
                         Files.createDirectories(targetDirPath);
                         System.out.println("Verzeichnis erstellt: " + targetDirPath);
                     }
-
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -77,5 +69,9 @@ public class MergeService implements IMergeService {
             System.err.println("Fehler beim Durchsuchen des Verzeichnisses: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void setTimer(){
+
     }
 }

@@ -3,6 +3,7 @@ package my.backup.backupTool;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -27,6 +28,9 @@ public class Main extends Application {
         mainStage.setTitle("Resurrection");
         mainStage.setMinWidth(800);
         mainStage.setMinHeight(800);
+        // Icon setzen
+        Image icon = new Image(String.valueOf(Main.class.getResource("img/FeeMainPage.png")));
+        mainStage.getIcons().add(icon);
         sceneMain.getStylesheets().add(String.valueOf(getClass().getResource("css/main.css")));
         sceneMerge.getStylesheets().add(String.valueOf(getClass().getResource("css/merge.css")));
         mainStage.setScene(sceneMain);

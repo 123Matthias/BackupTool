@@ -6,10 +6,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import my.backup.backupTool.Main;
+import my.backup.backupTool.Service.IMergeService;
 import my.backup.backupTool.Service.MergeService;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class MergeController {
 
@@ -53,6 +56,9 @@ public class MergeController {
 
     private boolean isSourceButtonClicked = false;
     private boolean isTargetButtonClicked = false;
+
+    IMergeService mergeService;
+
 
     @FXML
     public void initialize() {
@@ -120,8 +126,11 @@ public class MergeController {
     private void startMergeBackup(){
         System.out.println("Source: " + sourcePath.getText());
         System.out.println("Target" + targetPath.getText());
-        MergeService mergeService = new MergeService(sourcePath.getText(),targetPath.getText());
-        mergeService.mergeData();
+
+        if(checkBoxStartDate.isSelected()){
+
+        }
+        mergeService.mergeData(sourcePath.toString(),targetPath.toString());
     }
 
 
