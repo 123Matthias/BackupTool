@@ -10,6 +10,8 @@ public class MergeModel {
     private int IntervallDays;
     private int IntervallHours;
 
+    private LocalDateTime nextBackup;
+
     public MergeModel(){
 
     }
@@ -52,5 +54,13 @@ public class MergeModel {
 
     public void setIntervallHours(int intervallHuers) {
         IntervallHours = intervallHuers;
+    }
+
+    public LocalDateTime getNextBackup() {
+        return nextBackup;
+    }
+
+    public void setNextBackup(LocalDateTime nextBackup) {
+        this.nextBackup = nextBackup;
     }
 }

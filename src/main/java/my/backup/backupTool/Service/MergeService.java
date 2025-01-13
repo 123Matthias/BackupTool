@@ -1,11 +1,13 @@
 package my.backup.backupTool.Service;
 
+import javafx.util.converter.LocalTimeStringConverter;
 import my.backup.backupTool.Model.MergeModel;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class MergeService implements IMergeService {
 
@@ -71,7 +73,20 @@ public class MergeService implements IMergeService {
         }
     }
 
-    public void setTimer(){
-
+    public void setBackupTimer(LocalDateTime startDate, int intervallDays, int intervallHours){
+        if (startDate != null) {
+            mergeModel.setStartDate(startDate);
+        }
+        else{
+            mergeModel.setStartDate(LocalDateTime.now());
+        }
+        if(intervallDays != 0) {
+            mergeModel.setIntervallDays(intervallDays);
+        }
+        if(intervallHours != 0) {
+            mergeModel.setIntervallHours(intervallHours);
+        }
+        LocalTime time = LocalTime.of(intervallDays * 24 + intervallHours,0);
+        LocalDateTime backupTimer = new LocalDateTime(startDate,);
     }
 }
