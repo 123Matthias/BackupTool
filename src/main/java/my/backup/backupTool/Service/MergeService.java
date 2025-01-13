@@ -1,23 +1,18 @@
 package my.backup.backupTool.Service;
 
-import javafx.util.converter.LocalTimeStringConverter;
-import my.backup.backupTool.Model.MergeModel;
+import my.backup.backupTool.Model.BaseModel;
+import my.backup.backupTool.Model.IModel;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class MergeService implements IMergeService {
 
-    MergeModel mergeModel;
-
-
-    @Override
-    public void mergeData(String source, String target) {
-        File sourceDir = new File(source);
-        File targetDir = new File(target);
+    public void startMergeData(IModel model) {
+        File sourceDir = new File(model.getSource());
+        File targetDir = new File(model.getTarget());
 
         // Überprüfen, ob Quell- und Zielverzeichnisse existieren
         if (!sourceDir.exists() || !targetDir.exists()) {
@@ -28,11 +23,11 @@ public class MergeService implements IMergeService {
         }
 
         try {
-            Files.walkFileTree(Paths.get(mergeModel.getSource()), new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(Paths.get(model.getSource()), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                     // Deine Logik für Verzeichnisse
-                    Path targetDirPath = Paths.get(mergeModel.getTarget(), dir.toString().substring(mergeModel.getSource().length()));
+                    Path targetDirPath = Paths.get(model.getTarget(), dir.toString().substring(model.getSource().length()));
                     // Zielverzeichnis erstellen, falls es noch nicht existiert
                     if (!Files.exists(targetDirPath)) {
                         Files.createDirectories(targetDirPath);
@@ -44,7 +39,7 @@ public class MergeService implements IMergeService {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     // Deine Logik für Dateien
-                    Path targetFilePath = Paths.get(mergeModel.getTarget(), file.toString().substring(mergeModel.getSource().length()));
+                    Path targetFilePath = Paths.get(model.getTarget(), file.toString().substring(model.getSource().length()));
                     Files.copy(file, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
                     System.out.println("Datei kopiert: " + file);
                     return FileVisitResult.CONTINUE;
@@ -71,22 +66,5 @@ public class MergeService implements IMergeService {
             System.err.println("Fehler beim Durchsuchen des Verzeichnisses: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public void setBackupTimer(LocalDateTime startDate, int intervallDays, int intervallHours){
-        if (startDate != null) {
-            mergeModel.setStartDate(startDate);
-        }
-        else{
-            mergeModel.setStartDate(LocalDateTime.now());
-        }
-        if(intervallDays != 0) {
-            mergeModel.setIntervallDays(intervallDays);
-        }
-        if(intervallHours != 0) {
-            mergeModel.setIntervallHours(intervallHours);
-        }
-        LocalTime time = LocalTime.of(intervallDays * 24 + intervallHours,0);
-        LocalDateTime backupTimer = new LocalDateTime(startDate,);
     }
 }

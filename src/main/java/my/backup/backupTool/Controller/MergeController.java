@@ -6,8 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import my.backup.backupTool.Main;
-import my.backup.backupTool.Service.IMergeService;
-import my.backup.backupTool.Service.MergeService;
+import my.backup.backupTool.Model.MergeModel;
+import my.backup.backupTool.Service.*;
+import my.backup.backupTool.Model.IModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +16,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class MergeController {
-
-
 
     @FXML
     private CheckBox checkBoxPathing;
@@ -58,6 +57,9 @@ public class MergeController {
     private boolean isTargetButtonClicked = false;
 
     IMergeService mergeService;
+    ITimeService timeService;
+    IPathService pathService;
+    IModel model;
 
 
     @FXML
@@ -72,6 +74,11 @@ public class MergeController {
             isTargetButtonClicked = true;
             openDirectoryChooser();
         });
+        // MVC Model Initialisierung für MergeController;
+        model = new MergeModel();
+        mergeService = new MergeService();
+        timeService = new TimeService();
+        pathService = new PathService();
     }
     @FXML
     public void toggleTextAreas() {
@@ -121,16 +128,30 @@ public class MergeController {
         }
     }
 
-
     @FXML
     private void startMergeBackup(){
         System.out.println("Source: " + sourcePath.getText());
         System.out.println("Target" + targetPath.getText());
-
-        if(checkBoxStartDate.isSelected()){
-
+        int days = 0;
+        int hours = 0;
+        try{
+            days = Integer.parseInt(daysInterval.getText());
+            hours = Integer.parseInt(hoursInterval.getText());
         }
-        mergeService.mergeData(sourcePath.toString(),targetPath.toString());
+        catch (NumberFormatException e){
+            System.out.println("Not type of integer: " + e);
+        }
+
+        LocalDateTime startDate = LocalDateTime.now();
+        startDate = (datePicker != null && datePicker.getValue() != null)
+                ? datePicker.getValue().atTime(LocalTime.now())
+                : startDate;
+
+
+        timeService.setTiming(startDate, days, hours);
+        model = pathService.setModelPath(sourcePath.getText(), targetPath.getText(), model);
+        System.out.println("Meine Model Daten: " + "Source" +  model.getSource() + "Target" + model.getTarget());
+        mergeService.startMergeData(model);
     }
 
 
