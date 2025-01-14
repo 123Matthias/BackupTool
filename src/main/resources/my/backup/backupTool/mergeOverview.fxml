@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+
+<?import com.sun.javafx.scene.control.ContextMenuContent.MenuBox?>
+<?import javafx.scene.control.skin.VirtualFlow?>
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="my.backup.backupTool.Controller.MergeOverviewController"
+            fx:id="scrollPane"
+            fitToWidth="true"
+            vbarPolicy="ALWAYS"
+            pannable="true"
+            minWidth="800"
+            prefHeight="800">
+
+
+<StackPane alignment="TOP_LEFT" minWidth="800">
+
+        <!-- StackPane als Container für das FlowPane, um das FlowPane zu zentrieren -->
+            <FlowPane fx:id="flowPane"
+                      alignment="TOP_LEFT" onScroll="#handleScroll"
+                      style="-fx-background-color: grey" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" prefWidth="800" styleClass="flowContainer">
+                <Pane styleClass="cardPane">
+                    <VBox fx:id="fluentContainer" styleClass="card"  >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+               </Pane>
+
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+
+                <Pane styleClass="cardPane">
+                    <VBox styleClass="card" >
+                        <!-- Example Card -->
+                        <HBox styleClass="cardTitleContainer">
+                            <Label styleClass="cardTitle" text="Card Title" />
+                        </HBox>
+                        <VBox styleClass="cardContent" spacing="5">
+                            <Label text="Last Backup: " />
+                            <Label text="Next Backup: " />
+                            <Label text="Source Path: " />
+                            <Label text="Target Path: " />
+                        </VBox>
+                    </VBox>
+                </Pane>
+            </FlowPane>
+    <!-- Sticky ToolBar -->
+    <!-- Sticky Button -->
+    <!-- ToolBar -->
+    <ToolBar fx:id="toolBar" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" GridPane.columnIndex="0" GridPane.rowIndex="0"
+             style=" -fx-padding: 15; -fx-background-color: white; -fx-border-style: solid; -fx-border-width: 0 0 1 0; -fx-border-color: black">
+
+        <Button fx:id="addButton" styleClass="addButton">
+            <graphic>
+                <ImageView fx:id="addIcon" fitHeight="20" fitWidth="20">
+                    <image>
+                        <Image url="@img/icons/plus-solid.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+    </ToolBar>
+    </StackPane>
+</ScrollPane>

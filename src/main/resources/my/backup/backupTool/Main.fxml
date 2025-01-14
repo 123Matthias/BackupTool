@@ -33,13 +33,13 @@
          </rowConstraints>
 
 
-         <Button text="Help" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+         <Button text="Help" onAction="#handleOpenMergeOverviewWindow" styleClass="mainWindowButton" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
         <!-- <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
 
               <VBox styleClass="restoreButton" alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="2">
                   <!-- Stein-Button -->
                   <Button
-                          onAction="#handleOpenMergeWindow"
+                          onAction="#handleOpenMergeOverviewWindow"
                           styleClass="placeholderButton2"
                           prefWidth="100" prefHeight="100"
                   />
@@ -51,7 +51,7 @@
           <!-- Button 1 -->
           <VBox styleClass="restoreButton" alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="1">
               <Button
-                      onAction="#handleOpenMergeWindow"
+                      onAction="#handleOpenMergeOverviewWindow"
                       styleClass="placeholderButton2"
                       prefWidth="100" prefHeight="100"
               />
@@ -61,7 +61,7 @@
           <!-- Button 2 -->
           <VBox styleClass="restoreButton" alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="3">
               <Button
-                      onAction="#handleOpenMergeWindow"
+                      onAction="#handleOpenMergeOverviewWindow"
                       styleClass="placeholderButton2"
                       prefWidth="100" prefHeight="100"
               />
@@ -71,18 +71,18 @@
           <!-- Button 3 -->
           <VBox styleClass="restoreButton" alignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="2">
               <Button
-                      onAction="#handleOpenMergeWindow"
+                      onAction="#handleOpenMergeOverviewWindow"
                       styleClass="placeholderButton2"
                       prefWidth="100" prefHeight="100"
               />
               <Label text="Restore Apps" styleClass="buttonTextLabel"/>
           </VBox>
-           <Button text="Settings" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+           <Button text="Settings" onAction="#handleOpenMergeOverviewWindow" styleClass="mainWindowButton" GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
          <!--   <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
         <!--    <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
-           <Button text="Full Backup" wrapText="true" textAlignment="CENTER" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-           <Button text="App Backup" wrapText="true" textAlignment="CENTER" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-           <Button text="Merge Backup" wrapText="true" textAlignment="CENTER" onAction="#handleOpenMergeWindow" styleClass="mainWindowButton" GridPane.rowIndex="4" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+           <Button text="Full Backup" wrapText="true" textAlignment="CENTER" onAction="#handleOpenMergeOverviewWindow" styleClass="mainWindowButton" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+           <Button text="App Backup" wrapText="true" textAlignment="CENTER" onAction="#handleOpenMergeOverviewWindow" styleClass="mainWindowButton" GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+           <Button text="Merge Backup" wrapText="true" textAlignment="CENTER" onAction="#handleOpenMergeOverviewWindow" styleClass="mainWindowButton" GridPane.rowIndex="4" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
 
 
 
