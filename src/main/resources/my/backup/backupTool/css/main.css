@@ -1,66 +1,46 @@
+
+
 Pane {
     -fx-padding: 10;       /* Optionaler Innenabstand */
 }
-/* CSS für StackPane */
-StackPane {
-    -fx-alignment: center; /* Zentriert den Inhalt im StackPane */
-    -fx-background-color: lightblue; /* Hintergrundfarbe des StackPane */
-}
+
 
 /* GridPane Styling */
-.gridPane{
+.gridPane {
     -fx-max-width: 800px;      /* Maximale Breite */
     -fx-max-height: 800px;     /* Maximale Höhe */
     -fx-padding: 30px;         /* Außenabstand */
-    -fx-grid-lines-visible: true;  /* Gitterlinien sichtbar machen */
-
+    -fx-background-color: transparent; /* Hellgrauer transparenter Hintergrund */
 }
+
+  /*  -fx-grid-lines-visible: true; */  /* Gitterlinien sichtbar machen */
+
 .gridPane Line {
         -fx-stroke: linear-gradient(to right, #21d8ff, #09dd94); /* Farbverlauf für Gitterlinien */
         -fx-stroke-width: 8px;
         -fx-effect: dropshadow(gaussian, rgba(0, 0, 255, 0.95), 5, 0, 0, 0); /* Schimmernder Schatten für Linien */
-         -fx-transition: -fx-effect 0.5s ease-in-out infinite; /* Animation für den Schatten */
+       -fx-transition: -fx-effect 0.5s ease-in-out infinite; /* Animation für den Schatten */
 }
 
 
-.mainWindowButton {
-   -fx-min-width: 130px;
-   -fx-min-height: 130px;
-   -fx-max-width: 130px;
-   -fx-max-height: 130px;
-   -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d8ff, #09dd94);
-   -fx-background-radius: 65px;
-   -fx-font-family: "Serif";
-   -fx-font-size: 24px;
-   -fx-text-fill: #ffffff; /* Optionale Farbe */
-   -fx-font-style: italic;
-   -fx-scale-x: 1;
-   -fx-scale-y: 1;
 
-    /* Runder Schatten */
-    -fx-effect: dropshadow(gaussian, rgba(50, 30, 20, 0.93), 15, 0.0, 0.0, 0.0);
+.button2 {
+    -fx-min-width: 80px;
+    -fx-min-height: 80px;
+    -fx-max-width: 80px;
+    -fx-max-height: 80px;
+    -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d8ff, #09dd94);
+    -fx-background-radius: 40px;
+    -fx-font-family: "Serif";
+    -fx-font-size: 16px;
+    -fx-font-style: italic;
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-effect: dropshadow(gaussian, rgba(240, 230, 255, 0.65), 10, 0.0, 0.0, 0.0);
 
 }
 
-.placeholderButton {
-   -fx-min-width: 65px;
-   -fx-min-height: 65px;
-   -fx-max-width: 65px;
-   -fx-max-height: 65px;
-   -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d8ff, #09dd94);
-   -fx-background-radius: 32.5px;
-   -fx-font-family: "Serif";
-   -fx-font-size: 24px;
-   -fx-text-fill: #ffffff; /* Optionale Farbe */
-   -fx-font-style: italic;
-   -fx-scale-x: 1.0;
-   -fx-scale-y: 1.0;
-    /* Runder Schatten */
-    -fx-effect: dropshadow(gaussian, rgba(50, 30, 20, 0.93), 15, 0.0, 0.0, 0.0);
-
-}
-
-.placeholderButton2 {
+.button1 {
    -fx-min-width: 30px;
    -fx-min-height: 30px;
    -fx-max-width: 30px;
@@ -69,51 +49,68 @@ StackPane {
    -fx-background-radius: 15px;
    -fx-font-family: "Serif";
    -fx-font-size: 24px;
-   -fx-text-fill: #ffffff; /* Optionale Farbe */
    -fx-font-style: italic;
    -fx-scale-x: 1.0;
    -fx-scale-y: 1.3;
     -fx-transition: all 0.3s ease-in-out;
-    -fx-effect: dropshadow(gaussian, rgba(50, 30, 20, 0.98), 15, 0.0, 0.0, 0.0);
+    -fx-effect: dropshadow(gaussian, rgba(240, 230, 255, 0.7), 15, 0.0, 0.0, 0.0);
 
+}
+
+/* Button Hover */
+.button1:hover {
+    -fx-translate-y: -15px;
+    -fx-transition: all 0.7s ease-in-out;
+    -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94);
+}
+
+/* Button Box Hover */
+.button1Box:hover .button1 {
+    -fx-translate-y: -6px; /* gleiche Übersetzung wie bei .button1 */
+    -fx-transition: all 0.7s ease-in-out;
+    -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94); /* gleiche Hintergrundfarbe */
+}
+
+.button1Box {
+
+    -fx-text-alignment: center;
+    -fx-spacing: 10px;
+}
+
+
+.button1TextLabel{
+    -fx-font-family: Serif;
+    -fx-font-size: 16px;
+    -fx-text-fill: white; /* Optionale Farbe */
+    -fx-font-style: italic;
+    -fx-font-weight: bold;  /* Text fett */
+    -fx-wrap-text: true;
+    -fx-max-width: 60; /* Maximale Breite für den Zeilenumbruch */
+    -fx-text-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(255, 220, 255, 0.5), 15, 0.0, 0.0, 0.0);
+}
+/* Label Hover (beim Hover über Button1) */
+.button1Box:hover .button1TextLabel {
+    -fx-translate-y: -6px; /* Translate-Y um 10px */
 }
 
 
 
 .imageFee{
-    -fx-effect: dropshadow(gaussian, rgba(50, 30, 20, 0.98), 15, 0.0, 0.0, 0.0);
+    -fx-effect: dropshadow(gaussian, rgba(240, 230, 255, 0.98), 40, 0.0, 0.0, 0.0);
 }
 
-.mainWindowButton:hover {
+.button2:hover {
    -fx-scale-x: 1.03; /* 25 % größer */
    -fx-scale-y: 1.03; /* 25 % größer */
-   -fx-text-fill: #0088bb; /* Optionale Farbe */
    -fx-transition: all 0.7s ease-in-out;
    -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94);
 }
 
 
-.grid-pane-style {
-    -fx-grid-lines-visible: true;
-}
-.buttonTextLabel{
-       -fx-font-family: Serif;
-       -fx-font-size: 12px;
-       -fx-text-fill: #ffffff; /* Optionale Farbe */
-       -fx-font-style: italic;
-       -fx-wrap-text: true;
-       -fx-max-width: 50; /* Maximale Breite für den Zeilenumbruch */
-       -fx-text-alignment: center;
-}
 
 
-.placeholderButton2:hover {
-   -fx-scale-x: 1.05; /* 25 % größer */
-   -fx-scale-y: 1.35; /* 25 % größer */
-   -fx-text-fill: #0088bb; /* Optionale Farbe */
-   -fx-transition: all 0.7s ease-in-out;
-   -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94);
 
-}
+
 
 

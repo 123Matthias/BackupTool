@@ -4,11 +4,20 @@ import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
+import my.backup.backupTool.Main;
 
 public class MergeOverviewController {
 
@@ -18,6 +27,12 @@ public class MergeOverviewController {
     private ScrollPane scrollPane;
     @FXML
     private FlowPane flowPane; // Dein FlowPane
+    @FXML
+    private Pane cardId;
+
+
+    @FXML
+    private Text fontAwesomeIcon;
 
 
     @FXML
@@ -31,6 +46,21 @@ public class MergeOverviewController {
                 flowPane.setStyle("-fx-padding: " + (toolBarHeight) + " 0 0 0;");
             }
         });
+
+       // sceneMain.getStylesheets().add(String.valueOf(getClass().getResource("css/basicWindow.css")));
+      //  Font fontAwesome = Font.loadFont(String.valueOf(getClass().getResource("fonts/fontawesomeDesktop/otfs/Font Awesome 6 Free-Regular-400.otf")),24);
+
+// Lade die Font Awesome-Schriftart
+        Font fontAwesome = Font.loadFont(String.valueOf(getClass().getResource("fonts/fontawesomeWeb/webfonts/fa-brands-400.ttf")),12);
+
+// Prüfen, ob die Schriftart korrekt geladen wurde
+        if (fontAwesome != null) {
+            fontAwesomeIcon.setFont(fontAwesome);  // Setze die Schriftart
+            fontAwesomeIcon.setText("\uf052");     // Setze den Unicode für das Symbol
+        } else {
+            System.out.println("Fehler beim Laden der Schriftart!");
+        }
+
     }
 
 
@@ -77,12 +107,53 @@ public class MergeOverviewController {
     }
 
 
+    @FXML
+    public void addNewCard() {
+        // Neue Karte erstellen
+        Pane newCard = new Pane();
+        newCard.getStyleClass().addAll(cardId.getStyleClass()); // Stile der Vorlage übernehmen
+        newCard.setVisible(true); // Sichtbar machen
 
+        // Hauptcontainer (VBox) klonen
+        VBox contentTemplate = (VBox) cardId.lookup("#fluentContainer"); // Original-Container
+        VBox newContent = new VBox();
+        newContent.getStyleClass().addAll(contentTemplate.getStyleClass());
+        newContent.setSpacing(5);
+
+        // Titelcontainer (HBox) klonen
+        HBox titleTemplate = (HBox) contentTemplate.lookup(".cardTitleContainer"); // Original-Titel
+        HBox newTitleContainer = new HBox();
+        newTitleContainer.getStyleClass().addAll(titleTemplate.getStyleClass());
+
+        Label titleLabel = new Label("My Custom Title"); // Titel setzen
+        titleLabel.getStyleClass().add("cardTitle");
+        newTitleContainer.getChildren().add(titleLabel);
+
+        // Inhalte (Labels) setzen
+        VBox contentBox = new VBox();
+        contentBox.getStyleClass().add("cardContent");
+        contentBox.setSpacing(5);
+        contentBox.getChildren().addAll(
+                new Label("Last Backup: Test1"),
+                new Label("Next Backup: Test2"),
+                new Label("Source Path: Test3"),
+                new Label("Target Path: Test4")
+        );
+
+        // Struktur aufbauen
+        newContent.getChildren().addAll(newTitleContainer, contentBox);
+        newCard.getChildren().add(newContent);
+
+        // Neue Karte in das FlowPane einfügen
+        flowPane.getChildren().add(newCard);
+    }
 
     @FXML
-    private void setTop(ScrollEvent event) {
-        toolBar.setTranslateY(0);
-
+    public void backToMain(){
+        Main.mainStage.setScene(Main.sceneMain);
+        Main.mainStage.show();
     }
+
+
 
 }

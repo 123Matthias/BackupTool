@@ -1,0 +1,26 @@
+
+.basicButton {
+    -fx-text-fill: white; /* Weißer Text */
+    -fx-border-color: white;
+    -fx-background-color: none;
+    -fx-border-radius: 12.5px; /* Runde Ecken */
+    -fx-background-radius: 12.5px;
+    -fx-min-height: 25px;
+    -fx-min-width: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0); /* Sanfter Schatten */
+    -fx-transition: all 0.3s ease; /* Sanfter Übergang bei Hover */
+}
+
+/* Hover-Effekt: Button wird größer und dunkler */
+.basicButton:hover {
+    -fx-translate-y: -0.2;
+    -fx-border-color: lightblue;
+
+    -fx-transition: all 0.5s ease; /* Sanfter Übergang bei Hover */
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.4), 40, 0, 0, 0); /* Stärkerer Schatten */
+}
+
+.basicButton:hover > SVGPath {
+    -fx-fill: lightblue;
+}
+

@@ -1,45 +1,15 @@
-/* FlowContainer Styles */
 
-ScrollPane{
-    -fx-background-color: white;
-}
 
-.flowContainer {
-    -fx-padding: 10;
-    -fx-background-color: white; /* Weißer Hintergrund */
-}
-
-/* ScrollPane Styles */
-.scroll-pane {
-    -fx-background-color: white; /* Weißer Hintergrund */
-    -fx-padding: 10;
-    -fx-border-color: black; /* Dezente graue Umrandung */
-    -fx-border-width: 1;
-    -fx-border-radius: 10;
-}
-
-/* GridPane Styles */
-.grid-pane {
-    -fx-background-color: white; /* Weißer Hintergrund */
-    -fx-padding: 10;
-    -fx-border-color: #D1D1D1; /* Dezente graue Umrandung */
-    -fx-border-width: 1;
-    -fx-border-radius: 10;
-}
-
-/* Card Pane Styles */
 .cardPane {
     -fx-padding: 10;
 }
 
-
-/* Card Styles */
 .card {
     -fx-pref-height: 280;
     -fx-pref-width: 230;
-    -fx-border-color: #FF8000; /* Dunkelorange für den Rand */
+    -fx-border-color: limegreen; /* Dunkelorange für den Rand */
     -fx-border-width: 2;
-    -fx-background-color: #FFF5E6; /* Sehr helles Orange für den Hintergrund */
+    -fx-background-color: #FAF3E0; /* Sehr helles Orange für den Hintergrund */
     -fx-spacing: 10;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0.5, 0, 0); /* Sanfter Schatten */
     -fx-border-radius: 10;
@@ -54,78 +24,32 @@ ScrollPane{
 
 /* Card Title Container */
 .cardTitleContainer {
-    -fx-background-color: #FFA040; /* Etwas helleres Orange für den Titel */
+   /* -fx-background-color: #FFA040; /* Etwas helleres Orange für den Titel */
+    -fx-background-color: #FAF3E0; /* Etwas helleres Orange für den Titel */
     -fx-pref-height: 40;
     -fx-padding: 5;
     -fx-alignment: center-left;
     -fx-border-radius: 10 10 0 0;
     -fx-background-radius: 10 10 0 0;
+    -fx-border-width: 0 0 1 0; /* Oben, rechts, unten, links */
+    -fx-border-color: transparent transparent black transparent; /* Farbe oben, rechts, unten, links */
+
 }
 
 /* Card Title Text */
 .cardTitle {
     -fx-font-size: 16;
     -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 
-/* Specific Styles for Paths */
-#card Label[text^="Source Path"] {
-    -fx-text-fill: #4CAF50; /* Grüner Farbton für Quellenpfad */
-    -fx-font-weight: bold;
-}
 
-#card Label[text^="Target Path"] {
-    -fx-text-fill: #F44336; /* Roter Farbton für Zielpfad */
-    -fx-font-weight: bold;
-}
-
-/* Card Text Styles */
-#card Label {
-    -fx-font-size: 14;
-    -fx-text-fill: #333333; /* Neutraler Text in Dunkelgrau */
-}
-
-/* ScrollBar Customization */
-.scroll-bar:vertical .track,
-.scroll-bar:horizontal .track {
-    -fx-background-color: #E0E0E0; /* Leichter Grauton für Track */
-}
-
-.scroll-bar:vertical .thumb,
-.scroll-bar:horizontal .thumb {
-    -fx-background-color: orange; /* Azure Blue Scrollbar */
-    -fx-background-radius: 5;
-}
-
-/* Additional Modern Hover Effects */
 .card:hover {
     -fx-scale-x: 1.01;
     -fx-scale-y: 1.01;
-    -fx-background-color: #FFF0E0; /* Dezente Veränderung bei Hover */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0.5, 0, 0); /* Stärkerer Schatten bei Hover */
-    -fx-border-color: #CC6600; /* Dunklerer Rand bei Hover (dunkler Orange) */
-}
-/* Button mit grünem Hintergrund */
-.addButton {
-    -fx-background-color: #4CAF50; /* Hellgrün */
-    -fx-text-fill: white; /* Weißer Text */
-    -fx-border-color: #000000;
-    -fx-border-radius: 25px; /* Runde Ecken */
-    -fx-background-radius: 25px;
-    -fx-pref-height: 50px;
-    -fx-pref-width: 50px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 0); /* Sanfter Schatten */
-    -fx-transition: all 0.3s ease; /* Sanfter Übergang bei Hover */
-    -fx-position-shape: sticky;
-}
-
-/* Hover-Effekt: Button wird größer und dunkler */
-.addButton:hover {
-    -fx-background-color: #388E3C; /* Dunkleres Grün */
-    -fx-translate-y: -3;
-    -fx-transition: all 0.5s ease; /* Sanfter Übergang bei Hover */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0.5, 0, 0); /* Stärkerer Schatten */
+    -fx-background-color: white; /* Dezente Veränderung bei Hover */
+    -fx-effect: dropshadow(gaussian, limegreen, 15, 0.5, 0, 0); /* Schatten in LimeGreen bei Hover */
+    -fx-border-color: #000000; /* Dunklerer Rand bei Hover (dunkler Orange) */
 }
 
 

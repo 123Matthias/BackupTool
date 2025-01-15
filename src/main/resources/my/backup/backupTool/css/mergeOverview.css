@@ -1,0 +1,31 @@
+
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color:
+            linear-gradient(to bottom right, rgba(30,30,35, 1) 20%, rgba(40,40,45, 1) 60%, rgba(50,50,55, 1) 80%, rgba(60,60,65, 1) 100%); /* linearer Hintergrund */
+
+}
+
+
+
+/* ScrollBar Customization */
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: lightgreen; /* Leichter Grauton für Track */
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    /* -fx-background-color: orange; /* Azure Blue Scrollbar */
+    -fx-background-color: black; /* Azure Blue Scrollbar */
+    -fx-background-radius: 5;
+}
+
+
+
+
+

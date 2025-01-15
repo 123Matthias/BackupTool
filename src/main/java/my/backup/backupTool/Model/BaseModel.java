@@ -1,20 +1,35 @@
 package my.backup.backupTool.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 public class BaseModel implements IModel {
 
+    @JsonProperty("source_path") // JSON Name wird geändert
     private String source;
+
+    @JsonProperty("target_path") // JSON Name wird geändert
     private String target;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Format für das Datum
     private LocalDateTime startDate;
-    private int IntervalDays;
-    private int IntervalHours;
+
+    @JsonProperty("interval_days") // JSON Name wird geändert
+    private int intervalDays;
+
+    @JsonProperty("interval_hours") // JSON Name wird geändert
+    private int intervalHours;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Format für das Datum
     private LocalDateTime nextBackupLocalDateTime;
 
-    public BaseModel(){
 
+    public BaseModel() {
     }
 
+    // Getter und Setter
     public String getSource() {
         return source;
     }
@@ -40,19 +55,19 @@ public class BaseModel implements IModel {
     }
 
     public int getIntervalDays() {
-        return IntervalDays;
+        return intervalDays;
     }
 
     public void setIntervalDays(int intervalDays) {
-        IntervalDays = intervalDays;
+        this.intervalDays = intervalDays;
     }
 
     public int getIntervalHours() {
-        return IntervalHours;
+        return intervalHours;
     }
 
-    public void setIntervalHours(int intervallHuers) {
-        IntervalHours = intervallHuers;
+    public void setIntervalHours(int intervalHours) {
+        this.intervalHours = intervalHours;
     }
 
     public LocalDateTime getNextBackupLocalDateTime() {
@@ -62,4 +77,5 @@ public class BaseModel implements IModel {
     public void setNextBackupLocalDateTime(LocalDateTime nextBackupLocalDateTime) {
         this.nextBackupLocalDateTime = nextBackupLocalDateTime;
     }
+
 }
