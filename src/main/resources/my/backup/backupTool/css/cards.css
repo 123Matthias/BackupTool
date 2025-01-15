@@ -9,7 +9,7 @@
     -fx-pref-width: 230;
     -fx-border-color: limegreen; /* Dunkelorange für den Rand */
     -fx-border-width: 2;
-    -fx-background-color: #FAF3E0; /* Sehr helles Orange für den Hintergrund */
+    -fx-background-color: rgba(255,255,255,0.8); /* Sehr helles Orange für den Hintergrund */
     -fx-spacing: 10;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0.5, 0, 0); /* Sanfter Schatten */
     -fx-border-radius: 10;
@@ -25,7 +25,7 @@
 /* Card Title Container */
 .cardTitleContainer {
    /* -fx-background-color: #FFA040; /* Etwas helleres Orange für den Titel */
-    -fx-background-color: #FAF3E0; /* Etwas helleres Orange für den Titel */
+    -fx-background-color: rgba(255,255,255,0.85); /* Etwas helleres Orange für den Titel */
     -fx-pref-height: 40;
     -fx-padding: 5;
     -fx-alignment: center-left;
@@ -47,7 +47,6 @@
 .card:hover {
     -fx-scale-x: 1.01;
     -fx-scale-y: 1.01;
-    -fx-background-color: white; /* Dezente Veränderung bei Hover */
     -fx-effect: dropshadow(gaussian, limegreen, 15, 0.5, 0, 0); /* Schatten in LimeGreen bei Hover */
     -fx-border-color: #000000; /* Dunklerer Rand bei Hover (dunkler Orange) */
 }

@@ -59,14 +59,14 @@ Pane {
 
 /* Button Hover */
 .button1:hover {
-    -fx-translate-y: -15px;
     -fx-transition: all 0.7s ease-in-out;
     -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94);
 }
 
 /* Button Box Hover */
 .button1Box:hover .button1 {
-    -fx-translate-y: -6px; /* gleiche Übersetzung wie bei .button1 */
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.4;
     -fx-transition: all 0.7s ease-in-out;
     -fx-background-color: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94); /* gleiche Hintergrundfarbe */
 }
@@ -91,7 +91,9 @@ Pane {
 }
 /* Label Hover (beim Hover über Button1) */
 .button1Box:hover .button1TextLabel {
-    -fx-translate-y: -6px; /* Translate-Y um 10px */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+
 }
 
 

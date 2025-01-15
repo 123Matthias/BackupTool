@@ -34,7 +34,7 @@ public class Main extends Application {
         FXMLLoader fxmlMain = new FXMLLoader(Main.class.getResource("Main.fxml"));
         Font.loadFont(getClass().getResourceAsStream("fonts/Font Awesome 6 Free-Solid-900.otf"),20);
         sceneMain = new Scene(fxmlMain.load(), 800, 800);
-        mainStage.setTitle("Good Fairy");
+        mainStage.setTitle("ccBackup");
         mainStage.setMinWidth(800);
         mainStage.setMinHeight(800);
         // Icon setzen

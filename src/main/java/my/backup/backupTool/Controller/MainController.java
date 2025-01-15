@@ -23,7 +23,6 @@ public class MainController {
 */
     @FXML
     private void handleOpenMergeOverviewWindow() {
-        Main.mainStage.setTitle("Merge");
         Main.mainStage.setMinWidth(800);
         Main.mainStage.setMinHeight(800);
         Main.mainStage.setScene(Main.sceneMergeOverview);

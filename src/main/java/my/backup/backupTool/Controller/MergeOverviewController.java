@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import my.backup.backupTool.Main;
 
@@ -43,7 +44,7 @@ public class MergeOverviewController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 // Sobald die Höhe der ToolBar sich ändert, das Padding des FlowPane anpassen
                 double toolBarHeight = toolBar.getHeight();
-                flowPane.setStyle("-fx-padding: " + (toolBarHeight) + " 0 0 0;");
+                flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 0;");
             }
         });
 
@@ -146,6 +147,13 @@ public class MergeOverviewController {
 
         // Neue Karte in das FlowPane einfügen
         flowPane.getChildren().add(newCard);
+    }
+
+    @FXML
+    public void openMergeWindow() {
+        Stage stage = new Stage();
+        stage.setScene(Main.sceneMerge);
+        stage.show();
     }
 
     @FXML

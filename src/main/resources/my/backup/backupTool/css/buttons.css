@@ -13,14 +13,13 @@
 
 /* Hover-Effekt: Button wird größer und dunkler */
 .basicButton:hover {
-    -fx-translate-y: -0.2;
-    -fx-border-color: lightblue;
-
+    -fx-translate-y: -0.6;
+    -fx-border-color: rgba(0,80,255,1);
     -fx-transition: all 0.5s ease; /* Sanfter Übergang bei Hover */
-    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.4), 40, 0, 0, 0); /* Stärkerer Schatten */
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.3), 10, 0, 0, 0); /* Stärkerer Schatten */
 }
 
 .basicButton:hover > SVGPath {
-    -fx-fill: lightblue;
+    -fx-fill: rgba(0,80,255,1);
 }
 

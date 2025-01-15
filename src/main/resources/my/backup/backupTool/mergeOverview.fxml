@@ -8,6 +8,7 @@
 
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.TextFlow?>
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="my.backup.backupTool.Controller.MergeOverviewController"
@@ -20,12 +21,14 @@
             styleClass="basicBackground">
 
 
-<StackPane style="-fx-background-color: transparent" alignment="TOP_LEFT" minWidth="800">
+<StackPane style="-fx-background-color: transparent" alignment="TOP_LEFT" padding="10" minWidth="800">
 
 
             <FlowPane fx:id="flowPane"
                       alignment="TOP_LEFT" onScroll="#handleScroll"
-                      style="-fx-background-color: transparent; -fx-background-image: none" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" prefWidth="800">
+                      style="-fx-background-color: transparent;" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" prefWidth="800">
+
+
                 <Pane fx:id="cardId" styleClass="cardPane">
                     <VBox fx:id="fluentContainer" styleClass="card"  >
 
@@ -65,7 +68,7 @@
 
 
 
-            <Button fx:id="addButton" onAction="#addNewCard" style="-fx-background-color: rgba(0,100,0,0.65)" styleClass="basicButton"
+            <Button fx:id="addButton" onAction="#openMergeWindow" styleClass="basicButton" alignment="CENTER"
                     minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
                 <graphic>
                     <SVGPath fx:id="plusIcon"
