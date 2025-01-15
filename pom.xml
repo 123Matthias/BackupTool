@@ -96,7 +96,7 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <!-- Transformation für das Manifest -->
+
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>my.backup.backupTool.Main</mainClass>
                                 </transformer>
@@ -105,7 +105,6 @@
                     </execution>
                 </executions>
             </plugin>
-
 
 
             <plugin>

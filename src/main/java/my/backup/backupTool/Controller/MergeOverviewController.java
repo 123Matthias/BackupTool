@@ -14,10 +14,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import my.backup.backupTool.Main;
 
 public class MergeOverviewController {
@@ -33,10 +30,6 @@ public class MergeOverviewController {
 
 
     @FXML
-    private Text fontAwesomeIcon;
-
-
-    @FXML
     private void initialize() {
         // Listener für Änderungen an der Höhe der ToolBar
         toolBar.heightProperty().addListener(new ChangeListener<Number>() {
@@ -48,19 +41,6 @@ public class MergeOverviewController {
             }
         });
 
-       // sceneMain.getStylesheets().add(String.valueOf(getClass().getResource("css/basicWindow.css")));
-      //  Font fontAwesome = Font.loadFont(String.valueOf(getClass().getResource("fonts/fontawesomeDesktop/otfs/Font Awesome 6 Free-Regular-400.otf")),24);
-
-// Lade die Font Awesome-Schriftart
-        Font fontAwesome = Font.loadFont(String.valueOf(getClass().getResource("fonts/fontawesomeWeb/webfonts/fa-brands-400.ttf")),12);
-
-// Prüfen, ob die Schriftart korrekt geladen wurde
-        if (fontAwesome != null) {
-            fontAwesomeIcon.setFont(fontAwesome);  // Setze die Schriftart
-            fontAwesomeIcon.setText("\uf052");     // Setze den Unicode für das Symbol
-        } else {
-            System.out.println("Fehler beim Laden der Schriftart!");
-        }
 
     }
 
@@ -150,7 +130,7 @@ public class MergeOverviewController {
     }
 
     @FXML
-    public void openMergeWindow() {
+    public void openMergeDetailWindow(){
         Stage stage = new Stage();
         stage.setScene(Main.sceneMerge);
         stage.show();

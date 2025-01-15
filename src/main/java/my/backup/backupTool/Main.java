@@ -1,17 +1,11 @@
 package my.backup.backupTool;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.io.IOException;
 
 public class Main extends Application {
@@ -32,7 +26,6 @@ public class Main extends Application {
     private void setAndShowMainStage(Stage stage) throws IOException {
         Main.mainStage = stage;
         FXMLLoader fxmlMain = new FXMLLoader(Main.class.getResource("Main.fxml"));
-        Font.loadFont(getClass().getResourceAsStream("fonts/Font Awesome 6 Free-Solid-900.otf"),20);
         sceneMain = new Scene(fxmlMain.load(), 800, 800);
         mainStage.setTitle("ccBackup");
         mainStage.setMinWidth(800);

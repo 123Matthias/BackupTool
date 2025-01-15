@@ -3,12 +3,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-
-<?import javafx.scene.text.Text?>
 <?import javafx.scene.shape.SVGPath?>
-<?import javafx.scene.text.TextFlow?>
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="my.backup.backupTool.Controller.MergeOverviewController"
@@ -21,7 +16,7 @@
             styleClass="basicBackground">
 
 
-<StackPane style="-fx-background-color: transparent" alignment="TOP_LEFT" padding="10" minWidth="800">
+<StackPane style="-fx-background-color: transparent" alignment="TOP_LEFT" minWidth="800">
 
 
             <FlowPane fx:id="flowPane"
@@ -68,7 +63,7 @@
 
 
 
-            <Button fx:id="addButton" onAction="#openMergeWindow" styleClass="basicButton" alignment="CENTER"
+            <Button fx:id="addButton" onAction="#openMergeDetailWindow" styleClass="basicButton" alignment="CENTER"
                     minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
                 <graphic>
                     <SVGPath fx:id="plusIcon"
