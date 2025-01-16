@@ -1,0 +1,55 @@
+.root {
+    -fx-boxBackground-color: #e0e0e0;
+    -fx-boxSelected-color: #4caf50;
+}
+
+.check-box {
+    -fx-background-color: -fx-boxBackground-color; /* Grautöne im unselected Zustand */
+    -fx-border-color: #bdbdbd;  /* Graue Umrandung */
+    -fx-pref-height: 2em;  /* Bevorzugte Höhe der Box */
+    -fx-max-height: 2em;  /* Bevorzugte Höhe der Box */
+    -fx-pref-width: 4em;  /* Mindestbreite der Box */
+    -fx-min-width: 4em;
+    -fx-max-width: 4em;
+    -fx-border-radius: 1em;  /* Abgerundete Ecken */
+    -fx-background-radius: 1em;  /* Abgerundete Ecken */
+    -fx-alignment: center;  /* Box-Inhalt zentrieren */
+}
+
+.check-box:selected {
+    -fx-background-color: -fx-boxSelected-color; /* Grüner Hintergrund im selected Zustand */
+    -fx-border-color: white;  /* Weiße Umrandung im selected Zustand */
+}
+
+.check-box .box {
+    -fx-background-color: #666666; /* Grautöne im unselected Zustand */
+    -fx-border-color: white;  /* Weiße Umrandung */
+    -fx-border-width: 1px;
+    -fx-border-radius: 0.5em;  /* Abgerundete Ecken */
+    -fx-background-radius: 0.5em;  /* Abgerundete Ecken */
+    -fx-pref-height: 1em;  /* Mindesthöhe der Box */
+    -fx-pref-width: 1em;  /* Mindestbreite der Box */
+    -fx-translate-x: 0.3em;  /* Startposition */
+
+}
+
+.check-box:selected .box {
+    -fx-background-color: white;  /* Weiße Box bei aktivem Zustand */
+    -fx-text-fill: black;
+    -fx-border-color: grey;
+    -fx-fill: black;
+    -fx-stroke-width: 0;
+    -fx-translate-x: 2.6em;  /* Verschiebt die Box nach rechts, aber bleibt innerhalb */
+}
+
+.check-box:selected .mark {
+    -fx-background-color: none;  /* Keine Hintergrundfarbe */
+    -fx-text-fill: none;
+    -fx-border-color: none;
+    -fx-fill: none;
+    -fx-stroke-width: 0;
+}
+
+.check-box:hover {
+    -fx-background-color: #c8e6c9;  /* Hellerer Hintergrund beim Hover */
+}

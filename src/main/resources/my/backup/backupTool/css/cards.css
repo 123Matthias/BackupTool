@@ -1,4 +1,9 @@
-
+.root {
+    -fx-cardBody-color: #111111;
+    -fx-cardHeader-color: #050505;
+    -fx-cardBorder-color: #FFFFFF;
+    -fx-cardText-color: #FFFFFF;
+}
 
 .cardPane {
     -fx-padding: 10 10 10 10;
@@ -7,9 +12,9 @@
 .card {
     -fx-pref-height: 280;
     -fx-pref-width: 230;
-    -fx-border-color: limegreen; /* Dunkelorange für den Rand */
+    -fx-border-color: -fx-cardBorder-color; /* Korrektur: Kein Tippfehler mehr */
     -fx-border-width: 2;
-    -fx-background-color: rgba(255,255,255,0.8); /* Sehr helles Orange für den Hintergrund */
+    -fx-background-color: -fx-cardBody-color; /* Variable korrekt definiert */
     -fx-spacing: 10;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0.5, 0, 0); /* Sanfter Schatten */
     -fx-border-radius: 10;
@@ -19,20 +24,25 @@
 
 /* Card Content Styles */
 .cardContent {
-    -fx-padding: 10;
+    -fx-padding: 5;
+
+}
+.cardContent > Label {
+    -fx-text-fill: -fx-cardText-color;
+
 }
 
 /* Card Title Container */
 .cardTitleContainer {
    /* -fx-background-color: #FFA040; /* Etwas helleres Orange für den Titel */
-    -fx-background-color: rgba(255,255,255,0.85); /* Etwas helleres Orange für den Titel */
+    -fx-background-color: -fx-cardHeader-Color; /* Etwas helleres Orange für den Titel */
     -fx-pref-height: 40;
     -fx-padding: 5;
     -fx-alignment: center-left;
     -fx-border-radius: 10 10 0 0;
     -fx-background-radius: 10 10 0 0;
     -fx-border-width: 0 0 1 0; /* Oben, rechts, unten, links */
-    -fx-border-color: transparent transparent black transparent; /* Farbe oben, rechts, unten, links */
+    -fx-border-color: transparent transparent white transparent; /* Farbe oben, rechts, unten, links */
 
 }
 
@@ -40,15 +50,10 @@
 .cardTitle {
     -fx-font-size: 16;
     -fx-font-weight: bold;
-    -fx-text-fill: black;
+    -fx-text-fill: -fx-cardText-color;
 }
 
 
 .card:hover {
-    -fx-scale-x: 1.01;
-    -fx-scale-y: 1.01;
-    -fx-effect: dropshadow(gaussian, limegreen, 15, 0.5, 0, 0); /* Schatten in LimeGreen bei Hover */
-    -fx-border-color: #000000; /* Dunklerer Rand bei Hover (dunkler Orange) */
+    -fx-border-color: #888888; /* Verschiebung bei Hover */
 }
-
-

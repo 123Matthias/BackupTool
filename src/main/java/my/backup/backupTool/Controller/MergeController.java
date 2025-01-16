@@ -158,7 +158,7 @@ public class MergeController {
     @FXML
     private void handleBackButton() throws IOException {
 
-        FXMLLoader fxmlMergeBackup = new FXMLLoader(Main.class.getResource("merge.fxml"));
+        FXMLLoader fxmlMergeBackup = new FXMLLoader(Main.class.getResource("mergeDetail.fxml"));
         Scene scene = new Scene(fxmlMergeBackup.load(), 800, 800);
         Main.mainStage.setTitle("Merge");
         Main.mainStage.setMinWidth(800);

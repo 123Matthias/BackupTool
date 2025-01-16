@@ -1,0 +1,37 @@
+
+.path {
+
+    -fx-padding: 10px;
+}
+
+Label{
+    -fx-text-fill: white;
+}
+TextArea, TextField{
+    -fx-background-color: rgb(200,200,200);
+    -fx-text-fill: green;
+}
+
+TextArea {
+    -fx-control-inner-background: rgb(200, 200, 200);  /* Hintergrund des Textbereichs */
+}
+
+.playButton {
+    -fx-padding: 0 80 80 0;
+    -fx-background-color: transparent;
+    -fx-text-fill: transparent;  /* Falls Text auf Button ist */
+    -fx-border-color: transparent;  /* Keine Umrandung */
+}
+
+
+.playButton:hover{
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 0, 1), 30, 0, 0, 0); /* Schatten hinzufügen */
+}
+.playButton:hover #playButtonPath{
+    -fx-stroke-width: 45;
+}
+
+
+
+
+

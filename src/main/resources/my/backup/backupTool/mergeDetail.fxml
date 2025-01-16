@@ -15,8 +15,13 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<StackPane fx:controller="my.backup.backupTool.Controller.MergeController" xmlns:fx="http://javafx.com/fxml/1">
-   <GridPane style="-fx-background-color: white;" hgap="10" vgap="10">
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.Pane?>
+
+<StackPane fx:controller="my.backup.backupTool.Controller.MergeController" xmlns:fx="http://javafx.com/fxml/1"
+           styleClass="basicBackground">
+   <GridPane style="-fx-background-color: transparent">
       <!-- Column for Full Width -->
       <columnConstraints>
          <ColumnConstraints hgrow="ALWAYS" percentWidth="10" />
@@ -45,9 +50,10 @@
 
       <!-- Source Path -->
       <VBox spacing="10" style="-fx-padding: 10;" GridPane.rowIndex="2" GridPane.columnIndex="1">
-         <Label text="Source Path" />
+         <Label styleClass="text" text="Source Path" />
          <TextArea fx:id="sourcePath" promptText="Enter source path..." disable="true"></TextArea>
-         <Button fx:id="sourceButton" text="Browse..." disable="true" />         <Label text="Target Path" />
+         <Button fx:id="sourceButton" text="Browse..." disable="true" />
+         <Label text="Target Path" />
          <TextArea fx:id="targetPath" promptText="Enter target path..." disable="true"></TextArea>
          <Button fx:id="targetButton" text="Browse..." disable="true" />
 
@@ -73,18 +79,15 @@
          <TextField fx:id="hoursInterval" disable="true" editable="true" text="Hours"/>
       </VBox>
       <!-- Button -->
-      <HBox styleClass="playButtonBox" GridPane.rowIndex="8" GridPane.columnIndex="1">
-         <Button fx:id="playButton" styleClass="shadow" onAction="#startMergeBackup">
-            <graphic>
-               <ImageView fx:id="playIcon">
-                  <image>
-                     <Image url="@img/icons/play.png" />
-                  </image>
-               </ImageView>
-            </graphic>
-         </Button>
-      </HBox>
 
 
    </GridPane>
+
+
+   <Button styleClass="playButton" minHeight="30" minWidth="30" maxWidth="50" maxHeight="50" onAction="#startMergeBackup" StackPane.alignment="BOTTOM_RIGHT">
+      <graphic>
+         <SVGPath fx:id="playButtonPath" content="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
+                  fill="rgba(0,0,0,0)" stroke="lawngreen" strokeWidth="8" scaleX="0.1" scaleY="0.1"/>
+      </graphic>
+   </Button>
 </StackPane>
