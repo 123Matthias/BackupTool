@@ -9,13 +9,15 @@ import my.backup.backupTool.Main;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
 import my.backup.backupTool.Model.IModel;
+import my.backup.backupTool.Data.IStoreData;
+import my.backup.backupTool.Data.MergeData;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class MergeController {
+public class MergeDetailController {
 
     @FXML
     private CheckBox checkBoxPathing;
@@ -60,10 +62,14 @@ public class MergeController {
     ITimeService timeService;
     IPathService pathService;
     IModel model;
+    IStoreData setting;
+
+
 
 
     @FXML
     public void initialize() {
+
         // Button-Event-Handler für den Source-Button
         sourceButton.setOnAction(event -> {
             isSourceButtonClicked = true;
@@ -76,6 +82,7 @@ public class MergeController {
         });
         // MVC Model Initialisierung für MergeController;
         model = new MergeModel();
+        setting = new MergeData();
         mergeService = new MergeService();
         timeService = new TimeService();
         pathService = new PathService();
@@ -152,6 +159,12 @@ public class MergeController {
         model = pathService.setModelPath(sourcePath.getText(), targetPath.getText(), model);
         System.out.println("Meine Model Daten: " + "Source" +  model.getSource() + "Target" + model.getTarget());
         mergeService.startMergeData(model);
+       saveSettings();
+
+    }
+
+    private boolean saveSettings(){
+        return setting.saveModelAsJSON(model);
     }
 
 
