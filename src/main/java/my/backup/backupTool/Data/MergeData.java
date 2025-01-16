@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class MergeData implements IStoreData {
 
     private String storagePath;
-    private final String DEFAULT_STORAGE_PATH = "mergeDataSettings.json"; // Standardpfad als relativer Pfad
+    private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
 
     private ArrayList<IModel> modelList;
 
@@ -51,14 +51,21 @@ public class MergeData implements IStoreData {
     public boolean saveModelAsJSON(IModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
         modelList.add(model);
-        System.out.println("Stoooooraggeeee Path: " + getStoragePath());
+        System.out.println("Storage Path: " + getStoragePath());
 
         try {
             File file = new File(getStoragePath());
+            File parentDir = file.getParentFile();  // Hole das übergeordnete Verzeichnis
+
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs();  // Erstelle alle übergeordneten Verzeichnisse, falls sie nicht existieren
+            }
+
             if (!file.exists()) {
                 file.createNewFile();  // Erstelle die Datei, falls sie nicht existiert
             }
-            objectMapper.writeValue(file, modelList);
+
+            objectMapper.writeValue(file, modelList);  // Speichere die Datei
             System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
             return true;
         } catch (IOException e) {
@@ -66,4 +73,5 @@ public class MergeData implements IStoreData {
             return false;
         }
     }
+
 }
