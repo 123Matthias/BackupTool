@@ -12,7 +12,7 @@
 ---
 
 ## 1. Introduction
-The ccBackup Tool is freeware designed to be simple, intuitive, and efficient. Its primary goal is to allow quick and easy configuration, making it ideal for users who value speed and simplicity.
+The ccBackup Tool is designed to be simple and intuitive. Its primary goal is to allow quick and easy configuration, making it ideal for users who like it simple.
 
 ---
 
