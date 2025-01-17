@@ -50,22 +50,13 @@ public class BaseData implements IStoreData, ILoadData {
 
     public boolean saveModelAsJSON(IModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule()); // Registrierung des Moduls
-
+        objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
-        File parentDir = file.getParentFile();  // Hole das übergeordnete Verzeichnis
-
-        // Erstelle das Verzeichnis, falls es nicht existiert
-        if (parentDir != null && !parentDir.exists()) {
-            parentDir.mkdirs();
-        }
 
         try {
             List<IModel> modelList = new ArrayList<>();
 
-            // Wenn die Datei existiert, lade den Inhalt (JSON) in die Liste
             if (file.exists() && file.length() > 0) {
-                // Einlesen der bestehenden Daten in eine Liste
                 modelList = objectMapper.readValue(file,    objectMapper
                                                             .getTypeFactory()
                                                             .constructCollectionType(List.class, BaseModel.class));
@@ -73,7 +64,6 @@ public class BaseData implements IStoreData, ILoadData {
 
             modelList.add(model);
 
-            // Schreibe die aktualisierte Liste zurück in die Datei
             objectMapper.writeValue(file, modelList);
 
             System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
@@ -86,7 +76,25 @@ public class BaseData implements IStoreData, ILoadData {
     }
 
 
+    public boolean createDefaultStorageFile() {
+        try {
+            File file = new File(getStoragePath());
+            File parentDir = file.getParentFile();
 
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            if (!file.exists()) {
+                return file.createNewFile();
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     @Override
     public List<IModel> getAllAsList() throws IOException {
@@ -94,9 +102,13 @@ public class BaseData implements IStoreData, ILoadData {
         mapper.registerModule(new JavaTimeModule());
         // JSON-Datei einlesen
         File sourceFile = new File(getStoragePath());
+        createDefaultStorageFile();
+        if (!sourceFile.exists()) {
+            throw new IOException("Die Datei existiert nicht: " + sourceFile.getAbsolutePath());
+        }
 
-        if (!sourceFile.exists() || sourceFile.length() == 0) {
-            throw new IOException("Die Datei existiert nicht oder ist leer: " + sourceFile.getAbsolutePath());
+        if(sourceFile.length() == 0){
+            return new ArrayList<>();
         }
 
         // Daten in eine Liste von BaseModel-Objekten einlesen

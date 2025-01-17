@@ -2,7 +2,6 @@ package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
@@ -64,9 +63,9 @@ public class MergeDetailController {
 
     IMergeService mergeService;
     ITimeService timeService;
-    IPathService pathService;
     IModel model;
     IStoreData setting;
+    IUpdateScene sceneUpdate;
 
 
 
@@ -89,7 +88,7 @@ public class MergeDetailController {
         setting = new BaseData();
         mergeService = new MergeService();
         timeService = new TimeService();
-        pathService = new PathService();
+        sceneUpdate = new SceneUpdateFXMLService();
     }
     @FXML
     public void toggleTextAreas() {
@@ -160,10 +159,11 @@ public class MergeDetailController {
 
 
         timeService.setTiming(startDate, days, hours);
-        model = pathService.setModelPath(sourcePath.getText(), targetPath.getText(), model);
+        model.setSource(sourcePath.getText());
+        model.setTarget(targetPath.getText());
         System.out.println("Meine Model Daten: " + "Source" +  model.getSource() + "Target" + model.getTarget());
         mergeService.startMergeData(model);
-       saveSettings();
+        saveSettings();
 
     }
 
@@ -196,13 +196,7 @@ public class MergeDetailController {
         model.setIntervalHours(hours);
 
         saveSettings();
-        try {
-            SceneLoaderService.reloadView("mergeOverview.fxml");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
+        sceneUpdate.reloadView("mergeOverview.fxml");
     }
 
     private boolean saveSettings(){

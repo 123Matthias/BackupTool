@@ -165,15 +165,6 @@ public class BaseOverviewController {
         }
     }
 
-    public void updateCards() {
-        if(flowPane.getChildren()!=null){
-            flowPane.getChildren().clear();  // Entferne alle bestehenden Karten
-            getAllCards();  // Rufe getAllCards() auf, um die Karten erneut zu laden
-
-        }
-
-    }
-
 
 
     @FXML
