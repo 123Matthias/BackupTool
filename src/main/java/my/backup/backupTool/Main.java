@@ -6,6 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import my.backup.backupTool.Data.BaseData;
+
+import java.io.File;
 import java.io.IOException;
 
 public class Main extends Application {
@@ -23,6 +26,7 @@ public class Main extends Application {
         mainStage.show();
     }
 
+
     private void setAndShowMainStage(Stage stage) throws IOException {
         Main.mainStage = stage;
         FXMLLoader fxmlMain = new FXMLLoader(Main.class.getResource("Main.fxml"));
@@ -31,7 +35,7 @@ public class Main extends Application {
         mainStage.setMinWidth(800);
         mainStage.setMinHeight(800);
         // Icon setzen
-        Image icon = new Image(String.valueOf(Main.class.getResource("img/frame-rund.png")));
+        Image icon = new Image(String.valueOf(Main.class.getResource("img/FeenFluegel.png")));
         mainStage.getIcons().add(icon);
         sceneMain.getStylesheets().add(String.valueOf(getClass().getResource("css/main.css")));
         sceneMain.getStylesheets().add(String.valueOf(getClass().getResource("css/basicWindow.css")));

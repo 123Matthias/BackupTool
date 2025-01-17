@@ -1,12 +1,14 @@
 package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 public class BaseModel implements IModel {
 
+
+    @JsonProperty("title")
+    private String title;
     @JsonProperty("source_path") // JSON Name wird geändert
     private String source;
 
@@ -76,6 +78,14 @@ public class BaseModel implements IModel {
 
     public void setNextBackupLocalDateTime(LocalDateTime nextBackupLocalDateTime) {
         this.nextBackupLocalDateTime = nextBackupLocalDateTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
 }

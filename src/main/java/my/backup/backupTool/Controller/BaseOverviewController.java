@@ -3,9 +3,12 @@ package my.backup.backupTool.Controller;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -13,13 +16,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import my.backup.backupTool.Data.ILoadData;
-import my.backup.backupTool.Data.MergeData;
+import my.backup.backupTool.Data.BaseData;
 import my.backup.backupTool.Main;
 import my.backup.backupTool.Model.IModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class BaseOverviewController {
 
@@ -46,7 +50,7 @@ public class BaseOverviewController {
             }
         });
 
-
+        getAllCards();
     }
 
 
@@ -98,22 +102,21 @@ public class BaseOverviewController {
     public void addNewCard(IModel model) {
         // Neue Karte erstellen
         Pane newCard = new Pane();
-        newCard.getStyleClass().addAll(cardId.getStyleClass()); // Stile der Vorlage übernehmen
-        newCard.setVisible(true); // Sichtbar machen
+        newCard.getStyleClass().add("cardPane"); // Stile der Vorlage übernehmen
 
         // Hauptcontainer (VBox) klonen
-        VBox contentTemplate = (VBox) cardId.lookup("#fluentContainer"); // Original-Container
         VBox newContent = new VBox();
-        newContent.getStyleClass().addAll(contentTemplate.getStyleClass());
+        newContent.getStyleClass().add("card");
         newContent.setSpacing(5);
 
-        // Titelcontainer (HBox) klonen
-        HBox titleTemplate = (HBox) contentTemplate.lookup(".cardTitleContainer"); // Original-Titel
+        // Titelcontainer (HBox)
         HBox newTitleContainer = new HBox();
-        newTitleContainer.getStyleClass().addAll(titleTemplate.getStyleClass());
+        newTitleContainer.getStyleClass().add("cardTitleContainer");
 
-        Label titleLabel = new Label("My Custom Title"); // Titel setzen
-        titleLabel.getStyleClass().add("cardTitle");
+        // Titel setzen
+        Label titleLabel = new Label();
+        titleLabel.setText(model.getTitle());  // Setze den Titel
+        titleLabel.getStyleClass().add("cardTitle"); // Stile für den Titel setzen
         newTitleContainer.getChildren().add(titleLabel);
 
         // Inhalte (Labels) setzen
@@ -121,10 +124,10 @@ public class BaseOverviewController {
         contentBox.getStyleClass().add("cardContent");
         contentBox.setSpacing(5);
         contentBox.getChildren().addAll(
-                new Label("Last Backup: Test1"),
-                new Label("Next Backup: Test2"),
-                new Label("Source Path: Test3"),
-                new Label("Target Path: Test4")
+                new Label("Last Backup: " + model.getStartDate()),
+                new Label("Next Backup: " + model.getNextBackupLocalDateTime()),
+                new Label("Source Path: " + model.getSource()),
+                new Label("Target Path: " + model.getTarget())
         );
 
         // Struktur aufbauen
@@ -132,23 +135,46 @@ public class BaseOverviewController {
         newCard.getChildren().add(newContent);
 
         // Neue Karte in das FlowPane einfügen
-        flowPane.getChildren().add(newCard);
+        flowPane.getChildren().add(newCard);  // flowPane muss vorher definiert sein
+        System.out.println("...............Card Added ........................");
     }
 
-    public void getAllCards(){
-        ILoadData data = new MergeData();
+
+    @FXML
+    private void getAllCards() {
+        ILoadData data = new BaseData();
         List<IModel> dataList = new ArrayList<>();
         try {
-            data.getAllAsList();
+            dataList = data.getAllAsList();
+
+            // Prüfen, ob die Liste leer ist
+            if (dataList.isEmpty()) {
+                System.out.println("Die Liste ist leer. Vorgang wird abgebrochen.");
+                return; // Methode abbrechen, wenn die Liste leer ist
+            }
+
+            // Liste iterieren und Karten hinzufügen
+            for (IModel entry : dataList) {
+                System.out.println("addCard: " + entry.getTitle());
+                addNewCard(entry);
+            }
         } catch (IOException e) {
+            // Fehler behandeln und eine klare Nachricht ausgeben
+            System.err.println("Fehler beim Laden der Daten: " + e.getMessage());
             throw new RuntimeException(e);
         }
+    }
 
-        for (IModel entry: dataList) {
-            addNewCard(entry);
+    public void updateCards() {
+        if(flowPane.getChildren()!=null){
+            flowPane.getChildren().clear();  // Entferne alle bestehenden Karten
+            getAllCards();  // Rufe getAllCards() auf, um die Karten erneut zu laden
+
         }
 
     }
+
+
 
     @FXML
     public void openMergeDetailWindow(){

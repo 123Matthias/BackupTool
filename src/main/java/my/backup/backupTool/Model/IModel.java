@@ -20,4 +20,8 @@ public interface IModel {
 
     LocalDateTime getNextBackupLocalDateTime();
     void setNextBackupLocalDateTime(LocalDateTime nextBackupLocalDateTime);
+
+    String getTitle();
+
+    void setTitle(String title);
 }

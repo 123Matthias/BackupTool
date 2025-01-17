@@ -31,10 +31,10 @@
                             <Label styleClass="cardTitle" text="Card Title" />
                         </HBox>
                         <VBox styleClass="cardContent" spacing="5">
-                            <Label text="Last Backup: " />
-                            <Label text="Next Backup: " />
-                            <Label text="Source Path: " />
-                            <Label text="Target Path: " />
+                            <Label text="Last Backup: rrr" />
+                            <Label text="Next Backup: rr" />
+                            <Label text="Source Path: rr" />
+                            <Label text="Target Path: rr" />
                         </VBox>
                     </VBox>
                 </Pane>

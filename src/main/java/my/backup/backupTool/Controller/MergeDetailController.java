@@ -2,6 +2,7 @@ package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
@@ -10,7 +11,7 @@ import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.Data.IStoreData;
-import my.backup.backupTool.Data.MergeData;
+import my.backup.backupTool.Data.BaseData;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class MergeDetailController {
+
+    @FXML
+    private TextField title;
 
     @FXML
     private CheckBox checkBoxPathing;
@@ -82,7 +86,7 @@ public class MergeDetailController {
         });
         // MVC Model Initialisierung für MergeController;
         model = new MergeModel();
-        setting = new MergeData();
+        setting = new BaseData();
         mergeService = new MergeService();
         timeService = new TimeService();
         pathService = new PathService();
@@ -163,9 +167,48 @@ public class MergeDetailController {
 
     }
 
+    @FXML
+    private void saveMergeBackup(){
+        System.out.println("Source: " + sourcePath.getText());
+        System.out.println("Target" + targetPath.getText());
+        int days = 0;
+        int hours = 0;
+        try{
+            days = Integer.parseInt(daysInterval.getText());
+            hours = Integer.parseInt(hoursInterval.getText());
+        }
+        catch (NumberFormatException e){
+            System.out.println("Not type of integer: " + e);
+        }
+
+        LocalDateTime startDate = LocalDateTime.now();
+        startDate = (datePicker != null && datePicker.getValue() != null)
+                ? datePicker.getValue().atTime(LocalTime.now())
+                : startDate;
+
+
+        timeService.setTiming(startDate, days, hours);
+        model.setSource(sourcePath.getText());
+        model.setTarget(targetPath.getText());
+        model.setTitle(title.getText());
+        model.setStartDate(startDate);
+        model.setIntervalDays(days);
+        model.setIntervalHours(hours);
+
+        saveSettings();
+        try {
+            SceneLoaderService.reloadView("mergeOverview.fxml");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
     private boolean saveSettings(){
         return setting.saveModelAsJSON(model);
     }
+
 
 
     @FXML

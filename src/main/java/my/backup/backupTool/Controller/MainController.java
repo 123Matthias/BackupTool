@@ -2,6 +2,7 @@ package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import my.backup.backupTool.Main;
 
@@ -22,12 +23,13 @@ public class MainController {
         }
 */
     @FXML
-    private void handleOpenMergeOverviewWindow() {
+    public void handleOpenMergeOverviewWindow() {
         Main.mainStage.setMinWidth(800);
         Main.mainStage.setMinHeight(800);
         Main.mainStage.setScene(Main.sceneMergeOverview);
         Main.mainStage.show();
     }
+
 
 
     public void handleBackToMainButton() throws IOException {
