@@ -51,7 +51,7 @@ public class Main extends Application {
 
         private void setMergeDetailViewWindow() throws IOException {
             FXMLLoader fxmlMerge = new FXMLLoader(Main.class.getResource("mergeDetail.fxml"));
-            sceneMerge = new Scene(fxmlMerge.load(), 650, 650);
+            sceneMerge = new Scene(fxmlMerge.load(), 600, 750);
             sceneMerge.getStylesheets().add(String.valueOf(getClass().getResource("css/basicWindow.css")));
             sceneMerge.getStylesheets().add(String.valueOf(getClass().getResource("css/mergeDetail.css")));
             sceneMerge.getStylesheets().add(String.valueOf(getClass().getResource("css/basicComponents.css")));

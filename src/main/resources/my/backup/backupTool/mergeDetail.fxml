@@ -19,6 +19,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.Pane?>
 
+<?import javafx.scene.control.Separator?>
 <StackPane fx:controller="my.backup.backupTool.Controller.MergeDetailController" xmlns:fx="http://javafx.com/fxml/1"
            styleClass="basicBackground">
    <GridPane style="-fx-background-color: transparent">
@@ -30,52 +31,44 @@
 
       <!-- 15 Rows -->
       <rowConstraints>
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="15" vgrow="NEVER" />
+         <RowConstraints minHeight="40" percentHeight="36" vgrow="NEVER" />
          <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
          <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
          <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
          <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
       </rowConstraints>
 
-      <!-- Überschrift -->
-      <Label text="Path Configuration" style="-fx-font-size: 24;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
-
-      <!-- Checkbox -->
-      <CheckBox fx:id="checkBoxPathing" styleClass="shadow" onAction="#toggleTextAreas" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-
-      <!-- Source Path -->
-      <VBox spacing="10" style="-fx-padding: 10;" GridPane.rowIndex="2" GridPane.columnIndex="1">
-         <Label styleClass="text" text="Source Path" />
-         <TextArea fx:id="sourcePath" promptText="Enter source path..." disable="true"></TextArea>
-         <Button fx:id="sourceButton" text="Browse..." disable="true" />
-         <Label text="Target Path" />
-         <TextArea fx:id="targetPath" promptText="Enter target path..." disable="true"></TextArea>
-         <Button fx:id="targetButton" text="Browse..." disable="true" />
-
+      <VBox spacing="10" style="-fx-padding: 10;" GridPane.rowIndex="0" GridPane.columnIndex="1">
+         <Label text="Title" style="-fx-font-size: 18; -fx-padding: 10 0 0 0"  />
+         <TextField fx:id="titleText" editable="true" text="Title"/>
       </VBox>
 
+      <!-- Source Path -->
+      <VBox spacing="10" style="-fx-padding: 10;" GridPane.rowIndex="1" GridPane.columnIndex="1">
+         <Label styleClass="text" text="Source Path" />
+         <TextArea fx:id="sourcePath" promptText="Enter source path..."></TextArea>
+         <Button fx:id="sourceButton" styleClass="browseButton" text="Browse..." />
+         <Label text="Target Path" />
+         <TextArea fx:id="targetPath" promptText="Enter target path..."></TextArea>
+         <Button fx:id="targetButton" styleClass="browseButton" text="Browse..." />
+      </VBox>
 
-
-      <CheckBox GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="check-box, shadow" fx:id="checkBoxStartDate" onAction="#toggleDate" />
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="5" GridPane.columnIndex="1">
+      <CheckBox GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="check-box, shadow" fx:id="checkBoxStartDate" onAction="#toggleDate" />
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="2" GridPane.columnIndex="1">
          <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Start Date</Label>
          <DatePicker disable="true" fx:id="datePicker" promptText="01.01.1990"/>
       </VBox>
 
-      <CheckBox styleClass="shadow" fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="6" GridPane.columnIndex="1">
-         <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Days Interval</Label>
-         <TextField fx:id="daysInterval" disable="true" editable="true" text="Days" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+      <CheckBox styleClass="shadow" fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="3" GridPane.columnIndex="1">
+         <Label>Days Interval</Label>
+         <TextField fx:id="daysInterval" disable="true" editable="true" text="Days" />
       </VBox>
 
-      <CheckBox styleClass="shadow" fx:id="checkBoxIntervalHours" onAction="#toggleHours" GridPane.rowIndex="7" GridPane.columnIndex="0" />
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="7" GridPane.columnIndex="1">
-         <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Days Interval</Label>
+      <CheckBox styleClass="shadow" fx:id="checkBoxIntervalHours" onAction="#toggleHours" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="4" GridPane.columnIndex="1">
+         <Label>Hours Interval</Label>
          <TextField fx:id="hoursInterval" disable="true" editable="true" text="Hours"/>
       </VBox>
       <!-- Button -->
@@ -84,10 +77,39 @@
    </GridPane>
 
 
-   <Button styleClass="playButton" minHeight="30" minWidth="30" maxWidth="50" maxHeight="50" onAction="#startMergeBackup" StackPane.alignment="BOTTOM_RIGHT">
+<ToolBar styleClass="toolBarBottom" StackPane.alignment="BOTTOM_CENTER">
+
+   <Button styleClass="deleteButton" onAction="#startMergeBackup">
       <graphic>
-         <SVGPath fx:id="playButtonPath" content="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
-                  fill="rgba(0,0,0,0)" stroke="lawngreen" strokeWidth="8" scaleX="0.1" scaleY="0.1"/>
+         <SVGPath fx:id="deleteButtonPath" content="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"
+                  fill="rgba(0,0,0,0)" stroke="lightsteelblue" strokeWidth="12" scaleX="0.08" scaleY="0.08"/>
       </graphic>
    </Button>
+
+   <Button styleClass="saveButton" onAction="#startMergeBackup">
+      <graphic>
+         <SVGPath fx:id="saveButtonPath" content=" M48 96l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-245.5c0-4.2-1.7-8.3-4.7-11.3l33.9-33.9c12 12 18.7 28.3 18.7 45.3L448 416c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96C0 60.7 28.7 32 64 32l245.5 0c17 0 33.3 6.7 45.3 18.7l74.5 74.5-33.9 33.9L320.8 84.7c-.3-.3-.5-.5-.8-.8L320 184c0 13.3-10.7 24-24 24l-192 0c-13.3 0-24-10.7-24-24L80 80 64 80c-8.8 0-16 7.2-16 16zm80-16l0 80 144 0 0-80L128 80zm32 240a64 64 0 1 1 128 0 64 64 0 1 1 -128 0z"
+                  fill="rgba(0,0,0,0)" stroke="lightseagreen" strokeWidth="12" scaleX="0.08" scaleY="0.08"/>
+      </graphic>
+   </Button>
+
+   <Separator orientation="VERTICAL" />
+
+   <Button styleClass="pauseButton" onAction="#startMergeBackup">
+      <graphic>
+         <SVGPath fx:id="pauseButtonPath" content="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm224-72l0 144c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-144c0-13.3 10.7-24 24-24s24 10.7 24 24zm112 0l0 144c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-144c0-13.3 10.7-24 24-24s24 10.7 24 24z"
+                  fill="rgba(0,0,0,0)" stroke="red" strokeWidth="12" scaleX="0.08" scaleY="0.08"/>
+      </graphic>
+   </Button>
+
+   <Button styleClass="playButton" onAction="#startMergeBackup">
+      <graphic>
+         <SVGPath fx:id="playButtonPath" content="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
+                  fill="rgba(0,0,0,0)" stroke="lawngreen" strokeWidth="12" scaleX="0.08" scaleY="0.08"/>
+      </graphic>
+   </Button>
+
+</ToolBar>
+
+
 </StackPane>

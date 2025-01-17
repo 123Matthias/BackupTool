@@ -2,6 +2,7 @@ package my.backup.backupTool.Data;
 
 import my.backup.backupTool.Model.IModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import my.backup.backupTool.Model.MergeModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,8 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MergeData implements IStoreData {
+public class MergeData implements IStoreData, ILoadData {
 
     private String storagePath;
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
@@ -74,4 +76,22 @@ public class MergeData implements IStoreData {
         }
     }
 
+    @Override
+    public void getAllAsList() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+            // JSON-Datei einlesen
+            File sourceFile = new File(getStoragePath());
+
+            // Beispiel: Eine Liste von Objekten lesen
+            List<IModel> dataList = mapper.readValue(
+                    sourceFile,
+                    mapper.getTypeFactory().constructCollectionType(List.class, IModel.class)
+            );
+
+            // Daten verarbeiten
+            dataList.forEach(System.out::println);
+
+
+    }
 }

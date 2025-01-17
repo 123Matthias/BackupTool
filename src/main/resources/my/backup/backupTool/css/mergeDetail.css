@@ -16,21 +16,63 @@ TextArea {
     -fx-control-inner-background: rgb(200, 200, 200);  /* Hintergrund des Textbereichs */
 }
 
-.playButton {
-    -fx-padding: 0 80 80 0;
+
+.toolBarBottom{
+    -fx-background-color: transparent;
+    -fx-min-height: 100;
+    -fx-max-height: 100;
+    -fx-min-width: 600;
+    -fx-max-width: 600;
+    -fx-padding: 0 0 40 0;
+}
+
+.tool-bar{
+    -fx-alignment: center;
+    -fx-spacing: 30;
+}
+
+.playButton, .pauseButton, .deleteButton, .saveButton {
     -fx-background-color: transparent;
     -fx-text-fill: transparent;  /* Falls Text auf Button ist */
     -fx-border-color: transparent;  /* Keine Umrandung */
+    -fx-min-height: 50;
+    -fx-max-height: 50;
+    -fx-min-width: 50;
+    -fx-max-width: 50;
+    -fx-pref-width: 50;
+    -fx-pref-height: 50;
 }
 
-
-.playButton:hover{
-    -fx-effect: dropshadow(gaussian, rgba(0, 255, 0, 1), 30, 0, 0, 0); /* Schatten hinzufügen */
+.playButton:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 0, 1), 20, 0, 0, 0);
 }
-.playButton:hover #playButtonPath{
-    -fx-stroke-width: 45;
+.pauseButton:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 1), 20, 0, 0, 0);
+}
+.deleteButton:hover {
+    -fx-effect: dropshadow(gaussian, rgba(200, 200, 255, 1), 20, 0, 0, 0);
+}
+.saveButton:hover {
+    -fx-effect: dropshadow(gaussian, rgba(200, 255, 200, 1), 20, 0, 0, 0);
 }
 
+VBox > .browseButton{
+    -fx-text-fill: lightblue;
+    -fx-border-radius: 10;
+    -fx-background-color: none;
+    -fx-border-color: lightblue;
+}
+
+.browseButton:hover{
+    -fx-effect: dropshadow(gaussian, rgba(100, 150, 255, 1), 15, 0, 0, 0);
+}
+
+.playButton:hover #playButtonPath,
+.pauseButton:hover #pauseButtonPath,
+.deleteButton:hover #deleteButtonPath,
+.saveButton:hover #saveButtonPath {
+    -fx-stroke-width: 30; /* Pfadbreite erhöhen */
+}
 
 
 
