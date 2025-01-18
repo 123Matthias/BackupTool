@@ -1,4 +1,4 @@
-package my.backup.backupTool.Data;
+package my.backup.backupTool.DataRepository;
 
 import my.backup.backupTool.Model.IModel;
 

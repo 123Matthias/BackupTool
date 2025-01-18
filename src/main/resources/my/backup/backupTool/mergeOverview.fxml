@@ -53,7 +53,7 @@
             </Button>
 
 
-            <Button fx:id="addButton" onAction="#openMergeDetailWindow" styleClass="basicButton" alignment="CENTER"
+            <Button fx:id="addButton" styleClass="basicButton" alignment="CENTER"
                     minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
                 <graphic>
                     <SVGPath fx:id="plusIcon"

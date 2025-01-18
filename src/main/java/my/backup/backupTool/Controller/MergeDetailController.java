@@ -9,9 +9,9 @@ import my.backup.backupTool.Main;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
 import my.backup.backupTool.Model.IModel;
-import my.backup.backupTool.Data.IStoreData;
-import my.backup.backupTool.Data.BaseData;
-
+import my.backup.backupTool.DataRepository.IStoreData;
+import my.backup.backupTool.DataRepository.BaseDataRepository;
+import java.util.UUID;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -85,7 +85,7 @@ public class MergeDetailController {
         });
         // MVC Model Initialisierung für MergeController;
         model = new MergeModel();
-        setting = new BaseData();
+        setting = new BaseDataRepository();
         mergeService = new MergeService();
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
@@ -186,6 +186,9 @@ public class MergeDetailController {
                 ? datePicker.getValue().atTime(LocalTime.now())
                 : startDate;
 
+        if(model.getUid() == null || model.getUid().isEmpty()){
+            model.setUid(UUID.randomUUID().toString());
+        }
 
         timeService.setTiming(startDate, days, hours);
         model.setSource(sourcePath.getText());
@@ -194,9 +197,26 @@ public class MergeDetailController {
         model.setStartDate(startDate);
         model.setIntervalDays(days);
         model.setIntervalHours(hours);
-
         saveSettings();
         sceneUpdate.reloadView("mergeOverview.fxml");
+    }
+
+    public void updateUID(String uid){
+        BaseDataRepository repo = new BaseDataRepository();
+        IModel model = null;
+        try {
+            model = repo.getModelById(uid);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        model.getUid();
+        title.setText(model.getTitle() != null ? model.getTitle() : "");
+        sourcePath.setText(model.getSource() != null ? model.getSource() : "");
+        targetPath.setText(model.getTarget() != null ? model.getTarget() : "");
+
+
+
     }
 
     private boolean saveSettings(){

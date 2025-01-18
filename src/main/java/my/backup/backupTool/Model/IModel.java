@@ -3,6 +3,10 @@ package my.backup.backupTool.Model;
 import java.time.LocalDateTime;
 
 public interface IModel {
+
+    String getUid();
+
+    void setUid(String uid);
     String getSource();
     void setSource(String source);
 

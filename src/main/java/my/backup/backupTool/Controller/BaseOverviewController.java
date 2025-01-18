@@ -2,21 +2,18 @@ package my.backup.backupTool.Controller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import my.backup.backupTool.Data.ILoadData;
-import my.backup.backupTool.Data.BaseData;
+import my.backup.backupTool.DataRepository.ILoadData;
+import my.backup.backupTool.DataRepository.BaseDataRepository;
 import my.backup.backupTool.Main;
 import my.backup.backupTool.Model.IModel;
 
@@ -54,6 +51,117 @@ public class BaseOverviewController {
     }
 
 
+    @FXML
+    public void addNewCard(IModel model) {
+        // Randabstand
+        Pane newCard = new Pane();
+        newCard.getStyleClass().add("cardPane"); // Stile der Vorlage übernehmen
+
+        //CardContainer
+        VBox newContent = new VBox();
+        //UUID
+        String uid = model.getUid() != null && !model.getUid().isEmpty() ? model.getUid() : "";
+        newContent.setId(uid);
+        newContent.getStyleClass().add("card");
+        newContent.setSpacing(5);
+        newContent.setOnMouseClicked(event -> openMergeDetailWindow(uid));
+
+        // Titel (HBox)
+        HBox newTitleContainer = new HBox();
+        newTitleContainer.getStyleClass().add("cardTitleContainer");
+
+        // Titel
+        Label titleLabel = new Label();
+        titleLabel.setText(model.getTitle());  // Setze den Titel
+        titleLabel.getStyleClass().add("cardTitle"); // Stile für den Titel setzen
+        newTitleContainer.getChildren().add(titleLabel);
+
+        VBox contentBox = new VBox();
+        contentBox.getStyleClass().add("cardContent");
+        contentBox.setSpacing(5);
+        //UID Label
+        Label uuidLabel = new Label("UUID: " + uid);
+
+        contentBox.getChildren().addAll(
+                uuidLabel,
+                new Label("Last Backup: " + model.getStartDate()),
+                new Label("Next Backup: " + model.getNextBackupLocalDateTime()),
+                new Label("Source Path: " + model.getSource()),
+                new Label("Target Path: " + model.getTarget())
+        );
+
+        // Struktur aufbauen
+        newContent.getChildren().addAll(newTitleContainer, contentBox);
+        newCard.getChildren().add(newContent);
+
+        // Neue Karte in das FlowPane einfügen
+        flowPane.getChildren().add(newCard);  // flowPane muss vorher definiert sein
+        System.out.println("...............Card Added ........................");
+    }
+
+
+    @FXML
+    private void getAllCards() {
+        ILoadData data = new BaseDataRepository();
+        List<IModel> dataList = new ArrayList<>();
+        try {
+            dataList = data.getAllAsList();
+
+            // Prüfen, ob die Liste leer ist
+            if (dataList.isEmpty()) {
+                System.out.println("Die Liste ist leer. Vorgang wird abgebrochen.");
+                return; // Methode abbrechen, wenn die Liste leer ist
+            }
+
+            // Liste iterieren und Karten hinzufügen
+            for (IModel entry : dataList) {
+                System.out.println("addCard: " + entry.getTitle());
+                addNewCard(entry);
+            }
+        } catch (IOException e) {
+            // Fehler behandeln und eine klare Nachricht ausgeben
+            System.err.println("Fehler beim Laden der Daten: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @FXML
+    public void openMergeDetailWindow(String uid) {
+        Main.mergeDetailController.updateUID(uid);
+        Stage stage = new Stage();
+        stage.setScene(Main.sceneMerge);
+        stage.show();
+    }
+
+    @FXML
+    public void updateMergeDetailWindow(ActionEvent event) {
+        VBox element = (VBox) event.getSource();
+        String uid = element.getId();
+        //Ladend der Daten. Später beim initialisieren instanzieren. DI
+        ILoadData data = new BaseDataRepository();
+        IModel model = null;
+
+        try {
+            model = data.getModelById(uid);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Stage stage = new Stage();
+        stage.setScene(Main.sceneMerge);
+        stage.show();
+
+    }
+
+    @FXML
+    public void backToMain(){
+        Main.mainStage.setScene(Main.sceneMain);
+        Main.mainStage.show();
+    }
+
+/*
     @FXML
     private void handleScroll(ScrollEvent event) {
         // Berechne die neue Y-Position der ToolBar
@@ -96,89 +204,6 @@ public class BaseOverviewController {
         }
     }
 
-
-
-    @FXML
-    public void addNewCard(IModel model) {
-        // Neue Karte erstellen
-        Pane newCard = new Pane();
-        newCard.getStyleClass().add("cardPane"); // Stile der Vorlage übernehmen
-
-        // Hauptcontainer (VBox) klonen
-        VBox newContent = new VBox();
-        newContent.getStyleClass().add("card");
-        newContent.setSpacing(5);
-
-        // Titelcontainer (HBox)
-        HBox newTitleContainer = new HBox();
-        newTitleContainer.getStyleClass().add("cardTitleContainer");
-
-        // Titel setzen
-        Label titleLabel = new Label();
-        titleLabel.setText(model.getTitle());  // Setze den Titel
-        titleLabel.getStyleClass().add("cardTitle"); // Stile für den Titel setzen
-        newTitleContainer.getChildren().add(titleLabel);
-
-        // Inhalte (Labels) setzen
-        VBox contentBox = new VBox();
-        contentBox.getStyleClass().add("cardContent");
-        contentBox.setSpacing(5);
-        contentBox.getChildren().addAll(
-                new Label("Last Backup: " + model.getStartDate()),
-                new Label("Next Backup: " + model.getNextBackupLocalDateTime()),
-                new Label("Source Path: " + model.getSource()),
-                new Label("Target Path: " + model.getTarget())
-        );
-
-        // Struktur aufbauen
-        newContent.getChildren().addAll(newTitleContainer, contentBox);
-        newCard.getChildren().add(newContent);
-
-        // Neue Karte in das FlowPane einfügen
-        flowPane.getChildren().add(newCard);  // flowPane muss vorher definiert sein
-        System.out.println("...............Card Added ........................");
-    }
-
-
-    @FXML
-    private void getAllCards() {
-        ILoadData data = new BaseData();
-        List<IModel> dataList = new ArrayList<>();
-        try {
-            dataList = data.getAllAsList();
-
-            // Prüfen, ob die Liste leer ist
-            if (dataList.isEmpty()) {
-                System.out.println("Die Liste ist leer. Vorgang wird abgebrochen.");
-                return; // Methode abbrechen, wenn die Liste leer ist
-            }
-
-            // Liste iterieren und Karten hinzufügen
-            for (IModel entry : dataList) {
-                System.out.println("addCard: " + entry.getTitle());
-                addNewCard(entry);
-            }
-        } catch (IOException e) {
-            // Fehler behandeln und eine klare Nachricht ausgeben
-            System.err.println("Fehler beim Laden der Daten: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-
-
-    @FXML
-    public void openMergeDetailWindow(){
-        Stage stage = new Stage();
-        stage.setScene(Main.sceneMerge);
-        stage.show();
-    }
-
-    @FXML
-    public void backToMain(){
-        Main.mainStage.setScene(Main.sceneMain);
-        Main.mainStage.show();
-    }
-
+*/
 
 }

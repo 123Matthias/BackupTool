@@ -7,7 +7,11 @@ import java.time.LocalDateTime;
 public class BaseModel implements IModel {
 
 
+
+    @JsonProperty("uid")
+    private String uid;
     @JsonProperty("title")
+
     private String title;
     @JsonProperty("source_path") // JSON Name wird geändert
     private String source;
@@ -29,6 +33,15 @@ public class BaseModel implements IModel {
 
 
     public BaseModel() {
+    }
+
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     // Getter und Setter

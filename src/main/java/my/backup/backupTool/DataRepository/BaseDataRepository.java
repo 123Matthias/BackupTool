@@ -1,15 +1,16 @@
-package my.backup.backupTool.Data;
+package my.backup.backupTool.DataRepository;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Model.IModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseData implements IStoreData, ILoadData {
+public class BaseDataRepository implements IStoreData, ILoadData {
 
 
     private String storagePath;
@@ -18,12 +19,12 @@ public class BaseData implements IStoreData, ILoadData {
     private ArrayList<IModel> modelList;
 
     // Standardkonstruktor
-    public BaseData(){
+    public BaseDataRepository() {
         modelList = new ArrayList<>();
     }
 
     // Konstruktor mit benutzerdefiniertem Pfad
-    public BaseData(String storagePath) {
+    public BaseDataRepository(String storagePath) {
         this();
         this.storagePath = storagePath;
     }
@@ -57,9 +58,9 @@ public class BaseData implements IStoreData, ILoadData {
             List<IModel> modelList = new ArrayList<>();
 
             if (file.exists() && file.length() > 0) {
-                modelList = objectMapper.readValue(file,    objectMapper
-                                                            .getTypeFactory()
-                                                            .constructCollectionType(List.class, BaseModel.class));
+                modelList = objectMapper.readValue(file, objectMapper
+                        .getTypeFactory()
+                        .constructCollectionType(List.class, BaseModel.class));
             }
 
             modelList.add(model);
@@ -96,6 +97,7 @@ public class BaseData implements IStoreData, ILoadData {
         }
     }
 
+
     @Override
     public List<IModel> getAllAsList() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -107,7 +109,7 @@ public class BaseData implements IStoreData, ILoadData {
             throw new IOException("Die Datei existiert nicht: " + sourceFile.getAbsolutePath());
         }
 
-        if(sourceFile.length() == 0){
+        if (sourceFile.length() == 0) {
             return new ArrayList<>();
         }
 
@@ -123,4 +125,15 @@ public class BaseData implements IStoreData, ILoadData {
         return dataList;
     }
 
+    public IModel getModelById(String id) throws IOException {
+        List<IModel> dataList = this.getAllAsList();
+        for (IModel entry : dataList) {
+            if (entry.getUid() != null && entry.getUid().equals(id)) {
+                System.out.println("GetModel.ByID:" + entry.getUid());
+                return entry;
+            }
+        }
+        throw new FileNotFoundException("Not Found: " + id);
+    }
 }
+
