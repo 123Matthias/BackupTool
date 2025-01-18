@@ -3,8 +3,11 @@ package my.backup.backupTool;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import my.backup.backupTool.Controller.ExceptionController;
 import my.backup.backupTool.Controller.SceneMergeDetailController;
+import my.backup.backupTool.Service.SceneUpdateFXMLService;
 
+import java.io.FileReader;
 import java.io.IOException;
 
 public class App {
@@ -21,12 +24,13 @@ public class App {
         try {
             setMergeDetailStage();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            ExceptionController.handleException(e);
         }
+
         try {
             setBaseOverviewStage();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            ExceptionController.handleException(e);
         }
     }
 
