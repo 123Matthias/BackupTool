@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.SVGPath?>
-<ScrollPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="my.backup.backupTool.Controller.MergeOverviewController"
-            fx:id="scrollPane"
-            fitToWidth="true"
-            vbarPolicy="ALWAYS"
-            pannable="true"
-            minWidth="800"
-            prefHeight="800"
-            styleClass="basicBackground">
 
 
-<StackPane style="-fx-background-color: transparent" alignment="TOP_LEFT" minWidth="800">
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="my.backup.backupTool.Controller.MergeOverviewController"
+           styleClass="basicBackground"
+           alignment="TOP_LEFT" minWidth="800" minHeight="800" maxHeight="800" maxWidth="800">
 
+    <ScrollPane fx:id="scrollPane"
+                fitToWidth="true"
+                fitToHeight="true"
+                vbarPolicy="AS_NEEDED"
+                pannable="true">
 
             <FlowPane fx:id="flowPane"
-                      alignment="TOP_LEFT" onScroll="#handleScroll"
-                      style="-fx-background-color: transparent;" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP" prefWidth="800">
-
-
+                      alignment="TOP_LEFT"
+                      style="-fx-background-color: transparent;">
                 <Pane fx:id="cardId" styleClass="cardPane">
                     <VBox fx:id="fluentContainer" styleClass="card"  >
 
@@ -38,17 +34,13 @@
                         </VBox>
                     </VBox>
                 </Pane>
-
-
-
-
             </FlowPane>
-
+    </ScrollPane>
 
     <!-- Sticky ToolBar -->
     <!-- Sticky Button -->
     <!-- ToolBar -->
-        <ToolBar fx:id="toolBar" style=" -fx-spacing: 15; -fx-background-color: rgb(30,30,30); -fx-border-width: 0 0 1 0; -fx-border-color: grey;" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <ToolBar fx:id="toolBar" style=" -fx-spacing: 15; -fx-background-color: rgb(30,30,30); -fx-border-width: 0 0 1 0; -fx-border-color: grey;">
 
             <Button fx:id="backButton" onAction="#backToMain" styleClass="basicButton"
                     minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
@@ -69,10 +61,6 @@
                              fill="white" stroke="black" strokeWidth="3" scaleX="0.03" scaleY="0.03"/>
                 </graphic>
             </Button>
-
-
-
-
         </ToolBar>
-    </StackPane>
-</ScrollPane>
+
+</StackPane>

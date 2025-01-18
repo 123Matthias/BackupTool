@@ -46,7 +46,7 @@ public class BaseOverviewController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 // Sobald die Höhe der ToolBar sich ändert, das Padding des FlowPane anpassen
                 double toolBarHeight = toolBar.getHeight();
-                flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 0;");
+                flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
             }
         });
 
