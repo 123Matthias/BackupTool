@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class MergeDetailController {
+public class SceneMergeDetailController {
 
     @FXML
     private TextField title;
@@ -186,6 +186,7 @@ public class MergeDetailController {
                 ? datePicker.getValue().atTime(LocalTime.now())
                 : startDate;
 
+        //TODO UUID handling für update
         if(model.getUid() == null || model.getUid().isEmpty()){
             model.setUid(UUID.randomUUID().toString());
         }

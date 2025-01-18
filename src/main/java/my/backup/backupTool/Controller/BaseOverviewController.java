@@ -2,7 +2,6 @@ package my.backup.backupTool.Controller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -12,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import my.backup.backupTool.App;
 import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
 import my.backup.backupTool.Main;
@@ -64,7 +64,7 @@ public class BaseOverviewController {
         newContent.setId(uid);
         newContent.getStyleClass().add("card");
         newContent.setSpacing(5);
-        newContent.setOnMouseClicked(event -> openMergeDetailWindow(uid));
+        newContent.setOnMouseClicked(event -> updateMergeDetailWindow(uid));
 
         // Titel (HBox)
         HBox newTitleContainer = new HBox();
@@ -127,33 +127,23 @@ public class BaseOverviewController {
 
 
     @FXML
-    public void openMergeDetailWindow(String uid) {
-        Main.mergeDetailController.updateUID(uid);
+    public void updateMergeDetailWindow(String uid) {
+        App.sceneMergeDetailController.updateUID(uid);
         Stage stage = new Stage();
-        stage.setScene(Main.sceneMerge);
+        stage.setScene(App.sceneMergeDetail);
         stage.show();
     }
+
 
     @FXML
-    public void updateMergeDetailWindow(ActionEvent event) {
-        VBox element = (VBox) event.getSource();
-        String uid = element.getId();
-        //Ladend der Daten. Später beim initialisieren instanzieren. DI
-        ILoadData data = new BaseDataRepository();
-        IModel model = null;
-
-        try {
-            model = data.getModelById(uid);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+    public void openMergeDetailWindow() {
         Stage stage = new Stage();
-        stage.setScene(Main.sceneMerge);
+        stage.setScene(App.sceneMergeDetail);
         stage.show();
-
     }
+
+
+
 
     @FXML
     public void backToMain(){

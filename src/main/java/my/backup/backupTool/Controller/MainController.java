@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import my.backup.backupTool.App;
 import my.backup.backupTool.Main;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class MainController {
     public void handleOpenMergeOverviewWindow() {
         Main.mainStage.setMinWidth(800);
         Main.mainStage.setMinHeight(800);
-        Main.mainStage.setScene(Main.sceneMergeOverview);
+        Main.mainStage.setScene(App.sceneMergeOverview);
         Main.mainStage.show();
     }
 

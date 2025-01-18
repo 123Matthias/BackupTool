@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.Pane?>
 
 <?import javafx.scene.control.Separator?>
-<StackPane fx:controller="my.backup.backupTool.Controller.MergeDetailController" xmlns:fx="http://javafx.com/fxml/1"
+<StackPane fx:controller="my.backup.backupTool.Controller.SceneMergeDetailController" xmlns:fx="http://javafx.com/fxml/1"
            styleClass="basicBackground">
    <GridPane style="-fx-background-color: transparent">
       <!-- Column for Full Width -->

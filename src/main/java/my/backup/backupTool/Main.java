@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import my.backup.backupTool.Controller.MergeDetailController;
+import my.backup.backupTool.Controller.SceneMergeDetailController;
 
 import java.io.IOException;
 
@@ -14,16 +14,17 @@ public class Main extends Application {
 
     public static Stage mainStage;
     public static Scene sceneMain;
-    public static Scene sceneMerge;
-    public static Scene sceneMergeOverview;
+ //   public static Scene sceneMergeDetail;
+  //  public static Scene sceneMergeOverview;
+    SceneBuilder sceneBuilder;
 
-    public static MergeDetailController mergeDetailController;
+    public static SceneMergeDetailController mergeDetailController;
+    App app = new App();
+
 
     @Override
     public void start(Stage stage) throws IOException {
         setAndShowMainStage(stage);
-        setMergeOverviewWindow();
-        setMergeDetailViewWindow();
         mainStage.show();
     }
 
@@ -45,7 +46,7 @@ public class Main extends Application {
         mainStage.setScene(sceneMain);
 
         }
-
+/*
         private void setMergeOverviewWindow() throws IOException {
             FXMLLoader fxmlMergeOverview = new FXMLLoader(Main.class.getResource("mergeOverview.fxml"));
             sceneMergeOverview = new Scene(fxmlMergeOverview.load(), 800, 800);
@@ -63,6 +64,7 @@ public class Main extends Application {
             sceneMerge.getStylesheets().add(String.valueOf(getClass().getResource("css/basicComponents.css")));
         }
 
+*/
 
 
     public static void main(String[] args) {
