@@ -14,9 +14,7 @@ import javafx.stage.Stage;
 import my.backup.backupTool.App;
 import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
-import my.backup.backupTool.Main;
 import my.backup.backupTool.Model.IModel;
-import my.backup.backupTool.Router;
 import my.backup.backupTool.SceneBuilder;
 
 import java.io.IOException;
@@ -136,7 +134,7 @@ public class BaseOverviewController {
         try {
             stage.setScene(newScene.getScene());
             SceneMergeDetailController controller = newScene.getController();
-            controller.updateUID(uid);
+            controller.openUpdateSceneByUID(uid);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

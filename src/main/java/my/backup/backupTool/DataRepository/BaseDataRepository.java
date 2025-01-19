@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class BaseDataRepository implements IStoreData, ILoadData {
 
@@ -63,7 +64,22 @@ public class BaseDataRepository implements IStoreData, ILoadData {
                         .constructCollectionType(List.class, BaseModel.class));
             }
 
-            modelList.add(model);
+            //Update oder Create wenn uid schon existiert
+            if (model.getUid() != null && !model.getUid().isEmpty()) {
+                for (int i = 0; i < modelList.size(); i++) {
+                    if(modelList.get(i).getUid() == null) {
+                        continue;
+                    }
+                    if (modelList.get(i).getUid().equals(model.getUid())) {
+                        modelList.set(i, model);
+                        break;
+                    }
+                }
+            }
+            else{
+                model.setUid(UUID.randomUUID().toString());
+                modelList.add(model);
+            }
 
             objectMapper.writeValue(file, modelList);
 

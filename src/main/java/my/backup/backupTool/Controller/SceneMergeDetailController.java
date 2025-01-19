@@ -1,17 +1,15 @@
 package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
-import my.backup.backupTool.Main;
+import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.DataRepository.IStoreData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
-import java.util.UUID;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -61,10 +59,13 @@ public class SceneMergeDetailController {
     private boolean isSourceButtonClicked = false;
     private boolean isTargetButtonClicked = false;
 
+
+
     IMergeService mergeService;
     ITimeService timeService;
     IModel model;
-    IStoreData setting;
+    BaseDataRepository dataStore;
+
     IUpdateScene sceneUpdate;
 
 
@@ -85,7 +86,7 @@ public class SceneMergeDetailController {
         });
         // MVC Model Initialisierung für MergeController;
         model = new MergeModel();
-        setting = new BaseDataRepository();
+        dataStore = new BaseDataRepository();
         mergeService = new MergeService();
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
@@ -163,12 +164,12 @@ public class SceneMergeDetailController {
         model.setTarget(targetPath.getText());
         System.out.println("Meine Model Daten: " + "Source" +  model.getSource() + "Target" + model.getTarget());
         mergeService.startMergeData(model);
-        saveSettings();
+        saveData();
 
     }
 
     @FXML
-    private void saveMergeBackup(){
+    private void saveNewMergeBackup(){
         System.out.println("Source: " + sourcePath.getText());
         System.out.println("Target" + targetPath.getText());
         int days = 0;
@@ -186,10 +187,6 @@ public class SceneMergeDetailController {
                 ? datePicker.getValue().atTime(LocalTime.now())
                 : startDate;
 
-        //TODO UUID handling für update
-        if(model.getUid() == null || model.getUid().isEmpty()){
-            model.setUid(UUID.randomUUID().toString());
-        }
 
         timeService.setTiming(startDate, days, hours);
         model.setSource(sourcePath.getText());
@@ -198,30 +195,32 @@ public class SceneMergeDetailController {
         model.setStartDate(startDate);
         model.setIntervalDays(days);
         model.setIntervalHours(hours);
-        saveSettings();
+        saveData();
         sceneUpdate.reloadView("mergeOverview.fxml");
     }
 
-    public void updateUID(String uid){
-        BaseDataRepository repo = new BaseDataRepository();
-        IModel model = null;
+    public void openUpdateSceneByUID(String uid){
+
         try {
-            model = repo.getModelById(uid);
+            model = dataStore.getModelById(uid);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        model.getUid();
+
         title.setText(model.getTitle() != null ? model.getTitle() : "");
         sourcePath.setText(model.getSource() != null ? model.getSource() : "");
         targetPath.setText(model.getTarget() != null ? model.getTarget() : "");
-
-
+        if (model.getStartDate() != null) {
+            datePicker.setValue(model.getStartDate().toLocalDate());
+        }
+        daysInterval.setText(String.valueOf(model.getIntervalDays()));
+        hoursInterval.setText(String.valueOf(model.getIntervalHours()));
 
     }
 
-    private boolean saveSettings(){
-        return setting.saveModelAsJSON(model);
+    private boolean saveData(){
+        return dataStore.saveModelAsJSON(model);
     }
 
 
