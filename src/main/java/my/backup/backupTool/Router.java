@@ -70,6 +70,7 @@ public class Router {
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/mergeDetail.css")
                 .addStylesheet("css/buttons.css")
+                .addStylesheet("css/basicComponents.css")
                 .build();
     }
 
