@@ -16,6 +16,8 @@ import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
 import my.backup.backupTool.Main;
 import my.backup.backupTool.Model.IModel;
+import my.backup.backupTool.Router;
+import my.backup.backupTool.SceneBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,7 +66,7 @@ public class BaseOverviewController {
         newContent.setId(uid);
         newContent.getStyleClass().add("card");
         newContent.setSpacing(5);
-        newContent.setOnMouseClicked(event -> updateMergeDetailWindow(uid));
+        newContent.setOnMouseClicked(event -> updateDataViewMergeDetailWindow(uid));
 
         // Titel (HBox)
         HBox newTitleContainer = new HBox();
@@ -127,18 +129,25 @@ public class BaseOverviewController {
 
 
     @FXML
-    public void updateMergeDetailWindow(String uid) {
-        App.sceneMergeDetailController.updateUID(uid);
+    public void updateDataViewMergeDetailWindow(String uid) {
+        System.out.println("UID Nummer: " + uid);
         Stage stage = new Stage();
-        stage.setScene(App.sceneMergeDetail);
+        SceneBuilder newScene = App.Router.createNew_MergeDetailView_With_SceneBuilderObject();
+        try {
+            stage.setScene(newScene.getScene());
+            SceneMergeDetailController controller = newScene.getController();
+            controller.updateUID(uid);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         stage.show();
     }
 
 
     @FXML
-    public void openMergeDetailWindow() {
+    public void openMergeDetailWindow() throws IOException {
         Stage stage = new Stage();
-        stage.setScene(App.sceneMergeDetail);
+        stage.setScene(App.Router.createNew_MergeDetailView_With_SceneBuilderObject().getScene());
         stage.show();
     }
 
@@ -147,8 +156,9 @@ public class BaseOverviewController {
 
     @FXML
     public void backToMain(){
-        Main.mainStage.setScene(Main.sceneMain);
-        Main.mainStage.show();
+      //  Main.mainStage.setScene(Main.sceneMain);
+        App.Router.getMainStage().setScene(App.Router.getSceneMain());
+        App.Router.getMainStage().show();
     }
 
 /*

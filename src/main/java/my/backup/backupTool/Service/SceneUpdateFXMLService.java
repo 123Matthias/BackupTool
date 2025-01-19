@@ -3,6 +3,7 @@ package my.backup.backupTool.Service;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import my.backup.backupTool.App;
 import my.backup.backupTool.Main;
 
 import java.io.IOException;
@@ -21,10 +22,10 @@ public class SceneUpdateFXMLService implements IUpdateScene {
         }
 
         // Hole die aktuelle Scene und aktualisiere nur den Inhalt
-        Scene currentScene = Main.mainStage.getScene();
+        Scene currentScene = App.Router.getMainStage().getScene();
         currentScene.setRoot(newRoot);
 
         // Zeige die aktualisierte Szene ohne den Scene-Objekt zu wechseln
-        Main.mainStage.show();
+        App.Router.getMainStage().show();
     }
 }

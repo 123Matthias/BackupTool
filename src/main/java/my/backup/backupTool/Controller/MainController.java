@@ -1,15 +1,10 @@
 package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Main;
 
 import java.io.IOException;
-
-//import static my.backup.backupTool.Main.sceneMerge;
 
 public class MainController {
 
@@ -25,16 +20,14 @@ public class MainController {
 */
     @FXML
     public void handleOpenMergeOverviewWindow() {
-        Main.mainStage.setMinWidth(800);
-        Main.mainStage.setMinHeight(800);
-        Main.mainStage.setScene(App.sceneMergeOverview);
-        Main.mainStage.show();
+        App.Router.getMainStage().setScene(App.Router.getSceneMergeOverview());
+        App.Router.getMainStage().show();
     }
 
 
 
     public void handleBackToMainButton() throws IOException {
-        Main.mainStage.show();
+
 
     }
 

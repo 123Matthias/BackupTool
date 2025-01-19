@@ -225,19 +225,4 @@ public class SceneMergeDetailController {
     }
 
 
-
-    @FXML
-    private void handleBackButton() throws IOException {
-
-        FXMLLoader fxmlMergeBackup = new FXMLLoader(Main.class.getResource("mergeDetail.fxml"));
-        Scene scene = new Scene(fxmlMergeBackup.load(), 800, 800);
-        Main.mainStage.setTitle("Merge");
-        Main.mainStage.setMinWidth(800);
-        Main.mainStage.setMinHeight(800);
-        scene.getStylesheets().add(String.valueOf(getClass().getResource("css/main.css")));
-        Main.mainStage.setScene(scene);
-        Main.mainStage.show();
-    }
-
-
 }
