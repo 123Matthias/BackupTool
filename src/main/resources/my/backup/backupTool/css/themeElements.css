@@ -1,0 +1,173 @@
+
+.gridPane Line {
+    -fx-stroke: -fx-linearGradient1;
+}
+
+
+
+.mainButton2 {
+    -fx-background-color: -fx-radialGradient1;
+    -fx-effect: -fx-effect1;
+
+}
+
+.mainButton1 {
+    -fx-background-color: -fx-radialGradient1;
+    -fx-effect: -fx-effect1;
+
+}
+
+/* Button Hover */
+.mainButton1:hover {
+    -fx-background-color: -fx-radialGradient2;
+}
+
+/* Button Box Hover */
+.mainButton1Box:hover .mainButton1 {
+    -fx-background-color: -fx-radialGradient2;
+}
+
+
+.button1TextLabel{
+    -fx-text-fill: -fx-color1;
+    -fx-effect: -fx-effect1;
+}
+
+.imageFee{
+    -fx-effect: -fx-effect3;
+}
+
+.mainButton2:hover {
+
+    -fx-background-color: -fx-radialGradient2;
+}
+
+
+.check-box {
+    -fx-background-color: -fx-color1;
+    -fx-border-color: -fx-color5;
+}
+
+.check-box:selected {
+    -fx-background-color: -fx-color4;
+    -fx-border-color: -fx-color1;
+}
+
+.check-box .box {
+    -fx-background-color: -fx-color5;
+    -fx-border-color: -fx-color1;
+
+}
+
+.check-box:selected .box {
+    -fx-background-color: -fx-color1;
+    -fx-text-fill: -fx-color5;
+    -fx-border-color: -fx-color2;
+    -fx-fill: -fx-color5;
+}
+
+.check-box:hover {
+    -fx-background-color: -fx-color1;
+}
+.basicBackground {
+    -fx-background-color: -fx-basicBackground;
+}
+
+
+.basicButton {
+    -fx-text-fill: -fx-color1;
+    -fx-border-color: -fx-color1;
+    -fx-effect: -fx-effect1;
+}
+
+/* Hover-Effekt: Button wird größer und dunkler */
+.basicButton:hover {
+    -fx-border-color: -fx-color8;
+    -fx-effect: -fx-effect2;
+}
+
+.basicButton:hover > SVGPath {
+    -fx-fill: -fx-color8;
+}
+
+
+.card {
+    -fx-border-color: -fx-color1;
+    -fx-background-color: -fx-color6;
+    -fx-effect: -fx-effect1;
+}
+
+.cardContent > Label {
+    -fx-text-fill: -fx-color1;
+
+}
+
+/* Card Title Container */
+.cardTitleContainer {
+    -fx-background-color: -fx-color6;
+    -fx-border-color: transparent transparent -fx-color2 transparent; /* Farbe oben, rechts, unten, links */
+
+}
+
+.cardTitle {
+    -fx-text-fill: -fx-color1;
+}
+
+.card:hover {
+    -fx-border-color: -fx-color8;
+}
+
+Label{
+    -fx-text-fill: -fx-color1;
+}
+TextArea, TextField{
+    -fx-background-color: -fx-color2;
+    -fx-text-fill: -fx-color5;
+}
+
+TextArea {
+    -fx-control-inner-background: -fx-color2;  /* Hintergrund des Textbereichs */
+}
+
+
+.playButton:hover {
+    -fx-effect: -fx-effect8;
+}
+.pauseButton:hover {
+    -fx-effect: -fx-effect5;
+}
+.deleteButton:hover {
+    -fx-effect: -fx-effect6;
+}
+.saveButton:hover {
+    -fx-effect: -fx-effect7;
+}
+
+VBox > .browseButton{
+    -fx-text-fill: -fx-color7;
+    -fx-border-color: -fx-color7;
+}
+
+.browseButton:hover{
+    -fx-effect: -fx-effect4;
+}
+
+/* ScrollBar Customization */
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: -fx-color2;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: -fx-color5;
+}
+
+.scroll-pane {
+    -fx-background: -fx-color5;
+}
+
+
+
+
+

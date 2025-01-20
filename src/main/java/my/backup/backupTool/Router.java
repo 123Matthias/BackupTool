@@ -61,6 +61,7 @@ public class Router {
                 .setDimensions(800,800)
                 .addStylesheet("css/main.css")
                 .addStylesheet("css/basicWindow.css")
+                .addStylesheet("css/themeElements.css")
                 .addStylesheet(theme)
                 .build();
         sceneMain = sceneBuilder.getScene();
@@ -74,6 +75,7 @@ public class Router {
                 .addStylesheet("css/mergeDetail.css")
                 .addStylesheet("css/buttons.css")
                 .addStylesheet("css/basicComponents.css")
+                .addStylesheet("css/themeElements.css")
                 .addStylesheet(theme)
                 .build();
     }
@@ -87,6 +89,7 @@ public class Router {
                 .addStylesheet("css/basicComponents.css")
                 .addStylesheet("css/cards.css")
                 .addStylesheet("css/buttons.css")
+                .addStylesheet("css/themeElements.css")
                 .addStylesheet(theme)
                 .build();
         sceneMergeOverview = sceneBuilder.getScene();
@@ -107,8 +110,9 @@ public class Router {
                 .setDimensions(600,600)
                 .addStylesheet("css/main.css")
                 .addStylesheet("css/basicWindow.css")
-                .addStylesheet(theme)
                 .addStylesheet("css/buttons.css")
+                .addStylesheet("css/themeElements.css")
+                .addStylesheet(theme)
                 .build();
         sceneSettings = sceneBuilder.getScene();
     }
