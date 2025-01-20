@@ -34,11 +34,11 @@
 
         <!-- <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
 
-              <VBox styleClass="button1Box" alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="2">
+              <VBox styleClass="mainButton1Box" alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="2">
                   <!-- Stein-Button -->
                   <Button
                           onAction="#handleOpenMergeOverviewWindow"
-                          styleClass="button1"
+                          styleClass="mainButton1"
                           prefWidth="100" prefHeight="100"
                   />
                   <!-- Text unter dem Button -->
@@ -47,36 +47,36 @@
 
 
           <!-- Button 1 -->
-          <VBox styleClass="button1Box" alignment="CENTER" onMouseClicked="#handleOpenMergeOverviewWindow" GridPane.rowIndex="2" GridPane.columnIndex="1">
+          <VBox styleClass="mainButton1Box" alignment="CENTER" onMouseClicked="#handleOpenMergeOverviewWindow" GridPane.rowIndex="2" GridPane.columnIndex="1">
               <Button
-                      styleClass="button1"
+                      styleClass="mainButton1"
                       prefWidth="100" prefHeight="100"
               />
               <Label text="Merge Backup" styleClass="button1TextLabel"/>
           </VBox>
 
           <!-- Button 2 -->
-          <VBox styleClass="button1Box" alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="3">
+          <VBox styleClass="mainButton1Box" alignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="3">
               <Button
                       onAction="#handleOpenMergeOverviewWindow"
-                      styleClass="button1"
+                      styleClass="mainButton1"
                       prefWidth="100" prefHeight="100"
               />
               <Label text="Full Backup" styleClass="button1TextLabel"/>
           </VBox>
 
           <!-- Button 3 -->
-          <VBox styleClass="button1Box" alignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="2">
+          <VBox styleClass="mainButton1Box" alignment="CENTER" GridPane.rowIndex="3" GridPane.columnIndex="2">
               <Button
                       onAction="#handleOpenMergeOverviewWindow"
-                      styleClass="button1"
+                      styleClass="mainButton1"
                       prefWidth="100" prefHeight="100"
               />
               <Label text="Cloud Sync" styleClass="button1TextLabel"/>
           </VBox>
 
-           <Button text="Help" onAction="#handleOpenMergeOverviewWindow" styleClass="button2" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-           <Button text="Settings" onAction="#handleOpenMergeOverviewWindow" styleClass="button2" GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+           <Button text="Help" onAction="#handleOpenMergeOverviewWindow" styleClass="mainButton2" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+           <Button text="Settings" onAction="#handleOpenSettingsWindow" styleClass="mainButton2" GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
 
       </GridPane>
 

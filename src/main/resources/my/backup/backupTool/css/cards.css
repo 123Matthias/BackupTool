@@ -1,11 +1,3 @@
-.root{
-    -fx-hover-color: #0055FF;
-    -fx-cardBody-color: #111111;
-    -fx-cardHeader-color: #050505;
-    -fx-cardBorder-color: #AAAAAA;
-    -fx-cardText-color: #FFFFFF;
-}
-
 
 
 .cardPane {
@@ -15,14 +7,11 @@
 .card {
     -fx-pref-height: 280;
     -fx-pref-width: 230;
-    -fx-border-color: -fx-cardBorder-color; /* Korrektur: Kein Tippfehler mehr */
     -fx-border-width: 2;
-    -fx-background-color: -fx-cardBody-color; /* Variable korrekt definiert */
     -fx-spacing: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0.5, 0, 0); /* Sanfter Schatten */
     -fx-border-radius: 10;
     -fx-background-radius: 10;
-    -fx-font-family: "Segoe UI", sans-serif; /* Moderne Schriftart */
+    -fx-font-family: "Segoe UI", sans-serif;
 }
 
 /* Card Content Styles */
@@ -30,33 +19,19 @@
     -fx-padding: 5;
 
 }
-.cardContent > Label {
-    -fx-text-fill: -fx-cardText-color;
-
-}
 
 /* Card Title Container */
 .cardTitleContainer {
-   /* -fx-background-color: #FFA040; /* Etwas helleres Orange für den Titel */
-    -fx-background-color: -fx-cardHeader-Color; /* Etwas helleres Orange für den Titel */
     -fx-pref-height: 40;
     -fx-padding: 5;
     -fx-alignment: center-left;
     -fx-border-radius: 10 10 0 0;
     -fx-background-radius: 10 10 0 0;
-    -fx-border-width: 0 0 1 0; /* Oben, rechts, unten, links */
-    -fx-border-color: transparent transparent white transparent; /* Farbe oben, rechts, unten, links */
-
+    -fx-border-width: 0 0 1 0;
 }
 
 /* Card Title Text */
 .cardTitle {
     -fx-font-size: 16;
     -fx-font-weight: bold;
-    -fx-text-fill: -fx-cardText-color;
-}
-
-
-.card:hover {
-    -fx-border-color: -fx-hover-color; /* Verschiebung bei Hover */
 }

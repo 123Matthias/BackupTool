@@ -16,6 +16,7 @@ import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.SceneBuilder;
+import my.backup.backupTool.Theme;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class BaseOverviewController {
         newContent.setId(uid);
         newContent.getStyleClass().add("card");
         newContent.setSpacing(5);
-        newContent.setOnMouseClicked(event -> updateDataViewMergeDetailWindow(uid));
+        newContent.setOnMouseClicked(event -> openMergeDetailWindow(uid));
 
         // Titel (HBox)
         HBox newTitleContainer = new HBox();
@@ -127,10 +128,10 @@ public class BaseOverviewController {
 
 
     @FXML
-    public void updateDataViewMergeDetailWindow(String uid) {
+    public void openMergeDetailWindow(String uid) {
         System.out.println("UID Nummer: " + uid);
         Stage stage = new Stage();
-        SceneBuilder newScene = App.Router.createNew_MergeDetailView_With_SceneBuilderObject();
+        SceneBuilder newScene = App.Router.createNew_MergeDetailView_With_SceneBuilderObject(App.Router.getTheme().toString());
         try {
             stage.setScene(newScene.getScene());
             SceneMergeDetailController controller = newScene.getController();
@@ -142,14 +143,13 @@ public class BaseOverviewController {
     }
 
 
+
     @FXML
     public void openMergeDetailWindow() throws IOException {
         Stage stage = new Stage();
-        stage.setScene(App.Router.createNew_MergeDetailView_With_SceneBuilderObject().getScene());
+        stage.setScene(App.Router.createNew_MergeDetailView_With_SceneBuilderObject(App.Router.getTheme().toString()).getScene());
         stage.show();
     }
-
-
 
 
     @FXML

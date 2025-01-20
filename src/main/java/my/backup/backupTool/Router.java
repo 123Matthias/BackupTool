@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.Controller.ExceptionController;
-import my.backup.backupTool.Controller.SceneMergeDetailController;
 
 import java.io.IOException;
 
@@ -13,21 +12,25 @@ public class Router {
 
     private Stage mainStage;
     private Scene sceneMain;
-    private Scene sceneMergeDetail;
     private Scene sceneMergeOverview;
-    private SceneMergeDetailController mergeDetailController;
-
+    private Scene sceneSettings;
+    private Theme theme;
 
     public Router() {
-
+        this.theme = Theme.DARK;
         try {
-            setBaseOverviewScene();
+            setBaseOverviewScene(theme.toString());
         } catch (IOException e) {
             ExceptionController.handleException(e);
         }
 
         try {
-            setMainScene();
+            setMainScene(theme.toString());
+        } catch (IOException e) {
+            ExceptionController.handleException(e);
+        }
+        try{
+            setSceneSettings(theme.toString());
         } catch (IOException e) {
             ExceptionController.handleException(e);
         }
@@ -52,18 +55,18 @@ public class Router {
         return sceneMain;
     }
 
-    public void setMainScene() throws IOException {
+    public void setMainScene(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("Main.fxml")
                 .setDimensions(800,800)
                 .addStylesheet("css/main.css")
                 .addStylesheet("css/basicWindow.css")
+                .addStylesheet(theme)
                 .build();
         sceneMain = sceneBuilder.getScene();
-
     }
 
-    public SceneBuilder createNew_MergeDetailView_With_SceneBuilderObject() {
+    public SceneBuilder createNew_MergeDetailView_With_SceneBuilderObject(String theme) {
         return new SceneBuilder.Builder()
                 .setFXML("mergeDetail.fxml")
                 .setDimensions(800, 800)
@@ -71,10 +74,11 @@ public class Router {
                 .addStylesheet("css/mergeDetail.css")
                 .addStylesheet("css/buttons.css")
                 .addStylesheet("css/basicComponents.css")
+                .addStylesheet(theme)
                 .build();
     }
 
-    public void setBaseOverviewScene() throws IOException {
+    public void setBaseOverviewScene(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("mergeOverview.fxml")
                 .setDimensions(800, 800)
@@ -83,19 +87,44 @@ public class Router {
                 .addStylesheet("css/basicComponents.css")
                 .addStylesheet("css/cards.css")
                 .addStylesheet("css/buttons.css")
+                .addStylesheet(theme)
                 .build();
         sceneMergeOverview = sceneBuilder.getScene();
-    }
-
-    public Scene getSceneMergeDetail() {
-        return sceneMergeDetail;
     }
 
     public Scene getSceneMergeOverview() {
         return sceneMergeOverview;
     }
 
-    public SceneMergeDetailController getMergeDetailController() {
-        return mergeDetailController;
+
+    public Scene getSceneSettings() {
+        return sceneSettings;
+    }
+
+    public void setSceneSettings(String theme) throws IOException {
+        SceneBuilder sceneBuilder = new SceneBuilder.Builder()
+                .setFXML("settings.fxml")
+                .setDimensions(600,600)
+                .addStylesheet("css/main.css")
+                .addStylesheet("css/basicWindow.css")
+                .addStylesheet(theme)
+                .addStylesheet("css/buttons.css")
+                .build();
+        sceneSettings = sceneBuilder.getScene();
+    }
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+        try {
+            setMainScene(theme.toString());
+            setSceneSettings(theme.toString());
+            setBaseOverviewScene(theme.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -1,19 +1,6 @@
 
-/* ScrollBar Customization */
-.scroll-bar:vertical .track,
-.scroll-bar:horizontal .track {
-    -fx-background-color: lightgreen; /* Leichter Grauton für Track */
-}
-
 .scroll-bar:vertical .thumb,
 .scroll-bar:horizontal .thumb {
-    /* -fx-background-color: orange; /* Azure Blue Scrollbar */
-    -fx-background-color: black; /* Azure Blue Scrollbar */
     -fx-background-radius: 5;
 }
-
-.scroll-pane {
-    -fx-background: #222222;
-}
-
 

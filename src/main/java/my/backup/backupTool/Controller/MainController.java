@@ -24,12 +24,16 @@ public class MainController {
         App.Router.getMainStage().show();
     }
 
-
+    @FXML
+    public void handleOpenSettingsWindow() {
+        App.Router.getMainStage().setScene(App.Router.getSceneSettings());
+        App.Router.getMainStage().show();
+    }
 
     public void handleBackToMainButton() throws IOException {
 
 
     }
 
-    }
+}
 
