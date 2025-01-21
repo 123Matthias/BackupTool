@@ -1,6 +1,9 @@
 /*-------------------MAIN VIEW BUTTONS--------------------------*/
 
-
+.gridPane{
+    -fx-: 5;
+    -fx-stroke-width: 5;
+}
 
 .mainButton2 {
     -fx-background-color: -fx-radialGradient1;
@@ -15,23 +18,18 @@
 
 }
 
-.mainButton1 {
-    -fx-background-color: -fx-radialGradient1;
+.mainButton1Path {
+    -fx-fill: -fx-radialGradient1;
     -fx-effect: -fx-effect9;
 }
 
-/* Button Hover */
-.mainButton1:hover {
-    -fx-background-color: -fx-radialGradient2;
-}
-
-/* Button Box Hover */
-.mainButton1Box:hover .mainButton1 {
-    -fx-background-color: -fx-radialGradient2;
-}
 
 .mainButton1TextLabel{
     -fx-text-fill: -fx-color1;
+}
+
+.mainButton1Box:hover .mainButton1Path {
+    -fx-fill: -fx-radialGradient2;
 }
 
 

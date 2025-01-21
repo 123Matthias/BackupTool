@@ -8,6 +8,48 @@ Pane {
     -fx-max-height: 800px;
     -fx-padding: 30px;
     -fx-background-color: transparent;
+    -fx-grid-lines-visible: true;
+}
+
+.mainButton1 {
+   -fx-min-width: 30px;
+   -fx-min-height: 30px;
+   -fx-max-width: 30px;
+   -fx-max-height: 30px;
+   -fx-background-radius: 15px;
+   -fx-font-family: "Serif";
+   -fx-font-size: 24px;
+    -fx-background-color: none;
+    -fx-font-style: italic;
+}
+
+
+.mainButton1Box {
+    -fx-text-alignment: center;
+    -fx-spacing: 10px;
+    -fx-max-width: 60;
+    -fx-alignment: center;
+}
+
+.mainButton1TextLabel{
+    -fx-font-family: Serif;
+    -fx-font-size: 16px;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;  /* Text fett */
+    -fx-wrap-text: true;
+    -fx-min-width: 80; /* Maximale Breite für den Zeilenumbruch */
+    -fx-text-alignment: center;
+}
+
+.mainButton1Path{
+    -fx-scale-x: 2.0;
+    -fx-scale-y: 2.0;
+}
+
+.mainButton1Box:hover  {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+
 }
 
 .mainButton2 {
@@ -24,66 +66,11 @@ Pane {
 
 }
 
-.mainButton1 {
-   -fx-min-width: 30px;
-   -fx-min-height: 30px;
-   -fx-max-width: 30px;
-   -fx-max-height: 30px;
-   -fx-background-radius: 15px;
-   -fx-font-family: "Serif";
-   -fx-font-size: 24px;
-   -fx-font-style: italic;
-   -fx-scale-x: 1.0;
-   -fx-scale-y: 1.3;
-   -fx-transition: all 0.3s ease-in-out;
-
-}
-
-/* Button Hover */
-.mainButton1:hover {
-    -fx-transition: all 0.7s ease-in-out;
-}
-
-/* Button Box Hover */
-.mainButton1Box:hover .mainButton1 {
-    -fx-scale-x: 1.1;
-    -fx-scale-y: 1.4;
-    -fx-transition: all 0.7s ease-in-out;
-}
-
-.mainButton1Box {
-
-    -fx-text-alignment: center;
-    -fx-spacing: 10px;
-}
-
-
-.mainButton1TextLabel{
-    -fx-font-family: Serif;
-    -fx-font-size: 16px;
-    -fx-font-style: italic;
-    -fx-font-weight: bold;  /* Text fett */
-    -fx-wrap-text: true;
-    -fx-max-width: 60; /* Maximale Breite für den Zeilenumbruch */
-    -fx-text-alignment: center;
-}
-/* Label Hover (beim Hover über Button1) */
-.mainButton1Box:hover .mainButton1TextLabel {
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-
-}
-
 .mainButton2:hover {
-   -fx-scale-x: 1.03; /* 25 % größer */
-   -fx-scale-y: 1.03; /* 25 % größer */
-   -fx-transition: all 0.7s ease-in-out;
+    -fx-scale-x: 1.03; /* 25 % größer */
+    -fx-scale-y: 1.03; /* 25 % größer */
+    -fx-transition: all 0.7s ease-in-out;
 }
-
-
-
-
-
 
 
 

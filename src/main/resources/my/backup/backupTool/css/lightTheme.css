@@ -52,8 +52,8 @@
     /*----------------END SCENE VIEW BACKGROUND COLOR----------------*/
 
     /*---------------- MAIN SCENE BUTTONS------------------------------ */
-    -fx-RadialGradient1: radial-gradient(center 50% 50%, radius 50%, #21d8ff, #09dd94);/*BUTTON*/
-    -fx-radialGradient2: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94);/*HOVER BUTTON*/
+    -fx-RadialGradient1: radial-gradient(center 50% 50%, radius 50%, #001c22, #00301e);/*BUTTON*/
+    -fx-radialGradient2: radial-gradient(center 50% 50%, radius 50%, #0b5500, #005e3d);/*HOVER BUTTON*/
     -fx-effect3: dropshadow(gaussian, rgba(50, 50, 250, 0.98), 40, 0.0, 0.0, 0.0);/*FAIRY*/
     -fx-effect9: dropshadow(gaussian, rgba(50, 50, 250, 0.98), 10, 0.0, 0.0, 0.0);/*MAIN BUTTON 2*/
     /*------------- END MAIN SCENE BUTTONS------------------------------- */
@@ -63,7 +63,7 @@
     -fx-effect5: dropshadow(gaussian, rgba(100, 0, 0, 1), 20, 0, 0, 0); /*PAUSE BUTTON HOVER*/
     -fx-effect6: dropshadow(gaussian, rgba(100, 100, 155, 1), 20, 0, 0, 0);/*DELETE BUTTON HOVER*/
     -fx-effect7: dropshadow(gaussian, rgba(50, 55, 50, 1), 20, 0, 0, 0);/*SAVE BUTTON HOVER*/
-    -fx-effect8: dropshadow(gaussian, rgba(0, 100, 0, 1), 25, 0, 0, 0);/*PLAY BUTTON HOVER*/
+    -fx-effect8: dropshadow(gaussian, rgba(0, 100, 0, 1), 20, 0, 0, 0);/*PLAY BUTTON HOVER*/
 
     -fx-deleteColor: rgb(150, 0, 0);
     -fx-saveColor: rgb(0, 72, 255); /* Hex #0048ff in RGB */
