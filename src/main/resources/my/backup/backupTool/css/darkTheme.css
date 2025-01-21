@@ -31,7 +31,8 @@
      */
     /*---------- CARDS-------------- */
     -fx-color5: black;
-    -fx-color6: #1c1a1a; /* Background Color */
+    -fx-color6: rgba(28, 26, 26, 1); /* Background Color */
+    -fx-color66: rgba(38, 36, 36, 1); /* Background Color hover*/
 
     /*---------- END OF CARDS-------------- */
 
@@ -50,14 +51,14 @@
     -fx-basicBackground: #1e1e1e;
     /*----------------END SCENE VIEW BACKGROUND COLOR----------------*/
 
-   /* MAIN SCENE BUTTONS */
+   /*---------------- MAIN SCENE BUTTONS------------------------------ */
     -fx-RadialGradient1: radial-gradient(center 50% 50%, radius 50%, #21d8ff, #09dd94);/*BUTTON MAIN*/
     -fx-radialGradient2: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94);/*HOVER BUTTON MAIN*/
     -fx-effect3: dropshadow(gaussian, rgba(240, 230, 255, 0.98), 40, 0.0, 0.0, 0.0);/*FAIRY*/
-    -fx-effect9: dropshadow(gaussian, rgba(240, 230, 255, 0.98), 10, 0.0, 0.0, 0.0);/*MAIN BUTTON 2*/
-    /* END MAIN SCENE BUTTONS */
+    -fx-effect9: dropshadow(gaussian, rgba(240, 230, 255, 0.98), 5, 0.0, 0.0, 0.0);/*MAIN BUTTON 2 and 1*/
+    /*------------- END MAIN SCENE BUTTONS------------------------------- */
 
-    /*-----ACTION BUTTONS ------*/
+    /*--------------------------------ACTION BUTTONS ----------------------------*/
     -fx-effect4: dropshadow(gaussian, rgba(100, 150, 255, 1), 10, 0, 0, 0); /*BROWSE BUTTON HOVER*/
     -fx-effect5: dropshadow(gaussian, rgb(255, 0, 251), 20, 0, 0, 0); /*PAUSE BUTTON HOVER*/
     -fx-effect6: dropshadow(gaussian, rgba(200, 200, 255, 1), 20, 0, 0, 0); /*DELETE BUTTON HOVER*/
@@ -68,7 +69,7 @@
     -fx-saveColor: #009dff;
     -fx-pauseColor: #b200ff;
     -fx-playButton: #00dd00;
-    /*----- END ACTION BUTTONS ------*/
+    /*------------------------- END ACTION BUTTONS -----------------------------------*/
 
 }
 

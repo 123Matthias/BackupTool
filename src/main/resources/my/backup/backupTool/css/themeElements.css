@@ -139,6 +139,7 @@
 
 .card:hover {
     -fx-border-color: -fx-color13;
+    -fx-background-color: -fx-color66;
 }
 
 Label{
