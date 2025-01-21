@@ -40,7 +40,7 @@
     <!-- Sticky ToolBar -->
     <!-- Sticky Button -->
     <!-- ToolBar -->
-        <ToolBar fx:id="toolBar" style=" -fx-spacing: 15; -fx-background-color: rgb(30,30,30); -fx-border-width: 0 0 1 0; -fx-border-color: grey;">
+        <ToolBar fx:id="toolBar" styleClass="toolbar">
 
             <Button fx:id="backButton" onAction="#backToMain" styleClass="basicButton"
                     minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">

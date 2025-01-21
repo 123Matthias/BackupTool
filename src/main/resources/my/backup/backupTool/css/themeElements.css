@@ -1,20 +1,23 @@
-
-.gridPane Line {
-    -fx-stroke: -fx-linearGradient1;
-}
+/*-------------------MAIN VIEW BUTTONS--------------------------*/
 
 
 
 .mainButton2 {
     -fx-background-color: -fx-radialGradient1;
-    -fx-effect: -fx-effect1;
+    -fx-effect: -fx-effect9;
+}
+
+.mainButton2:hover {
+    -fx-background-color: -fx-radialGradient2;
+}
+
+.mainButton1Box{
 
 }
 
 .mainButton1 {
     -fx-background-color: -fx-radialGradient1;
-    -fx-effect: -fx-effect1;
-
+    -fx-effect: -fx-effect9;
 }
 
 /* Button Hover */
@@ -27,50 +30,70 @@
     -fx-background-color: -fx-radialGradient2;
 }
 
-
-.button1TextLabel{
+.mainButton1TextLabel{
     -fx-text-fill: -fx-color1;
-    -fx-effect: -fx-effect1;
+}
+
+
+.mainButton1Box:hover .mainButton1TextLabel {
+    -fx-text-fill: -fx-color13;
 }
 
 .imageFee{
     -fx-effect: -fx-effect3;
 }
 
-.mainButton2:hover {
 
-    -fx-background-color: -fx-radialGradient2;
-}
+/*-------------------END MAIN VIEW BUTTONS--------------------------*/
 
 
+
+/*---------------------  COMPONENTS ---------------- */
 .check-box {
-    -fx-background-color: -fx-color1;
-    -fx-border-color: -fx-color5;
+    -fx-background-color: -fx-color9;
+    -fx-border-color: -fx-color17;
 }
 
 .check-box:selected {
     -fx-background-color: -fx-color4;
-    -fx-border-color: -fx-color1;
+    -fx-border-color: -fx-color5;
 }
 
 .check-box .box {
-    -fx-background-color: -fx-color5;
-    -fx-border-color: -fx-color1;
+    -fx-background-color: -fx-color10;
+    -fx-border-color: -fx-color11;
 
 }
 
 .check-box:selected .box {
-    -fx-background-color: -fx-color1;
-    -fx-text-fill: -fx-color5;
-    -fx-border-color: -fx-color2;
+    -fx-background-color: -fx-color10;
+    -fx-border-color: -fx-color11;
     -fx-fill: -fx-color5;
 }
 
 .check-box:hover {
-    -fx-background-color: -fx-color1;
+    -fx-border-color: -fx-color13;
 }
+/*---------------- END OF COMPONENTS ---------- */
+
+
+.toolbar{
+    -fx-background-color: -fx-color15;
+    -fx-border-color: -fx-color16;
+}
+
+
+.basicButton SVGPath {
+    -fx-fill: -fx-color14;
+    -fx-stroke: -fx-color14;
+}
+/*------------------------ Scene and Main Scene BACKGROUND COLORS ---------------*/
 .basicBackground {
     -fx-background-color: -fx-basicBackground;
+}
+
+.mainBasicBackground {
+    -fx-background-color: -fx-mainBasicBackground;
 }
 
 
@@ -82,6 +105,7 @@
 
 /* Hover-Effekt: Button wird größer und dunkler */
 .basicButton:hover {
+    -fx-text-fill: -fx-color13;
     -fx-border-color: -fx-color8;
     -fx-effect: -fx-effect2;
 }
@@ -105,7 +129,7 @@
 /* Card Title Container */
 .cardTitleContainer {
     -fx-background-color: -fx-color6;
-    -fx-border-color: transparent transparent -fx-color2 transparent; /* Farbe oben, rechts, unten, links */
+    -fx-border-color: transparent transparent -fx-color3 transparent; /* Farbe oben, rechts, unten, links */
 
 }
 
@@ -114,7 +138,7 @@
 }
 
 .card:hover {
-    -fx-border-color: -fx-color8;
+    -fx-border-color: -fx-color13;
 }
 
 Label{
@@ -122,7 +146,8 @@ Label{
 }
 TextArea, TextField{
     -fx-background-color: -fx-color2;
-    -fx-text-fill: -fx-color5;
+    -fx-text-fill: -fx-color12;
+    -fx-border-color: -fx-color3;
 }
 
 TextArea {
@@ -164,10 +189,36 @@ VBox > .browseButton{
 }
 
 .scroll-pane {
-    -fx-background: -fx-color5;
+    -fx-background: -fx-basicBackground;
 }
 
 
+/*--------------ACTION BUTTONS---------------------*/
 
+#deleteButtonPath {
+    -fx-stroke: -fx-deleteColor;
+}
+#pauseButtonPath{
+    -fx-stroke: -fx-pauseColor;
+}
+
+#playButtonPath {
+    -fx-stroke: -fx-playButton;
+}
+
+#saveButtonPath {
+    -fx-stroke: -fx-saveColor;
+}
+
+/*--------------END ACTION BUTTONS---------------------*/
+
+/*-----Settings---------------*/
+.headerText{
+    -fx-padding: 0 0 10 0;
+    -fx-font-size: 18;
+    -fx-text-fill: -fx-color1;
+}
+
+/*-----END Settings---------------*/
 
 

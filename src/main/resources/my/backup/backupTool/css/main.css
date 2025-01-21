@@ -58,7 +58,7 @@ Pane {
 }
 
 
-.button1TextLabel{
+.mainButton1TextLabel{
     -fx-font-family: Serif;
     -fx-font-size: 16px;
     -fx-font-style: italic;
@@ -68,7 +68,7 @@ Pane {
     -fx-text-alignment: center;
 }
 /* Label Hover (beim Hover über Button1) */
-.mainButton1Box:hover .button1TextLabel {
+.mainButton1Box:hover .mainButton1TextLabel {
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 

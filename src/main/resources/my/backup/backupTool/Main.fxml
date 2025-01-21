@@ -9,7 +9,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane styleClass="basicBackground" fx:controller="my.backup.backupTool.Controller.MainController" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane styleClass="mainBasicBackground" fx:controller="my.backup.backupTool.Controller.MainController" xmlns:fx="http://javafx.com/fxml/1">
 
       <!-- GridPane für die Buttons, jetzt über den gesamten Bildschirm -->
       <GridPane styleClass="gridPane">
@@ -42,7 +42,7 @@
                           prefWidth="100" prefHeight="100"
                   />
                   <!-- Text unter dem Button -->
-                  <Label text="Restore Apps" styleClass="button1TextLabel"/>
+                  <Label text="Restore Apps" styleClass="mainButton1TextLabel"/>
               </VBox>
 
 
@@ -52,7 +52,7 @@
                       styleClass="mainButton1"
                       prefWidth="100" prefHeight="100"
               />
-              <Label text="Merge Backup" styleClass="button1TextLabel"/>
+              <Label text="Merge Backup" styleClass="mainButton1TextLabel"/>
           </VBox>
 
           <!-- Button 2 -->
@@ -62,7 +62,7 @@
                       styleClass="mainButton1"
                       prefWidth="100" prefHeight="100"
               />
-              <Label text="Full Backup" styleClass="button1TextLabel"/>
+              <Label text="Full Backup" styleClass="mainButton1TextLabel"/>
           </VBox>
 
           <!-- Button 3 -->
@@ -72,7 +72,7 @@
                       styleClass="mainButton1"
                       prefWidth="100" prefHeight="100"
               />
-              <Label text="Cloud Sync" styleClass="button1TextLabel"/>
+              <Label text="Cloud Sync" styleClass="mainButton1TextLabel"/>
           </VBox>
 
            <Button text="Help" onAction="#handleOpenMergeOverviewWindow" styleClass="mainButton2" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>

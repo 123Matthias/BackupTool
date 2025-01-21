@@ -41,6 +41,11 @@ VBox > .browseButton{
     -fx-stroke-width: 30; /* Pfadbreite erhöhen */
 }
 
+TextField, TextArea{
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
 
 
 
