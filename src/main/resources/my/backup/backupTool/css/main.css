@@ -10,6 +10,10 @@ Pane {
     -fx-background-color: transparent;
     -fx-grid-lines-visible: true;
 }
+.gridPane Line {
+    -fx-stroke: -fx-colorGridMain;
+    -fx-stroke-width: 2;
+}
 
 .mainButton1 {
    -fx-min-width: 30px;

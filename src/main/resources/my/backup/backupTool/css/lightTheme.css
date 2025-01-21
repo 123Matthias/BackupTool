@@ -2,6 +2,7 @@
 
 .root {
 
+    -fx-colorGridMain: rgba(0,0,0,0.05);
     /*----------- Text and Text Areas---------------- */
 
     -fx-color1: black; /* Text Fill Color */
