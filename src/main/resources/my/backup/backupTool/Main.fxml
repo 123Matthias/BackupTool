@@ -35,13 +35,11 @@
 
         <!-- <Button text=""  onAction="#handleOpenMergeWindow" styleClass="placeholderButton" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/> -->
 
-              <VBox styleClass="mainButton1Box" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="2">
+              <VBox styleClass="mainButton1Box" onMouseClicked="#handleOpenMergeOverviewWindow" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="2">
                   <!-- Stein-Button -->
-                  <Button
-                          onAction="#handleOpenMergeOverviewWindow"
+                  <Button onAction="#handleOpenMergeOverviewWindow"
                           styleClass="mainButton1"
-                          prefWidth="100" prefHeight="100"
-                  >
+                          prefWidth="100" prefHeight="100">
                       <graphic>
                           <SVGPath fx:id="restoreAppsPath" content="M22,17a1,1,0,0,1-1,1H19.48l1.39,2.51a1,1,0,0,1-.38,1.36A1,1,0,0,1,20,22a1,1,0,0,1-.87-.51L13.42,11.21a1,1,0,0,1,1.74-1L18.37,16H21A1,1,0,0,1,22,17Zm-9-1H7.92l7-12.51a1,1,0,0,0-1.74-1L12,4.54l-1.13-2a1,1,0,1,0-1.74,1L10.86,6.6,5.63,16H3a1,1,0,0,0,0,2H4.52L3.13,20.51a1,1,0,0,0,.38,1.36A1,1,0,0,0,4,22a1,1,0,0,0,.87-.51L6.81,18H13a1,1,0,0,0,0-2Z"
 
@@ -54,7 +52,7 @@
 
           <!-- Button 1 -->
           <VBox styleClass="mainButton1Box" GridPane.halignment="CENTER" onMouseClicked="#handleOpenMergeOverviewWindow" GridPane.rowIndex="2" GridPane.columnIndex="1">
-              <Button
+              <Button onAction="#handleOpenMergeOverviewWindow"
                       styleClass="mainButton1"
                       prefWidth="100" prefHeight="100">
                       <graphic>
@@ -67,8 +65,8 @@
           </VBox>
 
           <!-- Button 2 -->
-          <VBox styleClass="mainButton1Box" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="3">
-              <Button
+          <VBox styleClass="mainButton1Box" onMouseClicked="#handleOpenMergeOverviewWindow" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.columnIndex="3">
+              <Button onAction="#handleOpenMergeOverviewWindow"
                       styleClass="mainButton1"
                       prefWidth="100" prefHeight="100">
                   <graphic>
@@ -80,12 +78,10 @@
           </VBox>
 
           <!-- Button 3 -->
-          <VBox styleClass="mainButton1Box" GridPane.halignment="CENTER"  GridPane.rowIndex="3" GridPane.columnIndex="2">
-              <Button
-                      onAction="#handleOpenMergeOverviewWindow"
+          <VBox styleClass="mainButton1Box" onMouseClicked="#handleOpenMergeOverviewWindow" GridPane.halignment="CENTER"  GridPane.rowIndex="3" GridPane.columnIndex="2">
+              <Button onAction="#handleOpenMergeOverviewWindow"
                       styleClass="mainButton1"
-                      prefWidth="100" prefHeight="100"
-              >
+                      prefWidth="100" prefHeight="100">
                   <graphic>
                       <SVGPath fx:id="syncPath" content="M12.163179,3.773986 C11.821387,3.744485 11.549732,3.4688 11.549732,3.114784 L11.549732,1.853349 C11.549732,1.562405 11.226709,1.396587 11.000494,1.571561 L7.254616,4.483035 C6.915787,4.746512 6.9148,5.270414 7.253628,5.533892 L11.000494,8.454521 C11.225721,8.630512 11.549732,8.464694 11.549732,8.17375 L11.549732,7.009974 C11.549732,6.604077 11.903377,6.288718 12.293573,6.348738 C15.032846,6.777016 17.041119,9.496222 16.41483,12.550116 C16.289375,13.162523 16.04933,13.736273 15.72038,14.247968 C15.360808,14.808492 15.504044,15.561284 16.036488,15.949888 L16.057233,15.96413 C16.601531,16.361889 17.377971,16.249987 17.749398,15.678272 C18.537692,14.461598 19,13.001792 19,11.429067 C19,7.402647 15.992036,4.100535 12.163179,3.773986 Z M9.836821,20.226014 C10.178613,20.255515 10.450268,20.5312 10.450268,20.885216 L10.450268,22.146651 C10.450268,22.437595 10.773291,22.603413 10.999506,22.428439 L14.745384,19.516965 C15.084213,19.253488 15.0852,18.729586 14.746372,18.466108 L10.999506,15.545479 C10.774279,15.369488 10.450268,15.535306 10.450268,15.82625 L10.450268,16.990026 C10.450268,17.395923 10.096623,17.711282 9.706427,17.651262 C6.967154,17.222984 4.958881,14.503778 5.58517,11.449884 C5.710625,10.837477 5.95067,10.263727 6.27962,9.752032 C6.639192,9.191508 6.495956,8.438716 5.963512,8.050112 L5.942767,8.03587 C5.398469,7.638111 4.622029,7.750013 4.250602,8.321728 C3.462308,9.538402 3,10.998208 3,12.570933 C3,16.597353 6.007964,19.899465 9.836821,20.226014 Z"
 
@@ -97,8 +93,8 @@
 
           <!-- *****************  Secondary Buttons Button 2 *******************     -->
 
-          <VBox styleClass="mainButton1Box" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0">
-              <Button
+          <VBox styleClass="mainButton1Box" onMouseClicked="#handleOpenMergeOverviewWindow" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.columnIndex="0">
+              <Button onAction="#handleOpenMergeOverviewWindow"
                       styleClass="mainButton1"
                       prefWidth="100" prefHeight="100">
                   <graphic>
@@ -110,7 +106,7 @@
           </VBox>
 
           <VBox styleClass="mainButton1Box" GridPane.halignment="CENTER" onMouseClicked="#handleOpenSettingsWindow" GridPane.rowIndex="0" GridPane.columnIndex="4">
-              <Button
+              <Button onAction="#handleOpenSettingsWindow"
                       styleClass="mainButton1"
                       prefWidth="100" prefHeight="100">
                   <graphic>

@@ -61,15 +61,17 @@
 
     /*-----ACTION BUTTONS ------*/
     -fx-effect4: dropshadow(gaussian, rgba(100, 150, 255, 1), 15, 0, 0, 0);/*BROWSE BUTTON HOVER*/
-    -fx-effect5: dropshadow(gaussian, rgba(100, 0, 0, 1), 20, 0, 0, 0); /*PAUSE BUTTON HOVER*/
+    -fx-effect5: dropshadow(gaussian, rgb(149, 40, 0), 20, 0, 0, 0); /*PAUSE BUTTON HOVER*/
     -fx-effect6: dropshadow(gaussian, rgba(100, 100, 155, 1), 20, 0, 0, 0);/*DELETE BUTTON HOVER*/
     -fx-effect7: dropshadow(gaussian, rgba(50, 55, 50, 1), 20, 0, 0, 0);/*SAVE BUTTON HOVER*/
     -fx-effect8: dropshadow(gaussian, rgba(0, 100, 0, 1), 20, 0, 0, 0);/*PLAY BUTTON HOVER*/
+    -fx-effect10: dropshadow(gaussian, rgba(100, 0, 0, 1), 20, 0, 0, 0); /*Restore BUTTON HOVER*/
 
     -fx-deleteColor: rgb(150, 0, 0);
-    -fx-saveColor: rgb(0, 72, 255); /* Hex #0048ff in RGB */
-    -fx-pauseColor: rgb(85, 0, 128); /* Hex #550080 in RGB */
-    -fx-playButton: rgb(0, 128, 0); /* 'green' in RGB */
+    -fx-saveColor: rgb(0, 72, 255);
+    -fx-pauseColor: rgb(99, 43, 2);
+    -fx-playButton: rgb(0, 128, 0);
+    -fx-restoreColor: rgb(85, 0, 128);
 
     /*----- END ACTION BUTTONS ------*/
 

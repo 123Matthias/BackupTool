@@ -52,6 +52,7 @@
     /*----------------SCENE VIEW BACKGROUND COLOR----------------*/
     -fx-mainBasicBackground: linear-gradient(to bottom right, rgba(30,30,35, 1) 20%, rgba(40,40,45, 1) 60%, rgba(50,50,55, 1) 80%, rgba(60,60,65, 1) 100%);
     -fx-basicBackground: #1e1e1e;
+
     /*----------------END SCENE VIEW BACKGROUND COLOR----------------*/
 
    /*---------------- MAIN SCENE BUTTONS------------------------------ */
@@ -63,15 +64,17 @@
 
     /*--------------------------------ACTION BUTTONS ----------------------------*/
     -fx-effect4: dropshadow(gaussian, rgba(100, 150, 255, 1), 10, 0, 0, 0); /*BROWSE BUTTON HOVER*/
-    -fx-effect5: dropshadow(gaussian, rgb(255, 0, 251), 20, 0, 0, 0); /*PAUSE BUTTON HOVER*/
+    -fx-effect5: dropshadow(gaussian, rgb(255, 177, 33), 20, 0, 0, 0); /*PAUSE BUTTON HOVER*/
     -fx-effect6: dropshadow(gaussian, rgba(200, 200, 255, 1), 20, 0, 0, 0); /*DELETE BUTTON HOVER*/
     -fx-effect7: dropshadow(gaussian, rgba(150, 155, 150, 1), 20, 0, 0, 0); /*SAVE BUTTON HOVER*/
     -fx-effect8: dropshadow(gaussian, rgba(100, 255, 100, 1), 25, 0, 0, 0); /*PLAY BUTTON HOVER*/
+    -fx-effect10: dropshadow(gaussian, rgb(255, 0, 251), 20, 0, 0, 0); /*Restore BUTTON HOVER*/
 
     -fx-deleteColor: #c80000;
     -fx-saveColor: #009dff;
-    -fx-pauseColor: #b200ff;
+    -fx-pauseColor: #c87300;
     -fx-playButton: #00dd00;
+    -fx-restoreColor: #b200ff;
     /*------------------------- END ACTION BUTTONS -----------------------------------*/
 
 }

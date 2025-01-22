@@ -34,3 +34,9 @@
     -fx-fill: none;
     -fx-stroke-width: 0;
 }
+
+/*Information on hover element*/
+.tooltip{
+    -fx-font-size: 12px;
+    -fx-padding: 6px;
+}

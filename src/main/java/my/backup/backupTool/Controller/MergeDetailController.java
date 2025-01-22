@@ -2,20 +2,27 @@ package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
-import my.backup.backupTool.DataRepository.ILoadData;
+import my.backup.backupTool.App;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
 import my.backup.backupTool.Model.IModel;
-import my.backup.backupTool.DataRepository.IStoreData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
+import my.backup.backupTool.Theme;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class SceneMergeDetailController {
+public class MergeDetailController {
+
+    @FXML
+    private StackPane stackPane;
 
     @FXML
     private TextField title;
@@ -54,7 +61,22 @@ public class SceneMergeDetailController {
     private TextArea targetPath;
 
     @FXML
+    private Button backupButton;
+    @FXML
+    private Button restoreButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button pauseButton;
+    @FXML
     private Button playButton;
+    @FXML
+    private Button playReverseButton;
+    @FXML
+    private Button deleteSettingsButton;
+
 
     private boolean isSourceButtonClicked = false;
     private boolean isTargetButtonClicked = false;
@@ -63,6 +85,7 @@ public class SceneMergeDetailController {
 
     IMergeService mergeService;
     ITimeService timeService;
+    ValidationService validationService;
     IModel model;
     BaseDataRepository dataStore;
 
@@ -73,6 +96,8 @@ public class SceneMergeDetailController {
 
     @FXML
     public void initialize() {
+
+        enableBackupMode();
 
         // Button-Event-Handler für den Source-Button
         sourceButton.setOnAction(event -> {
@@ -140,7 +165,74 @@ public class SceneMergeDetailController {
     }
 
     @FXML
-    private void startMergeBackup(){
+    private void enableBackupMode(){
+        playButton.setVisible(true);
+        playButton.setManaged(true);
+        pauseButton.setVisible(true);
+        pauseButton.setManaged(true);
+        deleteButton.setVisible(true);
+        deleteButton.setManaged(true);
+        saveButton.setVisible(true);
+        saveButton.setManaged(true);
+        restoreButton.setVisible(true);
+        restoreButton.setManaged(true);
+        deleteSettingsButton.setVisible(true);
+        deleteSettingsButton.setManaged(true);
+
+        backupButton.setVisible(false);
+        backupButton.setManaged(false);
+        playReverseButton.setVisible(false);
+        playReverseButton.setManaged(false);
+
+        stackPane.getStyleClass().add("basic-background");
+
+    }
+
+    @FXML
+    private void enableRestoreMode(){
+        playButton.setVisible(false);
+        playButton.setManaged(false);
+        pauseButton.setVisible(false);
+        pauseButton.setManaged(false);
+        deleteButton.setVisible(false);
+        deleteButton.setManaged(false);
+        saveButton.setVisible(false);
+        saveButton.setManaged(false);
+        restoreButton.setVisible(false);
+        restoreButton.setManaged(false);
+        deleteSettingsButton.setVisible(false);
+        deleteSettingsButton.setManaged(false);
+
+
+        backupButton.setVisible(true);
+        backupButton.setManaged(true);
+        playReverseButton.setVisible(true);
+        playReverseButton.setManaged(true);
+
+        changeModeColor();
+
+    }
+
+
+    private void changeModeColor() {
+        BackgroundFill backgroundFill;
+
+        if (App.Router.getTheme() == Theme.DARK) {
+            // Dunkler Rotton
+            backgroundFill = new BackgroundFill(Color.rgb(50, 0, 0), null, null);  // Dunkler Rotton
+        } else {
+            // Heller Rotton
+            backgroundFill = new BackgroundFill(Color.rgb(255, 215, 200), null, null);  // Hellerer Rotton
+        }
+
+        Background background = new Background(backgroundFill);
+        stackPane.setBackground(background);
+    }
+
+
+
+    @FXML
+    private void play(){
         System.out.println("Source: " + sourcePath.getText());
         System.out.println("Target" + targetPath.getText());
         int days = 0;
@@ -169,7 +261,7 @@ public class SceneMergeDetailController {
     }
 
     @FXML
-    private void saveNewMergeBackup(){
+    private void save(){
         System.out.println("Source: " + sourcePath.getText());
         System.out.println("Target" + targetPath.getText());
         int days = 0;
@@ -195,9 +287,13 @@ public class SceneMergeDetailController {
         model.setStartDate(startDate);
         model.setIntervalDays(days);
         model.setIntervalHours(hours);
+        ValidationService.validatePath(new File(model.getSource()), new File(model.getTarget()));
         saveData();
         sceneUpdate.reloadView("mergeOverview.fxml");
     }
+
+
+
 
     public void openUpdateSceneByUID(String uid){
 

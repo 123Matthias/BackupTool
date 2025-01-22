@@ -44,6 +44,9 @@
 
             <Button fx:id="backButton" onAction="#backToMain" styleClass="basicButton"
                     minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
+                <tooltip>
+                    <Tooltip text="back to Main View"/>
+                </tooltip>
                 <graphic>
                     <SVGPath fx:id="chevronLeftIcon"
                              content="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"
@@ -55,6 +58,7 @@
 
             <Button fx:id="addButton" onAction="#openMergeDetailWindow" styleClass="basicButton" alignment="CENTER"
                     minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
+                <Tooltip text="add a new Backup"/>
                 <graphic>
                     <SVGPath fx:id="plusIcon"
                              content="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"

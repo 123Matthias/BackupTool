@@ -80,6 +80,18 @@ public class Router {
                 .build();
     }
 
+    public SceneBuilder createMessage(String theme) {
+        return new SceneBuilder.Builder()
+                .setFXML("message.fxml")
+                .setDimensions(400, 300)
+                .addStylesheet("css/basicWindow.css")
+                .addStylesheet("css/mergeDetail.css")
+                .addStylesheet("css/basicComponents.css")
+                .addStylesheet("css/themeElements.css")
+                .addStylesheet(theme)
+                .build();
+    }
+
     public void setBaseOverviewScene(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("mergeOverview.fxml")

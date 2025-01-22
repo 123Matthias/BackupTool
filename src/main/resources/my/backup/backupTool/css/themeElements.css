@@ -143,6 +143,12 @@
 Label{
     -fx-text-fill: -fx-color1;
 }
+
+.tooltip{
+    -fx-background-color: -fx-color13;
+    -fx-text-fill: -fx-color12;
+}
+
 TextArea, TextField{
     -fx-background-color: -fx-color2;
     -fx-text-fill: -fx-color12;
@@ -153,19 +159,6 @@ TextArea {
     -fx-control-inner-background: -fx-color2;  /* Hintergrund des Textbereichs */
 }
 
-
-.playButton:hover {
-    -fx-effect: -fx-effect8;
-}
-.pauseButton:hover {
-    -fx-effect: -fx-effect5;
-}
-.deleteButton:hover {
-    -fx-effect: -fx-effect6;
-}
-.saveButton:hover {
-    -fx-effect: -fx-effect7;
-}
 
 VBox > .browseButton{
     -fx-text-fill: -fx-color7;
@@ -195,20 +188,72 @@ VBox > .browseButton{
 /*--------------ACTION BUTTONS---------------------*/
 
 #deleteButtonPath {
+    -fx-fill: -fx-deleteColor;
     -fx-stroke: -fx-deleteColor;
 }
 #pauseButtonPath{
+    -fx-fill: -fx-pauseColor;
     -fx-stroke: -fx-pauseColor;
 }
 
 #playButtonPath {
+    -fx-fill: -fx-playButton;
     -fx-stroke: -fx-playButton;
 }
 
 #saveButtonPath {
+    -fx-fill: -fx-saveColor;
     -fx-stroke: -fx-saveColor;
 }
 
+#backupButtonPath {
+    -fx-fill: -fx-playButton;
+    -fx-stroke: -fx-playButton;
+}
+#restoreButtonPath {
+    -fx-fill: -fx-restoreColor;
+    -fx-stroke: -fx-restoreColor;
+}
+
+#playReverseButtonPath {
+    -fx-fill: -fx-restoreColor;
+    -fx-stroke: -fx-restoreColor;
+}
+
+#deleteSettingsButtonPath {
+    -fx-fill: -fx-saveColor;
+    -fx-stroke: -fx-saveColor;
+}
+
+
+.playButton:hover {
+    -fx-effect: -fx-effect8;
+}
+.pauseButton:hover {
+    -fx-effect: -fx-effect5;
+}
+.deleteButton:hover {
+    -fx-effect: -fx-effect6;
+}
+.saveButton:hover {
+    -fx-effect: -fx-effect7;
+}
+
+.backupButton:hover {
+    -fx-effect: -fx-effect8;
+}
+
+.restoreButton:hover {
+    -fx-effect: -fx-effect10;
+}
+
+.playReverseButton:hover {
+    -fx-effect: -fx-effect10;
+}
+
+.deleteSettingsButton:hover {
+    -fx-effect: -fx-effect7;
+}
 /*--------------END ACTION BUTTONS---------------------*/
 
 /*-----Settings---------------*/

@@ -6,17 +6,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
 import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.SceneBuilder;
-import my.backup.backupTool.Theme;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +61,11 @@ public class BaseOverviewController {
 
         //CardContainer
         VBox newContent = new VBox();
+
+        Tooltip tooltip = new Tooltip("click for update this card");
+        Tooltip.install(newContent, tooltip);
+
+
         //UUID
         String uid = model.getUid() != null && !model.getUid().isEmpty() ? model.getUid() : "";
         newContent.setId(uid);
@@ -134,7 +140,7 @@ public class BaseOverviewController {
         SceneBuilder newScene = App.Router.createNew_MergeDetailView_With_SceneBuilderObject(App.Router.getTheme().toString());
         try {
             stage.setScene(newScene.getScene());
-            SceneMergeDetailController controller = newScene.getController();
+            MergeDetailController controller = newScene.getController();
             controller.openUpdateSceneByUID(uid);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -147,6 +153,7 @@ public class BaseOverviewController {
     @FXML
     public void openMergeDetailWindow() throws IOException {
         Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(App.Router.createNew_MergeDetailView_With_SceneBuilderObject(App.Router.getTheme().toString()).getScene());
         stage.show();
     }
