@@ -38,6 +38,9 @@
 }
 
 .imageFee{
+    -fx-effect: -fx-effect18;
+}
+.imageFee:hover{
     -fx-effect: -fx-effect3;
 }
 

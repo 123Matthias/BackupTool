@@ -50,7 +50,7 @@ Pane {
     -fx-scale-y: 2.0;
 }
 
-.mainButton1Box:hover  {
+.mainButton1Box:hover, .imageFee:hover  {
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 

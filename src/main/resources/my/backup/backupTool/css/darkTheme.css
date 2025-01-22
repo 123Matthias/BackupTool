@@ -60,6 +60,7 @@
     -fx-radialGradient2: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94);/*HOVER BUTTON MAIN*/
     -fx-effect3: dropshadow(gaussian, rgba(240, 230, 255, 0.98), 40, 0.0, 0.0, 0.0);/*FAIRY*/
     -fx-effect9: dropshadow(gaussian, rgba(80, 70, 100, 0.98), 5, 0.0, 0.0, 0.0);/*MAIN BUTTON 2 and 1*/
+    -fx-effect18: dropshadow(gaussian, rgba(60, 200, 120, 0.98), 5, 0.0, 0.0, 0.0);
     /*------------- END MAIN SCENE BUTTONS------------------------------- */
 
     /*--------------------------------ACTION BUTTONS ----------------------------*/

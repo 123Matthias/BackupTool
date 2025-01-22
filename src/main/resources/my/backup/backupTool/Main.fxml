@@ -118,12 +118,22 @@
           </VBox>
 
           <!-- *****************  END  Secondary Buttons Button 2 *******************     -->
+
+
+          <ImageView styleClass="imageFee" preserveRatio="true" fitHeight="120"
+                     GridPane.halignment="CENTER"
+                     onMouseClicked="#handleOpenSettingsWindow"
+                     GridPane.rowIndex="2"
+                     GridPane.columnIndex="2"  >
+              <image>
+                  <Image url="@img/Fee.PNG" />
+              </image>
+          </ImageView>
+
+
       </GridPane>
 
-   <!-- Bild im StackPane -->
-   <ImageView styleClass="imageFee" preserveRatio="true" fitHeight="120" >
-      <image>
-         <Image url="@img/FeeMainPage.png" />
-      </image>
-   </ImageView>
+
+
+
 </StackPane>
