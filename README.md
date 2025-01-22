@@ -3,40 +3,37 @@
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Features](#features)
-   - [Merge Backup](#21-merge-backup)
-   - [Full Backup](#22-full-backup)
-   - [App Reinstaller](#23-app-reinstaller)
-   - [Cloud Synchronization](#24-cloud-synchronization)
+   - [Merge Backup](#merge-backup)
+   - [Full Backup](#full-backup)
+   - [App Reinstaller](#app-reinstaller)
+   - [Cloud Synchronization](#cloud-synchronization)
 3. [Conclusion](#conclusion)
 
 ---
 
-## 1. Introduction
+## Introduction
 The ccBackup Tool is designed to be simple and intuitive. Its primary goal is to allow quick and easy configuration, making it ideal for users who like it simple.
 
 ---
 
-## 2. Features
+## Features
 
-### 2.1 Merge Backup (in progress)
+### Merge Backup
 This feature ensures that the old backup is overwritten each time, reducing memory usage compared to other backup methods.  
 It allows customization of the local date, time, source, and target paths for backups. You can create an unlimited number of backup instances, all of which are displayed in the tool's overview window.
 
-### 2.2 Full Backup (not started)
-Provides a complete backup of all selected files and directories.  
-Additional information can be added here.
+### Full Backup
+Provides a complete backup of all selected files and directories. You can adjust the Timing and Number of Backups which will kept in store.
 
-### 2.3 App Reinstaller (not started)
+### App Reinstaller
 Allows users to back up and restore application settings and data.  
-Additional information can be added here.
+The Apps are nor saved only the Informations about them. The installer will download and install this Apps.
 
-### 2.4 Cloud Synchronization (not started)
-Enables seamless synchronization of backups with cloud storage services.  
-Additional information can be added here.
+### Cloud Synchronization
+Synchronizes in tho ways. In and from Target and Source Folder.  
+Timing can be Adjusted on creation.
 
 ---
 
-## 3. Conclusion
-an msi installer link is here:
-
-
+## Conclusion
+An MSI installer link is here:
