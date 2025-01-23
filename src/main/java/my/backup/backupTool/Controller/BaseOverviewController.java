@@ -137,7 +137,7 @@ public class BaseOverviewController {
     public void openMergeDetailWindow(String uid) {
         System.out.println("UID Nummer: " + uid);
         Stage stage = new Stage();
-        SceneBuilder newScene = App.Router.createNew_MergeDetailView_With_SceneBuilderObject(App.Router.getTheme().toString());
+        SceneBuilder newScene = App.Router.createMergeDetail(App.Router.getTheme().toString());
         try {
             stage.setScene(newScene.getScene());
             MergeDetailController controller = newScene.getController();
@@ -154,7 +154,7 @@ public class BaseOverviewController {
     public void openMergeDetailWindow() throws IOException {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(App.Router.createNew_MergeDetailView_With_SceneBuilderObject(App.Router.getTheme().toString()).getScene());
+        stage.setScene(App.Router.createMergeDetail(App.Router.getTheme().toString()).getScene());
         stage.show();
     }
 

@@ -42,7 +42,7 @@ public class Router {
         // Icon setzen
         Image icon = new Image(String.valueOf(Main.class.getResource("img/FeenFluegel.png")));
         mainStage.getIcons().add(icon);
-        mainStage.setTitle("ccBackup");
+        mainStage.setTitle("Memoria");
         mainStage.initStyle(StageStyle.DECORATED); // Kein Hintergrund für die Scene
         mainStage.setScene(sceneMain);
     }
@@ -67,7 +67,7 @@ public class Router {
         sceneMain = sceneBuilder.getScene();
     }
 
-    public SceneBuilder createNew_MergeDetailView_With_SceneBuilderObject(String theme) {
+    public SceneBuilder createMergeDetail(String theme) {
         return new SceneBuilder.Builder()
                 .setFXML("mergeDetail.fxml")
                 .setDimensions(800, 800)

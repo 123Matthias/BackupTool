@@ -13,17 +13,20 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.DatePicker?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.shape.SVGPath?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.Pane?>
+<StackPane fx:id="stackPane" fx:controller="my.backup.backupTool.Controller.MergeDetailController" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           styleClass="basicBackground" maxWidth="800" minWidth="800" maxHeight="800" minHeight="500">
 
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Tooltip?>
-<StackPane fx:id="stackPane" fx:controller="my.backup.backupTool.Controller.MergeDetailController" xmlns:fx="http://javafx.com/fxml/1"
-           styleClass="basicBackground">
-   <GridPane style="-fx-background-color: transparent">
+
+   <!-- ********************HEADER******************************-->
+   <HBox  style="-fx-padding: 10 0 0 0; -fx-alignment: top-center" >
+      <children>
+         <Label fx:id="header" text="Backup Mode" style="-fx-font-size: 24;" />
+      </children>
+   </HBox>
+   <!-- ********************END HEADER******************************-->
+
+   <GridPane styleClass="gridPane"
+             style="-fx-padding: 40 0 0 0; -fx-background-color: transparent" maxWidth="800" minWidth="800" maxHeight="800" minHeight="500">
       <!-- Column for Full Width -->
       <columnConstraints>
          <ColumnConstraints hgrow="ALWAYS" percentWidth="10" />
@@ -32,43 +35,48 @@
 
       <!-- 15 Rows -->
       <rowConstraints>
-         <RowConstraints minHeight="40" percentHeight="15" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="36" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
-         <RowConstraints minHeight="40" percentHeight="10" vgrow="NEVER" />
+         <RowConstraints minHeight="25" percentHeight="10" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="35" percentHeight="20" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="35" percentHeight="20" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="25" percentHeight="10" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="20" percentHeight="10" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="20" percentHeight="10" vgrow="SOMETIMES" />
       </rowConstraints>
 
-      <VBox spacing="10" style="-fx-padding: 10;" GridPane.rowIndex="0" GridPane.columnIndex="1">
-         <Label text="Title" style="-fx-font-size: 18; -fx-padding: 10 0 0 0"  />
+
+
+      <VBox spacing="10" style="-fx-padding: 5;" GridPane.rowIndex="0" GridPane.columnIndex="1">
+         <Label text="Title" />
          <TextField fx:id="title" editable="true" text="Title"/>
       </VBox>
 
       <!-- Source Path -->
-      <VBox spacing="10" style="-fx-padding: 10;" GridPane.rowIndex="1" GridPane.columnIndex="1">
+      <VBox spacing="10" style="-fx-padding: 5;" GridPane.rowIndex="1" GridPane.columnIndex="1">
          <Label styleClass="text" text="Source Path" />
          <TextArea fx:id="sourcePath" promptText="Enter source path..."></TextArea>
          <Button fx:id="sourceButton" styleClass="browseButton" text="Browse..." />
+      </VBox>
+
+      <VBox spacing="10" style="-fx-padding: 5;" GridPane.rowIndex="2" GridPane.columnIndex="1">
          <Label text="Target Path" />
          <TextArea fx:id="targetPath" promptText="Enter target path..."></TextArea>
          <Button fx:id="targetButton" styleClass="browseButton" text="Browse..." />
       </VBox>
 
-      <CheckBox GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="check-box, shadow" fx:id="checkBoxStartDate" onAction="#toggleDate" />
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="2" GridPane.columnIndex="1">
+      <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxStartDate" onAction="#toggleDate" />
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="3" GridPane.columnIndex="1">
          <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Start Date</Label>
          <DatePicker disable="true" fx:id="datePicker" promptText="01.01.1990"/>
       </VBox>
 
-      <CheckBox styleClass="shadow" fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="3" GridPane.columnIndex="1">
+      <CheckBox fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" />
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="4" GridPane.columnIndex="1">
          <Label>Days Interval</Label>
          <TextField fx:id="daysInterval" disable="true" editable="true" text="Days" />
       </VBox>
 
-      <CheckBox styleClass="shadow" fx:id="checkBoxIntervalHours" onAction="#toggleHours" GridPane.rowIndex="4" GridPane.columnIndex="0" />
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="4" GridPane.columnIndex="1">
+      <CheckBox fx:id="checkBoxIntervalHours" onAction="#toggleHours" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.halignment="CENTER"  />
+      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="5" GridPane.columnIndex="1">
          <Label>Hours Interval</Label>
          <TextField fx:id="hoursInterval" disable="true" editable="true" text="Hours"/>
       </VBox>
@@ -77,94 +85,8 @@
 
    </GridPane>
 
+   <fx:include source="toolbarDetail.fxml" fx:id="toolbar"/>
 
-   <ToolBar styleClass="toolBarBottom" StackPane.alignment="BOTTOM_CENTER">
-
-      <Button fx:id="restoreButton" styleClass="restoreButton" onAction="#enableRestoreMode">
-         <tooltip>
-            <Tooltip text="Switch Restore Mode" />
-         </tooltip>
-         <graphic>
-            <SVGPath fx:id="restoreButtonPath" content="M6,22h24v2H6ZM26,26h4v2h-4ZM13,9.92L17,6V19a1,1,0,1,0,2,0V6l4,3.95a1,1,0,0,0,.71.29l.11,0a7.46,7.46,0,0,1-1.25-3.52L18,2.16,11.61,8.5A1,1,0,0,0,13,9.92ZM30.87,13.45a7.55,7.55,0,0,1-.87.05A7.46,7.46,0,0,1,25.51,12H21v2h7.95C30,16.94,31.72,21.65,32,22.48V30H4V22.48C4.28,21.65,7.05,14,7.05,14H15V12H7.07a1.92,1.92,0,0,0-1.9,1.32C2,22,2,22.1,2,22.33V30a2,2,0,0,0,2,2H32a2,2,0,0,0,2-2V22.33C34,22.1,34,22,30.87,13.45ZM30,11a5,5,0,1,0-5-5A5,5,0,0,0,30,11Z"
-                     />
-         </graphic>
-      </Button>
-
-      <Button fx:id="backupButton" styleClass="backupButton" onAction="#enableBackupMode">
-         <tooltip>
-            <Tooltip text="Switch Backup Mode" />
-         </tooltip>
-         <graphic>
-            <SVGPath fx:id="backupButtonPath" content="M6,22h24v2H6ZM26,26h4v2h-4ZM18,19.84l6.38-6.35A1,1,0,1,0,23,12.08L19,16V4a1,1,0,1,0-2,0V16l-4-3.95a1,1,0,0,0-1.41,1.42ZM30.87,13.45a7.55,7.55,0,0,1-.87.05,7.46,7.46,0,0,1-3.35-.8,3,3,0,0,1-.24,1.3h2.54C30,16.94,31.72,21.65,32,22.48V30H4V22.48C4.28,21.65,7.05,14,7.05,14H9.58a3,3,0,0,1-.14-2H7.07a1.92,1.92,0,0,0-1.9,1.32C2,22,2,22.1,2,22.33V30a2,2,0,0,0,2,2H32a2,2,0,0,0,2-2V22.33C34,22.1,34,22,30.87,13.45ZM30,11a5,5,0,1,0-5-5A5,5,0,0,0,30,11Z"
-            />
-         </graphic>
-      </Button>
-
-      <Separator orientation="VERTICAL" blendMode="DIFFERENCE"/>
-
-      <Button fx:id="deleteButton" styleClass="deleteButton" onAction="#play">
-         <tooltip>
-            <Tooltip text="Delete this backup from the disk." />
-         </tooltip>
-         <graphic>
-            <SVGPath fx:id="deleteButtonPath" content="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"
-                      scaleX="0.06" scaleY="0.06"/>
-         </graphic>
-      </Button>
-
-      <Button fx:id="deleteSettingsButton" styleClass="deleteSettingsButton" onAction="#play">
-         <tooltip>
-            <Tooltip text= "Delete only the settings. The backup will be kept."/>
-         </tooltip>
-         <graphic>
-            <SVGPath fx:id="deleteSettingsButtonPath" content="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"
-                     scaleX="0.06" scaleY="0.06"/>
-         </graphic>
-      </Button>
-
-      <Button fx:id="saveButton" styleClass="saveButton" onAction="#save">
-         <tooltip>
-            <Tooltip text="Settings saved. Backup has not been started." />
-         </tooltip>
-         <graphic>
-            <SVGPath fx:id="saveButtonPath" content=" M48 96l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-245.5c0-4.2-1.7-8.3-4.7-11.3l33.9-33.9c12 12 18.7 28.3 18.7 45.3L448 416c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96C0 60.7 28.7 32 64 32l245.5 0c17 0 33.3 6.7 45.3 18.7l74.5 74.5-33.9 33.9L320.8 84.7c-.3-.3-.5-.5-.8-.8L320 184c0 13.3-10.7 24-24 24l-192 0c-13.3 0-24-10.7-24-24L80 80 64 80c-8.8 0-16 7.2-16 16zm80-16l0 80 144 0 0-80L128 80zm32 240a64 64 0 1 1 128 0 64 64 0 1 1 -128 0z"
-                     scaleX="0.06" scaleY="0.06"/>
-         </graphic>
-      </Button>
-
-      <Button fx:id="pauseButton" styleClass="pauseButton" onAction="#play">
-         <tooltip>
-            <Tooltip text="Stops Backup" />
-         </tooltip>
-         <graphic>
-            <SVGPath fx:id="pauseButtonPath" content="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm224-72l0 144c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-144c0-13.3 10.7-24 24-24s24 10.7 24 24zm112 0l0 144c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-144c0-13.3 10.7-24 24-24s24 10.7 24 24z"
-                     scaleX="0.06" scaleY="0.06"/>
-         </graphic>
-      </Button>
-
-      <Separator orientation="VERTICAL" blendMode="DIFFERENCE" />
-
-      <Button fx:id="playButton" styleClass="playButton" onAction="#play">
-         <tooltip>
-            <Tooltip text="Start Backup" />
-         </tooltip>
-         <graphic>
-            <SVGPath fx:id="playButtonPath" content="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
-                     scaleX="0.06" scaleY="0.06"/>
-         </graphic>
-      </Button>
-
-      <Button fx:id="playReverseButton" styleClass="playReverseButton">
-         <graphic>
-            <SVGPath fx:id="playReverseButtonPath"
-                     content="M191.553,118.075V28.036L0,204.142l191.553,176.106v-81.005c185.827,4.923,280.365,147.827,281.313,149.293l13.212,20.438
-			                  l4.721-23.861c4.12-20.832,6.212-42.245,6.212-63.654C497.01,219.243,383.058,121.305,191.553,118.075z M475.043,418.954
-			                  c-34.87-42.043-133.024-139.529-293.337-139.534h-9.846v55.971L29.096,204.142l142.764-131.25v64.793h9.846
-			                  c187.865,0,295.611,88.851,295.611,243.774C477.317,394.002,476.553,406.546,475.043,418.954z"
-                     scaleX="0.06" scaleY="0.06" strokeWidth="30"/>
-         </graphic>
-      </Button>
-   </ToolBar>
 
 
 </StackPane>

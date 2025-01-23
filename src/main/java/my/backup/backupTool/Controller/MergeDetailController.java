@@ -2,6 +2,7 @@ package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
@@ -19,7 +20,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+
 public class MergeDetailController {
+
 
     @FXML
     private StackPane stackPane;
@@ -61,26 +64,13 @@ public class MergeDetailController {
     private TextArea targetPath;
 
     @FXML
-    private Button backupButton;
-    @FXML
-    private Button restoreButton;
-    @FXML
-    private Button deleteButton;
-    @FXML
-    private Button saveButton;
-    @FXML
-    private Button pauseButton;
-    @FXML
-    private Button playButton;
-    @FXML
-    private Button playReverseButton;
-    @FXML
-    private Button deleteSettingsButton;
+    private Label header;
 
+    @FXML
+    private ToolBar toolbar;
 
     private boolean isSourceButtonClicked = false;
     private boolean isTargetButtonClicked = false;
-
 
 
     IMergeService mergeService;
@@ -97,8 +87,8 @@ public class MergeDetailController {
     @FXML
     public void initialize() {
 
+        initToolbar();
         enableBackupMode();
-
         // Button-Event-Handler für den Source-Button
         sourceButton.setOnAction(event -> {
             isSourceButtonClicked = true;
@@ -116,6 +106,78 @@ public class MergeDetailController {
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
     }
+
+
+    /*Toolbar Toggler FXML Toolbar is reusable and includet in Parent FXML file*/
+    //TODO REUSABLE CONTROLLER with Annotaion @FXML if possible
+
+    private void initToolbar(){
+        toolbar.getItems().stream()
+                .filter(node -> node.getId() != null).forEach(node -> {
+                    if (node.getId().equals("playButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.save();
+                        });
+                    else if (node.getId().equals("saveButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.save();
+                        });
+                    else if (node.getId().equals("restoreButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.enableRestoreMode();
+                        });
+                    else if (node.getId().equals("backupButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.enableBackupMode();
+                        });
+                });
+    }
+
+
+    private void enableAllToolbarButtons(){
+        toolbar.getItems().stream()
+                .filter(node -> node.getId() != null && node.getId().contains("Button"))
+                .forEach(node -> {node.setVisible(true); node.setManaged(true);});
+    }
+
+    private void disableAllToolbarButtons(){
+        toolbar.getItems().stream()
+                .filter(node -> node.getId() != null && node.getId().contains("Button"))
+                .forEach(node -> {node.setVisible(false); node.setManaged(false);});
+    }
+
+
+    @FXML
+    private void enableBackupMode(){
+        disableAllToolbarButtons();
+        toolbar.getItems().stream()
+                .filter(node -> node.getId() != null && node.getId().contains("Button")
+                        && !node.getId().equals("backupButton")
+                        && !node.getId().equals("playReverseButton"))
+                .forEach(node -> {node.setVisible(true); node.setManaged(true);});
+        header.setText("Backup Mode");
+        changeModeColor();
+    }
+
+
+    @FXML
+    private void enableRestoreMode() {
+        enableAllToolbarButtons();
+        toolbar.getItems().stream()
+                .filter(node -> node.getId() != null && node.getId().contains("Button")
+                        && !node.getId().equals("backupButton")
+                        && !node.getId().equals("playReverseButton"))
+                .forEach(node -> {node.setVisible(false); node.setManaged(false);});
+        header.setText("Restore Mode");
+        changeModeColor();
+    }
+
+
+
+    /*----------------------END------------------------------------*/
+
+
+
     @FXML
     public void toggleTextAreas() {
         boolean enable = checkBoxPathing.isSelected();
@@ -164,54 +226,10 @@ public class MergeDetailController {
         }
     }
 
-    @FXML
-    private void enableBackupMode(){
-        playButton.setVisible(true);
-        playButton.setManaged(true);
-        pauseButton.setVisible(true);
-        pauseButton.setManaged(true);
-        deleteButton.setVisible(true);
-        deleteButton.setManaged(true);
-        saveButton.setVisible(true);
-        saveButton.setManaged(true);
-        restoreButton.setVisible(true);
-        restoreButton.setManaged(true);
-        deleteSettingsButton.setVisible(true);
-        deleteSettingsButton.setManaged(true);
-
-        backupButton.setVisible(false);
-        backupButton.setManaged(false);
-        playReverseButton.setVisible(false);
-        playReverseButton.setManaged(false);
-
-        stackPane.getStyleClass().add("basic-background");
-
-    }
-
-    @FXML
-    private void enableRestoreMode(){
-        playButton.setVisible(false);
-        playButton.setManaged(false);
-        pauseButton.setVisible(false);
-        pauseButton.setManaged(false);
-        deleteButton.setVisible(false);
-        deleteButton.setManaged(false);
-        saveButton.setVisible(false);
-        saveButton.setManaged(false);
-        restoreButton.setVisible(false);
-        restoreButton.setManaged(false);
-        deleteSettingsButton.setVisible(false);
-        deleteSettingsButton.setManaged(false);
 
 
-        backupButton.setVisible(true);
-        backupButton.setManaged(true);
-        playReverseButton.setVisible(true);
-        playReverseButton.setManaged(true);
 
-        changeModeColor();
 
-    }
 
 
     private void changeModeColor() {
@@ -318,6 +336,5 @@ public class MergeDetailController {
     private boolean saveData(){
         return dataStore.saveModelAsJSON(model);
     }
-
 
 }

@@ -4,6 +4,7 @@ module my.backup.backupTool {
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.jsr310;
+    requires java.compiler;
 
     opens my.backup.backupTool to javafx.fxml;
     opens my.backup.backupTool.Controller to javafx.fxml;
