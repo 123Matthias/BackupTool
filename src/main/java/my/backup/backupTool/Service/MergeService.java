@@ -2,6 +2,7 @@ package my.backup.backupTool.Service;
 
 import my.backup.backupTool.Controller.IMessageController;
 import my.backup.backupTool.Controller.MessageController;
+import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.IModel;
 
 import java.io.File;
@@ -12,7 +13,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class MergeService implements IMergeService {
 
 
-    IMessageController messageController;
+    MessageController messageController;
 
     public MergeService() {
 
@@ -29,7 +30,7 @@ public class MergeService implements IMergeService {
 
 
         if(model.validate() == false){
-             messageController.show(model.getMessageList());
+             messageController.show(model.getMessageList(), MessageTYPE.VALIDATION);
             return;
         }
 

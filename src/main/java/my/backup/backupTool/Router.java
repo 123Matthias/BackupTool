@@ -85,9 +85,9 @@ public class Router {
                 .setFXML("message.fxml")
                 .setDimensions(400, 300)
                 .addStylesheet("css/basicWindow.css")
-                .addStylesheet("css/mergeDetail.css")
-                .addStylesheet("css/basicComponents.css")
                 .addStylesheet("css/themeElements.css")
+                .addStylesheet("css/basicComponents.css")
+                .addStylesheet("css/messages.css")
                 .addStylesheet(theme)
                 .build();
     }

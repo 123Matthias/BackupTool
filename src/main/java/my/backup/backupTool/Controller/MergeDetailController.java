@@ -9,6 +9,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import my.backup.backupTool.App;
+import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
 import my.backup.backupTool.Model.IModel;
@@ -78,9 +79,6 @@ public class MergeDetailController {
     IModel model;
     BaseDataRepository dataStore;
     IUpdateScene sceneUpdate;
-    IMessageController messageController;
-
-
 
 
     @FXML
@@ -104,7 +102,6 @@ public class MergeDetailController {
         mergeService = new MergeService();
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
-        messageController = new MessageController();
     }
 
 
@@ -282,6 +279,12 @@ public class MergeDetailController {
         model.setSource(sourcePath.getText());
         model.setTarget(targetPath.getText());
         System.out.println("Meine Model Daten: " + "Source" +  model.getSource() + "Target" + model.getTarget());
+
+        if(!model.validate()){
+            MessageService.createMessage(model.getMessageList(),MessageTYPE.VALIDATION);
+            return;
+        }
+
         mergeService.startMergeData(model);
         saveData();
 
@@ -319,7 +322,7 @@ public class MergeDetailController {
             sceneUpdate.reloadView("mergeOverview.fxml");
         }
         else {
-            messageController.show(model.getMessageList());
+            MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
         }
     }
 

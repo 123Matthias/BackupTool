@@ -145,7 +145,7 @@ public class BaseModel implements IModel {
             valid = false;
         }
 
-        if ( !sourceDisk.equals("") && sourceDisk.equalsIgnoreCase(targetDisk)) {
+        if (!sourceDisk.isEmpty() && sourceDisk.equalsIgnoreCase(targetDisk)) {
             messages.addMessage("SOURCE " + sourceDisk + " + AND TARGET " + targetDisk + " IS ON SAME DISK");
             valid = false;
         }

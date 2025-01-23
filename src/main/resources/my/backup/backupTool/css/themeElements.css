@@ -172,6 +172,14 @@ VBox > .browseButton{
     -fx-effect: -fx-effect4;
 }
 
+.standardButton{
+    -fx-text-fill: -fx-color7;
+    -fx-border-color: -fx-color7;
+}
+.standardButton:hover {
+    -fx-effect: -fx-effect4;
+}
+
 /* ScrollBar Customization */
 .scroll-bar:vertical .track,
 .scroll-bar:horizontal .track {
@@ -267,5 +275,8 @@ VBox > .browseButton{
 }
 
 /*-----END Settings---------------*/
+.messageHeader{
+    -fx-text-fill: -fx-header1;
+}
 
-
+/*--------------Messages----------------------*/

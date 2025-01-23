@@ -1,0 +1,17 @@
+
+
+.messageHeader{
+    -fx-font-size: 24;
+    -fx-padding: 5;
+    -fx-alignment: center;
+}
+
+.messageContent{
+    -fx-font-size: 16px;
+    -fx-wrap-text: true;
+    -fx-padding: 5px;
+}
+
+.messageContainer{
+    -fx-padding: 5;
+}

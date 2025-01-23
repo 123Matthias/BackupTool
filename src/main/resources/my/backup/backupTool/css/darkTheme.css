@@ -5,6 +5,10 @@
     -fx-colorGridMain: rgba(0,0,0,0.05);
 
 
+
+    /*HEADERS*/
+    -fx-header1: #0082ae;
+    /*END HEADERS*/
     /*----------- Text and Text Areas---------------- */
 
     -fx-color1: white;  /* Text Fill Color */
