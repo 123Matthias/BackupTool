@@ -40,3 +40,9 @@
     -fx-font-size: 12px;
     -fx-padding: 6px;
 }
+
+.standardButton{
+    -fx-border-radius: 10;
+    -fx-background-color: none;
+    -fx-min-width: 50;
+}
