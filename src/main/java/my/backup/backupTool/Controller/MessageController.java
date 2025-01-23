@@ -10,15 +10,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
 import my.backup.backupTool.SceneBuilder;
-import my.backup.backupTool.Service.IMessage;
-import my.backup.backupTool.Service.Message;
-
+import my.backup.backupTool.Service.IMessageList;
 import java.io.IOException;
 
 public class MessageController implements IMessageController {
 
     @Override
-    public void setMessage(IMessage messages) {
+    public void show(IMessageList messages) {
         Stage stage = new Stage();
         SceneBuilder sceneBuilder = App.Router.createMessage(App.Router.getTheme().toString());
         Scene scene = null;

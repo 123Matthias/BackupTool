@@ -1,8 +1,8 @@
 package my.backup.backupTool.Controller;
 
-import my.backup.backupTool.Service.IMessage;
+import my.backup.backupTool.Service.IMessageList;
 
 public interface IMessageController {
 
-    void setMessage(IMessage message);
+    void show(IMessageList message);
 }

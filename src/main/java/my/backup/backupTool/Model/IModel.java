@@ -1,5 +1,8 @@
 package my.backup.backupTool.Model;
 
+
+import my.backup.backupTool.Service.IMessageList;
+
 import java.time.LocalDateTime;
 
 public interface IModel {
@@ -28,4 +31,7 @@ public interface IModel {
     String getTitle();
 
     void setTitle(String title);
+
+    boolean validate();
+    IMessageList getMessageList();
 }

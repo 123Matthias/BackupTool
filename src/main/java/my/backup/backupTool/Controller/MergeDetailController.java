@@ -75,11 +75,10 @@ public class MergeDetailController {
 
     IMergeService mergeService;
     ITimeService timeService;
-    ValidationService validationService;
     IModel model;
     BaseDataRepository dataStore;
-
     IUpdateScene sceneUpdate;
+    IMessageController messageController;
 
 
 
@@ -105,6 +104,7 @@ public class MergeDetailController {
         mergeService = new MergeService();
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
+        messageController = new MessageController();
     }
 
 
@@ -133,7 +133,16 @@ public class MergeDetailController {
                 });
     }
 
+    private void enableRestoreMode() {
+        header.setText("Restore");
+        changeModeColor();
+    }
 
+    private void enableBackupMode() {
+        header.setText("Backup");
+    }
+
+/*
     private void enableAllToolbarButtons(){
         toolbar.getItems().stream()
                 .filter(node -> node.getId() != null && node.getId().contains("Button"))
@@ -172,7 +181,7 @@ public class MergeDetailController {
         changeModeColor();
     }
 
-
+*/
 
     /*----------------------END------------------------------------*/
 
@@ -281,7 +290,7 @@ public class MergeDetailController {
     @FXML
     private void save(){
         System.out.println("Source: " + sourcePath.getText());
-        System.out.println("Target" + targetPath.getText());
+        System.out.println("Target: " + targetPath.getText());
         int days = 0;
         int hours = 0;
         try{
@@ -305,9 +314,13 @@ public class MergeDetailController {
         model.setStartDate(startDate);
         model.setIntervalDays(days);
         model.setIntervalHours(hours);
-        ValidationService.validatePath(new File(model.getSource()), new File(model.getTarget()));
-        saveData();
-        sceneUpdate.reloadView("mergeOverview.fxml");
+        if(model.validate()){
+            saveData();
+            sceneUpdate.reloadView("mergeOverview.fxml");
+        }
+        else {
+            messageController.show(model.getMessageList());
+        }
     }
 
 

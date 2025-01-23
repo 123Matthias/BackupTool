@@ -1,5 +1,6 @@
 package my.backup.backupTool.Service;
 
+import my.backup.backupTool.Controller.IMessageController;
 import my.backup.backupTool.Controller.MessageController;
 import my.backup.backupTool.Model.IModel;
 
@@ -11,12 +12,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class MergeService implements IMergeService {
 
 
-    IMessage messages;
+    IMessageController messageController;
 
     public MergeService() {
-        messages = new Message();
+
+        messageController = new MessageController();
+
     }
 
+    @Override
     public void startMergeData(IModel model) {
         File sourceDir = new File(model.getSource());
         File targetDir = new File(model.getTarget());
@@ -24,7 +28,10 @@ public class MergeService implements IMergeService {
         String targetDisk = sourceDir.toString().substring(0,2);
 
 
-        ValidationService.validatePath(sourceDir,targetDir);
+        if(model.validate() == false){
+             messageController.show(model.getMessageList());
+            return;
+        }
 
 
 

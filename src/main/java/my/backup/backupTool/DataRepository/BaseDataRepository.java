@@ -1,5 +1,6 @@
 package my.backup.backupTool.DataRepository;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Model.IModel;
@@ -118,6 +119,7 @@ public class BaseDataRepository implements IStoreData {
     public List<IModel> getAllAsList() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // JSON-Datei einlesen
         File sourceFile = new File(getStoragePath());
         createDefaultStorageFile();

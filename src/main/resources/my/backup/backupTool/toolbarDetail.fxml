@@ -7,9 +7,10 @@
 <ToolBar xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          fx:id="toolbarDetail"
+         fx:controller="my.backup.backupTool.Controller.ToolbarDetailController"
          styleClass="toolBarBottom" StackPane.alignment="BOTTOM_CENTER">
 
-    <Button fx:id="restoreButton" styleClass="restoreButton">
+    <Button fx:id="restoreButton" styleClass="restoreButton" onAction="#enableRestoreMode">
         <tooltip>
             <Tooltip text="Switch Restore Mode" />
         </tooltip>
@@ -19,7 +20,7 @@
         </graphic>
     </Button>
 
-    <Button fx:id="backupButton" styleClass="backupButton">
+    <Button fx:id="backupButton" styleClass="backupButton" onAction="#enableBackupMode">
         <tooltip>
             <Tooltip text="Switch Backup Mode" />
         </tooltip>

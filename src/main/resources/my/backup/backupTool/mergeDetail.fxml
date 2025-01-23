@@ -72,13 +72,13 @@
       <CheckBox fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" />
       <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="4" GridPane.columnIndex="1">
          <Label>Days Interval</Label>
-         <TextField fx:id="daysInterval" disable="true" editable="true" text="Days" />
+         <TextField fx:id="daysInterval" disable="true" editable="true" text="0" />
       </VBox>
 
       <CheckBox fx:id="checkBoxIntervalHours" onAction="#toggleHours" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.halignment="CENTER"  />
       <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="5" GridPane.columnIndex="1">
          <Label>Hours Interval</Label>
-         <TextField fx:id="hoursInterval" disable="true" editable="true" text="Hours"/>
+         <TextField fx:id="hoursInterval" disable="true" editable="true" text="0"/>
       </VBox>
       <!-- Button -->
 
