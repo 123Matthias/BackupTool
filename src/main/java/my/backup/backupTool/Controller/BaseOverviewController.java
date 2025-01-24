@@ -66,7 +66,6 @@ public class BaseOverviewController {
         Tooltip tooltip = new Tooltip("click for update this card");
         Tooltip.install(newContent, tooltip);
 
-
         //UUID
         String uid = model.getUid() != null && !model.getUid().isEmpty() ? model.getUid() : "";
         newContent.setId(uid);
