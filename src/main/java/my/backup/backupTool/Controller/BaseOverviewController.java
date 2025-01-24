@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
 import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
@@ -145,6 +146,8 @@ public class BaseOverviewController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
         stage.show();
     }
 
@@ -152,9 +155,25 @@ public class BaseOverviewController {
 
     @FXML
     public void openMergeDetailWindow() throws IOException {
+
         Stage stage = new Stage();
+        SceneBuilder sceneBuilder = App.Router.createMergeDetail(App.Router.getTheme().toString());
+        stage.setScene(sceneBuilder.getScene());
+
+        MergeDetailController controller = sceneBuilder.getController();
+
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(App.Router.createMergeDetail(App.Router.getTheme().toString()).getScene());
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setMinWidth(600);
+        stage.setMaxWidth(600);
+        stage.setMinHeight(750);
+        stage.setMaxHeight(750);
+
+        controller.getStackPane().setMinWidth(stage.getMinWidth());
+        controller.getStackPane().setMaxWidth(stage.getMaxWidth());
+        controller.getStackPane().setMinHeight(stage.getMinHeight());
+        controller.getStackPane().setMaxHeight(stage.getMaxHeight());
+
         stage.show();
     }
 

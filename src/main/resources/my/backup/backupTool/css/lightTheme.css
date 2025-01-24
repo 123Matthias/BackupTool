@@ -81,4 +81,8 @@
 
     /*----- END ACTION BUTTONS ------*/
 
+
+    -fx-danger: #ffe0cc; 
+
+    -fx-dangerBorder1: rgb(255, 0, 0);
 }

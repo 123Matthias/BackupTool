@@ -66,5 +66,9 @@ TextField, TextArea{
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 3); /* Schatteneffekt */
 }
 
+.danger{
+    -fx-border-width: 2px;
+}
+
 
 

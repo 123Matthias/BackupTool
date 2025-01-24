@@ -1,6 +1,5 @@
 package my.backup.backupTool.Service;
 
-import my.backup.backupTool.Controller.IMessageController;
 import my.backup.backupTool.Controller.MessageController;
 import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.IModel;
@@ -17,7 +16,6 @@ public class MergeService implements IMergeService {
 
     public MergeService() {
 
-        messageController = new MessageController();
 
     }
 
@@ -30,7 +28,7 @@ public class MergeService implements IMergeService {
 
 
         if(model.validate() == false){
-             messageController.show(model.getMessageList(), MessageTYPE.VALIDATION);
+             MessageService.createMessage(model.getMessageList(),MessageTYPE.VALIDATION);
             return;
         }
 

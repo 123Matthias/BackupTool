@@ -8,6 +8,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import my.backup.backupTool.App;
 import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.MergeModel;
@@ -83,7 +84,6 @@ public class MergeDetailController {
 
     @FXML
     public void initialize() {
-
         initToolbar();
         enableBackupMode();
         // Button-Event-Handler für den Source-Button
@@ -104,6 +104,13 @@ public class MergeDetailController {
         sceneUpdate = new SceneUpdateFXMLService();
     }
 
+    public StackPane getStackPane() {
+        return stackPane;
+    }
+
+    public void setStackPane(StackPane stackPane) {
+        this.stackPane = stackPane;
+    }
 
     /*Toolbar Toggler FXML Toolbar is reusable and includet in Parent FXML file*/
     //TODO REUSABLE CONTROLLER with Annotaion @FXML if possible
@@ -132,12 +139,29 @@ public class MergeDetailController {
 
     private void enableRestoreMode() {
         header.setText("Restore");
-        changeModeColor();
+        changeRestoreModeColor(true);
     }
 
     private void enableBackupMode() {
         header.setText("Backup");
+        changeRestoreModeColor(false);
+
+}
+
+
+    private void changeRestoreModeColor(boolean restoreMode) {
+
+
+        stackPane.getStyleClass().removeAll("danger", "basicBackground");
+
+        if (restoreMode) {
+            stackPane.getStyleClass().add("danger");
+        } else {
+            stackPane.getStyleClass().add("basicBackground");
+        }
     }
+
+
 
 /*
     private void enableAllToolbarButtons(){
@@ -238,21 +262,6 @@ public class MergeDetailController {
 
 
 
-    private void changeModeColor() {
-        BackgroundFill backgroundFill;
-
-        if (App.Router.getTheme() == Theme.DARK) {
-            // Dunkler Rotton
-            backgroundFill = new BackgroundFill(Color.rgb(50, 0, 0), null, null);  // Dunkler Rotton
-        } else {
-            // Heller Rotton
-            backgroundFill = new BackgroundFill(Color.rgb(255, 215, 200), null, null);  // Hellerer Rotton
-        }
-
-        Background background = new Background(backgroundFill);
-        stackPane.setBackground(background);
-    }
-
 
 
     @FXML
@@ -320,13 +329,14 @@ public class MergeDetailController {
         if(model.validate()){
             saveData();
             sceneUpdate.reloadView("mergeOverview.fxml");
+            MessageService.createToast("Saved Successfully");
+            Stage stage = (Stage) stackPane.getScene().getWindow();
+            stage.close();
         }
         else {
             MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
         }
     }
-
-
 
 
     public void openUpdateSceneByUID(String uid){
@@ -346,6 +356,7 @@ public class MergeDetailController {
         }
         daysInterval.setText(String.valueOf(model.getIntervalDays()));
         hoursInterval.setText(String.valueOf(model.getIntervalHours()));
+
 
     }
 

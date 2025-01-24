@@ -2,8 +2,7 @@
 
 .root {
 
-    -fx-colorGridMain: rgba(0,0,0,0.05);
-
+    -fx-colorGridMain: rgba(0, 0, 0, 0.05);
 
 
     /*HEADERS*/
@@ -11,7 +10,7 @@
     /*END HEADERS*/
     /*----------- Text and Text Areas---------------- */
 
-    -fx-color1: white;  /* Text Fill Color */
+    -fx-color1: white; /* Text Fill Color */
     -fx-color2: white; /* Background Text Areas */
     -fx-color12: black; /* Text Fill in Text Areas*/
     /*----------- END OF Text and Text Areas---------------- */
@@ -25,14 +24,14 @@
     -fx-color14: white; /*Stroke and Fill SVG PATH*/
     -fx-color15: #0f0f0f; /* TOOLBAR BACKGROUND*/
     -fx-color16: -fx-color3; /* Border Button */
-    -fx-effect1: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 0);/*SHADOW BUTTON*/
-    -fx-effect2: dropshadow(gaussian, rgba(255, 255, 255, 0.3), 5, 0, 0, 0);/*hover BASIC BUTTON*/
+    -fx-effect1: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 0); /*SHADOW BUTTON*/
+    -fx-effect2: dropshadow(gaussian, rgba(255, 255, 255, 0.3), 5, 0, 0, 0); /*hover BASIC BUTTON*/
     /*----------------END OF Toolbar----------------------- */
 
 
     /**-----------------Buttons--------------------------*/
     -fx-color7: -fx-color13; /*BROWSER BUTTON COLOR*/
-    -fx-color8:  -fx-color13; /*basic Button hover*/
+    -fx-color8: -fx-color13; /*basic Button hover*/
     /*-----------------END Buttons--------------------------/
 
      */
@@ -54,16 +53,16 @@
 
 
     /*----------------SCENE VIEW BACKGROUND COLOR----------------*/
-    -fx-mainBasicBackground: linear-gradient(to bottom right, rgba(30,30,35, 1) 20%, rgba(40,40,45, 1) 60%, rgba(50,50,55, 1) 80%, rgba(60,60,65, 1) 100%);
+    -fx-mainBasicBackground: linear-gradient(to bottom right, rgba(30, 30, 35, 1) 20%, rgba(40, 40, 45, 1) 60%, rgba(50, 50, 55, 1) 80%, rgba(60, 60, 65, 1) 100%);
     -fx-basicBackground: #1e1e1e;
 
     /*----------------END SCENE VIEW BACKGROUND COLOR----------------*/
 
-   /*---------------- MAIN SCENE BUTTONS------------------------------ */
-    -fx-RadialGradient1: radial-gradient(center 50% 50%, radius 50%, #21d8ff, #09dd94);/*BUTTON MAIN*/
-    -fx-radialGradient2: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94);/*HOVER BUTTON MAIN*/
-    -fx-effect3: dropshadow(gaussian, rgba(240, 230, 255, 0.98), 40, 0.0, 0.0, 0.0);/*FAIRY*/
-    -fx-effect9: dropshadow(gaussian, rgba(80, 70, 100, 0.98), 5, 0.0, 0.0, 0.0);/*MAIN BUTTON 2 and 1*/
+    /*---------------- MAIN SCENE BUTTONS------------------------------ */
+    -fx-RadialGradient1: radial-gradient(center 50% 50%, radius 50%, #21d8ff, #09dd94); /*BUTTON MAIN*/
+    -fx-radialGradient2: radial-gradient(center 50% 50%, radius 50%, #21d805, #09dd94); /*HOVER BUTTON MAIN*/
+    -fx-effect3: dropshadow(gaussian, rgba(240, 230, 255, 0.98), 40, 0.0, 0.0, 0.0); /*FAIRY*/
+    -fx-effect9: dropshadow(gaussian, rgba(80, 70, 100, 0.98), 5, 0.0, 0.0, 0.0); /*MAIN BUTTON 2 and 1*/
     -fx-effect18: dropshadow(gaussian, rgba(60, 200, 120, 0.98), 5, 0.0, 0.0, 0.0);
     /*------------- END MAIN SCENE BUTTONS------------------------------- */
 
@@ -82,5 +81,12 @@
     -fx-restoreColor: #b200ff;
     /*------------------------- END ACTION BUTTONS -----------------------------------*/
 
+
+
+
+    -fx-danger: rgba(95, 5, 5, 0.8);
+    -fx-dangerBorder1: rgb(255, 0, 0);
 }
+
+
 

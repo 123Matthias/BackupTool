@@ -14,7 +14,7 @@
 <?import javafx.scene.control.DatePicker?>
 
 <StackPane fx:id="stackPane" fx:controller="my.backup.backupTool.Controller.MergeDetailController" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           styleClass="basicBackground" maxWidth="800" minWidth="800" maxHeight="800" minHeight="500">
+           styleClass="basicBackground" >
 
 
    <!-- ********************HEADER******************************-->
@@ -26,7 +26,7 @@
    <!-- ********************END HEADER******************************-->
 
    <GridPane styleClass="gridPane"
-             style="-fx-padding: 40 0 0 0; -fx-background-color: transparent" maxWidth="800" minWidth="800" maxHeight="800" minHeight="500">
+             style="-fx-padding: 40 0 0 0; -fx-background-color: transparent" >
       <!-- Column for Full Width -->
       <columnConstraints>
          <ColumnConstraints hgrow="ALWAYS" percentWidth="10" />

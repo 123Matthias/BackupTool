@@ -46,3 +46,18 @@
     -fx-background-color: none;
     -fx-min-width: 50;
 }
+
+
+.toastLabel{
+    -fx-alignment: center;
+    -fx-font-size: 18;
+    -fx-font-style: italic;
+}
+.toastLogo{
+    -fx-alignment: center;
+
+}
+
+.toast{
+    -fx-border-width: 3;
+}

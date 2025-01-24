@@ -280,3 +280,21 @@ VBox > .browseButton{
 }
 
 /*--------------Messages----------------------*/
+
+
+/*-------------RESTORE MODES----------------*/
+
+.danger{
+    -fx-background-color: -fx-danger;
+    -fx-border-color: -fx-dangerBorder1;
+}
+
+.toast{
+    -fx-border-color: -fx-color13;
+}
+
+.toastLogo{
+    -fx-effect: -fx-effect3;
+}
+
+/*----------------END RESTORE--------------------------*/

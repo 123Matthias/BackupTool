@@ -2,6 +2,7 @@ package my.backup.backupTool;
 
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.Controller.ExceptionController;
@@ -15,9 +16,11 @@ public class Router {
     private Scene sceneMergeOverview;
     private Scene sceneSettings;
     private Theme theme;
+    private Stage toastStage;
 
     public Router() {
         this.theme = Theme.DARK;
+        setToastStage();
         try {
             setBaseOverviewScene(theme.toString());
         } catch (IOException e) {
@@ -45,6 +48,17 @@ public class Router {
         mainStage.setTitle("Memoria");
         mainStage.initStyle(StageStyle.DECORATED); // Kein Hintergrund für die Scene
         mainStage.setScene(sceneMain);
+    }
+
+    private void setToastStage(){
+        toastStage = new Stage();
+        toastStage.initStyle(StageStyle.TRANSPARENT);
+        toastStage.initModality(Modality.NONE);
+        toastStage.setAlwaysOnTop(true);
+    }
+
+    public Stage getToastStage(){
+        return toastStage;
     }
 
     public Stage getMainStage() {
@@ -84,6 +98,18 @@ public class Router {
         return new SceneBuilder.Builder()
                 .setFXML("message.fxml")
                 .setDimensions(400, 300)
+                .addStylesheet("css/basicWindow.css")
+                .addStylesheet("css/themeElements.css")
+                .addStylesheet("css/basicComponents.css")
+                .addStylesheet("css/messages.css")
+                .addStylesheet(theme)
+                .build();
+    }
+
+    public SceneBuilder createToast(String theme) {
+        return new SceneBuilder.Builder()
+                .setFXML("toast.fxml")
+                .setDimensions(350, 80)
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet("css/basicComponents.css")
