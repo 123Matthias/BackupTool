@@ -139,18 +139,18 @@ public class BaseOverviewController {
         System.out.println("UID Nummer: " + uid);
         Stage stage = new Stage();
         SceneBuilder newScene = App.Router.createMergeDetail(App.Router.getTheme().toString());
+
         try {
             stage.setScene(newScene.getScene());
-            MergeDetailController controller = newScene.getController();
-            controller.openUpdateSceneByUID(uid);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UTILITY);
+
+        MergeDetailController controller = newScene.getController();
+        controller.openUpdateSceneByUID(uid);
+        setStageDimensions(stage, controller);
         stage.show();
     }
-
 
 
     @FXML
@@ -159,8 +159,12 @@ public class BaseOverviewController {
         Stage stage = new Stage();
         SceneBuilder sceneBuilder = App.Router.createMergeDetail(App.Router.getTheme().toString());
         stage.setScene(sceneBuilder.getScene());
-
         MergeDetailController controller = sceneBuilder.getController();
+        setStageDimensions(stage, controller);
+        stage.show();
+    }
+
+    private void setStageDimensions(Stage stage, MergeDetailController controller) {
 
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
@@ -174,8 +178,9 @@ public class BaseOverviewController {
         controller.getStackPane().setMinHeight(stage.getMinHeight());
         controller.getStackPane().setMaxHeight(stage.getMaxHeight());
 
-        stage.show();
     }
+
+
 
 
     @FXML

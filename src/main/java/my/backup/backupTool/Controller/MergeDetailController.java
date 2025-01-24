@@ -138,14 +138,27 @@ public class MergeDetailController {
     }
 
     private void enableRestoreMode() {
-        header.setText("Restore");
+        header.setText("Restore Target to Source");
+        sourcePath.editableProperty().set(false);
+        targetPath.editableProperty().set(false);
+        sourceButton.setDisable(true);
+        targetButton.setDisable(true);
+        checkBoxIntervalDays.setDisable(true);
+        checkBoxIntervalHours.setDisable(true);
+        checkBoxStartDate.setDisable(true);
         changeRestoreModeColor(true);
     }
 
     private void enableBackupMode() {
         header.setText("Backup");
+        sourcePath.editableProperty().set(true);
+        targetPath.editableProperty().set(true);
+        sourceButton.setDisable(false);
+        targetButton.setDisable(false);
+        checkBoxIntervalDays.setDisable(false);
+        checkBoxIntervalHours.setDisable(false);
+        checkBoxStartDate.setDisable(false);
         changeRestoreModeColor(false);
-
 }
 
 

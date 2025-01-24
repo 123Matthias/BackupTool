@@ -290,7 +290,7 @@ VBox > .browseButton{
 }
 
 .toast{
-    -fx-border-color: -fx-color13;
+    -fx-border-color: -fx-color23;
 }
 
 .toastLogo{
