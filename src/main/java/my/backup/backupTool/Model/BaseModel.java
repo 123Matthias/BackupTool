@@ -121,27 +121,32 @@ public class BaseModel implements IModel {
 
         boolean valid = true;
 
-        File sourceDir = new File("");
-        File targetDir = new File("");
-        String sourceDisk = "";
-        String targetDisk = "";
-
-        if (source == null || target == null || source.length() <  3 || target.length() < 3){
-            messages.addMessage("Quell oder Zielpfadeingabe ist zu kurz");
+        if (source == null || source.length() <  3){
+            messages.addMessage("Quellpfadeingabe ist zu kurz");
             valid = false;
         }
-        else {
-            sourceDisk = source.substring(0, 2);
-            targetDisk = target.substring(0, 2);
-            sourceDir = new File(sourceDisk);
-            targetDir = new File(targetDisk);
+
+        if (target == null || target.length() <  3){
+            messages.addMessage("Zielpfadeingabe ist zu kurz");
+            valid = false;
         }
 
+        if(!valid){
+            return valid;
+        }
 
-        if (!sourceDir.exists() || !targetDir.exists()) {
+        File sourceDir = new File(source);
+        File targetDir = new File(target);
+
+        if (!sourceDir.exists()) {
             System.out.println("Source: " + sourceDir);
+            messages.addMessage("SOURCE DIRECTORY not EXISTS.");
+            valid = false;
+        }
+
+        if (!targetDir.exists()) {
             System.out.println("Target" + targetDir);
-            messages.addMessage("SOURCE OR TARGET DIRECTORY not EXISTS.");
+            messages.addMessage("TARGET DIRECTORY not EXISTS.");
             valid = false;
         }
 
