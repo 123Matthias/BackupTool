@@ -21,7 +21,7 @@
                       alignment="TOP_LEFT"
                       style="-fx-background-color: transparent;">
                 <Pane fx:id="cardId" styleClass="cardPane">
-                    <VBox fx:id="fluentContainer" styleClass="card"  >
+                    <VBox fx:id="cardContainer" styleClass="card"  >
 
                         <HBox styleClass="cardTitleContainer">
                             <Label styleClass="cardTitle" text="Card Title" />

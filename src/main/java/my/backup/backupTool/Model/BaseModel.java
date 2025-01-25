@@ -14,6 +14,9 @@ public class BaseModel implements IModel {
     @JsonProperty("uid")
     private String uid;
 
+    @JsonProperty("flowPane-Position")
+    private int flowPanePosition;
+
     @JsonProperty("title")
     private String title;
     @JsonProperty("source_path") // JSON Name wird geändert
@@ -33,6 +36,7 @@ public class BaseModel implements IModel {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Format für das Datum
     private LocalDateTime nextBackupLocalDateTime;
+
 
     @JsonIgnore
     private IMessageList messages;
@@ -175,6 +179,14 @@ public class BaseModel implements IModel {
             return false;
         }
         return true;
+    }
+
+    public int getFlowPanePosition() {
+        return flowPanePosition;
+    }
+
+    public void setFlowPanePosition(int flowPanePosition) {
+        this.flowPanePosition = flowPanePosition;
     }
 
     @Override

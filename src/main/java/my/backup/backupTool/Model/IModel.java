@@ -34,4 +34,9 @@ public interface IModel {
 
     boolean validate();
     IMessageList getMessageList();
+
+    int getFlowPanePosition();
+
+    void setFlowPanePosition(int flowPanePosition);
+
 }

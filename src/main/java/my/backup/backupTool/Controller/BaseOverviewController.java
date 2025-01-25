@@ -3,25 +3,25 @@ package my.backup.backupTool.Controller;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToolBar;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
 import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
+import my.backup.backupTool.DataRepository.IStoreData;
+import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.SceneBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -36,6 +36,12 @@ public class BaseOverviewController {
     private FlowPane flowPane; // Dein FlowPane
     @FXML
     private Pane cardId;
+    @FXML
+    private VBox cardContainer;
+
+    IModel model;
+
+    IStoreData storeData;
 
 
     @FXML
@@ -50,6 +56,8 @@ public class BaseOverviewController {
             }
         });
 
+        model = new BaseModel();
+        storeData = new BaseDataRepository();
         getAllCards();
     }
 
@@ -57,31 +65,61 @@ public class BaseOverviewController {
     @FXML
     public void addNewCard(IModel model) {
         // Randabstand
-        Pane newCard = new Pane();
-        newCard.getStyleClass().add("cardPane"); // Stile der Vorlage übernehmen
+        Pane newCardPane = new Pane();
+        newCardPane.getStyleClass().add("cardPane"); // Stile der Vorlage übernehmen
 
         //CardContainer
-        VBox newContent = new VBox();
-
+        VBox newCardBox = new VBox();
         Tooltip tooltip = new Tooltip("click for update this card");
-        Tooltip.install(newContent, tooltip);
+        Tooltip.install(newCardBox, tooltip);
+
 
         //UUID
         String uid = model.getUid() != null && !model.getUid().isEmpty() ? model.getUid() : "";
-        newContent.setId(uid);
-        newContent.getStyleClass().add("card");
-        newContent.setSpacing(5);
-        newContent.setOnMouseClicked(event -> openMergeDetailWindow(uid));
+        newCardBox.getStyleClass().add("card");
+        newCardBox.setSpacing(5);
+        newCardPane.setId(uid);
+        enableDragAndDrop(newCardPane, flowPane);
 
-        // Titel (HBox)
+
+
+// Titel (HBox)
         HBox newTitleContainer = new HBox();
         newTitleContainer.getStyleClass().add("cardTitleContainer");
 
-        // Titel
+// Titel
         Label titleLabel = new Label();
         titleLabel.setText(model.getTitle());  // Setze den Titel
         titleLabel.getStyleClass().add("cardTitle"); // Stile für den Titel setzen
-        newTitleContainer.getChildren().add(titleLabel);
+
+// Buttons
+        Button increaseWidthButton = new Button("+");
+        increaseWidthButton.setStyle("-fx-font-size: 16; -fx-padding: 0");
+        increaseWidthButton.setOnMouseClicked(event -> {
+            double currentWidth = newCardBox.getPrefWidth();
+            newCardBox.setPrefWidth(currentWidth + 50);
+            newCardBox.setStyle("-fx-pref-width: " + (currentWidth + 50) + "px;");
+        });
+
+        Button decreaseWidthButton = new Button("-");
+        decreaseWidthButton.setStyle("-fx-font-size: 16; -fx-padding: 0");
+        decreaseWidthButton.setOnMouseClicked(event -> {
+            double currentWidth = newCardBox.getPrefWidth();
+            if (currentWidth > 50) { // Mindestbreite beachten
+                newCardBox.setPrefWidth(currentWidth - 50);
+                newCardBox.setStyle("-fx-pref-width: " + (currentWidth - 50) + "px;");
+            }
+        });
+
+
+// Pane als Platzhalter hinzufügen
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS); // Pane dehnt sich aus, um Platz zu schaffen
+        increaseWidthButton.getStyleClass().add("basicButton");
+        decreaseWidthButton.getStyleClass().add("basicButton");
+// Buttons zur HBox hinzufügen
+        newTitleContainer.getChildren().addAll(titleLabel, spacer, increaseWidthButton, decreaseWidthButton);
+
 
         VBox contentBox = new VBox();
         contentBox.getStyleClass().add("cardContent");
@@ -97,12 +135,18 @@ public class BaseOverviewController {
                 new Label("Target Path: " + model.getTarget())
         );
 
+        //EVENT LISTENER für Open Update View
+        contentBox.setOnMouseClicked(event -> openMergeDetailWindow(uid));
+
         // Struktur aufbauen
-        newContent.getChildren().addAll(newTitleContainer, contentBox);
-        newCard.getChildren().add(newContent);
+        newCardBox.getChildren().addAll(newTitleContainer, contentBox);
+        newCardPane.getChildren().add(newCardBox);
+
 
         // Neue Karte in das FlowPane einfügen
-        flowPane.getChildren().add(newCard);  // flowPane muss vorher definiert sein
+        flowPane.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
+
+
         System.out.println("...............Card Added ........................");
     }
 
@@ -113,6 +157,7 @@ public class BaseOverviewController {
         List<IModel> dataList = new ArrayList<>();
         try {
             dataList = data.getAllAsList();
+            dataList.sort(Comparator.comparingInt(IModel::getFlowPanePosition));
 
             // Prüfen, ob die Liste leer ist
             if (dataList.isEmpty()) {
@@ -233,5 +278,55 @@ public class BaseOverviewController {
     }
 
 */
+
+
+    private void enableDragAndDrop(Pane card, FlowPane container) {
+        // Drag startet
+        card.setOnDragDetected(event -> {
+            Dragboard db = card.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(card.getId()); // ID zur Identifikation
+            db.setContent(content);
+            event.consume();
+        });
+
+        // Drag bewegt sich über eine andere Card und ist nicht die eigene Card != card
+        card.setOnDragOver(event -> {
+            if (event.getGestureSource() != card && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        // Drag wird fallen gelassen
+        card.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                String draggedId = db.getString();
+                Pane draggedCard = (Pane) container.lookup("#" + draggedId); // Suche Karte
+                if (draggedCard != null) {
+                    int dropIndex = container.getChildren().indexOf(card); // Zielposition
+                    container.getChildren().remove(draggedCard); // Alte Karte entfernen
+                    container.getChildren().add(dropIndex, draggedCard); // Neu einfügen
+                    try {
+                        model = storeData.getModelById(card.getId());
+                        model.setFlowPanePosition(container.getChildren().indexOf(card));
+                        storeData.saveModelAsJSON(model);
+                    } catch (IOException e) {
+                        ExceptionController.handleException(e);
+                    }
+                    success = true;
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        // Drag abgeschlossen
+        card.setOnDragDone(event -> event.consume());
+    }
+
+
 
 }
