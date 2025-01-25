@@ -22,11 +22,6 @@ public class Router {
     public Router() {
         this.theme = Theme.DARK;
         setToastStage();
-        try {
-            setSceneBuilderBaseOverview(theme.toString());
-        } catch (IOException e) {
-            ExceptionController.handleException(e);
-        }
 
         try {
             setMainScene(theme.toString());
@@ -125,20 +120,6 @@ public class Router {
                 .build();
     }
 
-    public void setSceneBuilderBaseOverview(String theme) throws IOException {
-        sceneBuilderMergeOverview = new SceneBuilder.Builder()
-                .setFXML("mergeOverview.fxml")
-                .setDimensions(800, 800)
-                .addStylesheet("css/basicWindow.css")
-                .addStylesheet("css/mergeOverview.css")
-                .addStylesheet("css/basicComponents.css")
-                .addStylesheet("css/cards.css")
-                .addStylesheet("css/toolBar.css")
-                .addStylesheet("css/themeElements.css")
-                .addStylesheet(theme)
-                .build();
-    }
-
     public void setSceneMergeOverview(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("mergeOverview.fxml")
@@ -188,7 +169,6 @@ public class Router {
         try {
             setMainScene(theme.toString());
             setSceneSettings(theme.toString());
-            setSceneBuilderBaseOverview(theme.toString());
             setSceneMergeOverview(theme.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);

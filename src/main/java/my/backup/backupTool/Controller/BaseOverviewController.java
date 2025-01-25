@@ -152,14 +152,7 @@ public class BaseOverviewController {
 // Neue ProgressBar
         ProgressBar progressBar = new ProgressBar(0);  // Fort
 
-// Listener für Fortschrittsaktualisierung
-        model.addChangeListener(evt -> {
-            System.out.println("progressBar: " + progressBar.getProgress());
-            if ("progressState".equals(evt.getPropertyName())) {
-                double progress = (double) evt.getNewValue();
-                Platform.runLater(() -> progressBar.setProgress(progress));
-            }
-        });
+        progressBar.progressProperty().bind(model.progressStateProperty());
 
 
         //EVENT LISTENER für Open Update View
@@ -175,8 +168,8 @@ public class BaseOverviewController {
         // Neue Karte in das FlowPane einfügen
         flowPane.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
         if(model.hasPlayBackupOrder()){
-            IMergeService mergeService = new MergeService();
-            mergeService.startMergeData(model);
+            IMergeService mergeService = new MergeService(model);
+            mergeService.startMergeThread();
         }
 
         System.out.println("...............Card Added ........................");

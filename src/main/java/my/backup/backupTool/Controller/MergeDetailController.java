@@ -75,7 +75,6 @@ public class MergeDetailController {
     private boolean isTargetButtonClicked = false;
 
 
-    IMergeService mergeService;
     ITimeService timeService;
     IModel model;
     BaseDataRepository dataStore;
@@ -99,7 +98,6 @@ public class MergeDetailController {
         // MVC Model Initialisierung für MergeController;
         model = new MergeModel();
         dataStore = new BaseDataRepository();
-        mergeService = new MergeService();
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
     }

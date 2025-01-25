@@ -1,6 +1,8 @@
 package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.IProgressBar;
 import my.backup.backupTool.Service.MergeService;
@@ -19,6 +21,10 @@ public class BaseModel implements IModel {
 
     @JsonIgnore
     private double progressState;
+
+    @JsonIgnore
+    private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0.0);
+
 
     @JsonProperty("uid")
     private String uid;
@@ -252,5 +258,24 @@ public class BaseModel implements IModel {
     @JsonProperty("play-BackupOrder")
     public void setPlayBackupOrder(boolean playBackupOrder) {
         this.playBackupOrder = playBackupOrder;
+    }
+
+
+    @Override
+    @JsonIgnore
+    public double getProgressStateProp() {
+        return progressStateProp.get();
+    }
+
+    @Override
+    @JsonIgnore
+    public void setProgressStateProp(double progress) {
+        this.progressStateProp.set(progress);
+    }
+
+    @Override
+    @JsonIgnore
+    public DoubleProperty progressStateProperty() {
+        return progressStateProp;
     }
 }

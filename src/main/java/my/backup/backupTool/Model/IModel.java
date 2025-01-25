@@ -1,6 +1,8 @@
 package my.backup.backupTool.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javafx.beans.property.DoubleProperty;
 import my.backup.backupTool.Service.IMessageList;
 
 import java.beans.PropertyChangeListener;
@@ -56,5 +58,12 @@ public interface IModel {
     public boolean hasPlayBackupOrder();
 
     public void setPlayBackupOrder(boolean playBackupOrder);
+
+
+    public double getProgressStateProp();
+
+    public void setProgressStateProp(double progress);
+
+    public DoubleProperty progressStateProperty();
 
 }
