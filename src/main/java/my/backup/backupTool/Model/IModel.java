@@ -3,6 +3,7 @@ package my.backup.backupTool.Model;
 
 import my.backup.backupTool.Service.IMessageList;
 
+import java.beans.PropertyChangeListener;
 import java.time.LocalDateTime;
 
 public interface IModel {
@@ -38,5 +39,22 @@ public interface IModel {
     int getFlowPanePosition();
 
     void setFlowPanePosition(int flowPanePosition);
+
+
+    public int getCardWidth();
+
+    public void setCardWidth(int cardWidth);
+
+    void setProgressState(double progressState);
+
+    double getProgressState();
+
+     void addChangeListener(PropertyChangeListener listener);
+
+     void removeChangeListener(PropertyChangeListener listener);
+
+    public boolean hasPlayBackupOrder();
+
+    public void setPlayBackupOrder(boolean playBackupOrder);
 
 }

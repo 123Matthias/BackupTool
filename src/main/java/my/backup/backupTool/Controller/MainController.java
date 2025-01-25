@@ -20,6 +20,7 @@ public class MainController {
 */
     @FXML
     public void handleOpenMergeOverviewWindow() {
+
         App.Router.getMainStage().setScene(App.Router.getSceneMergeOverview());
         App.Router.getMainStage().show();
     }

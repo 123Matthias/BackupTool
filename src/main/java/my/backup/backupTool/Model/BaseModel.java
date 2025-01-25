@@ -2,14 +2,23 @@ package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.*;
 import my.backup.backupTool.Service.IMessageList;
+import my.backup.backupTool.Service.IProgressBar;
+import my.backup.backupTool.Service.MergeService;
 import my.backup.backupTool.Service.MessageList;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.time.LocalDateTime;
 
 public class BaseModel implements IModel {
 
 
+    @JsonIgnore
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this); // Listener-Verwaltung
+
+    @JsonIgnore
+    private double progressState;
 
     @JsonProperty("uid")
     private String uid;
@@ -37,9 +46,15 @@ public class BaseModel implements IModel {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Format für das Datum
     private LocalDateTime nextBackupLocalDateTime;
 
+    @JsonProperty("Cardwidth")
+    private int cardWidth;
+
+    @JsonProperty("play-BackupOrder")
+    private boolean playBackupOrder;
 
     @JsonIgnore
     private IMessageList messages;
+
 
     @JsonCreator
     public BaseModel() {
@@ -189,9 +204,53 @@ public class BaseModel implements IModel {
         this.flowPanePosition = flowPanePosition;
     }
 
+    public int getCardWidth() {
+        return cardWidth;
+    }
+
+    public void setCardWidth(int cardWidth) {
+        this.cardWidth = cardWidth;
+    }
+
     @Override
     @JsonIgnore
     public IMessageList getMessageList() {
         return messages;
+    }
+
+
+    @Override
+    @JsonIgnore
+    public double getProgressState() {
+        return this.progressState;
+    }
+
+    @Override
+    @JsonIgnore
+    public void setProgressState(double progressState) {
+        double oldProgressState = this.progressState;
+        this.progressState = progressState;
+        // Listener benachrichtigen
+        support.firePropertyChange("progressState", oldProgressState, progressState);
+    }
+
+    @Override
+    @JsonIgnore
+    public void addChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    @JsonIgnore
+    public void removeChangeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
+    }
+    @JsonProperty("play-BackupOrder")
+    public boolean hasPlayBackupOrder() {
+        return playBackupOrder;
+    }
+    @JsonProperty("play-BackupOrder")
+    public void setPlayBackupOrder(boolean playBackupOrder) {
+        this.playBackupOrder = playBackupOrder;
     }
 }

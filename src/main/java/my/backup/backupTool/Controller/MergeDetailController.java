@@ -120,7 +120,7 @@ public class MergeDetailController {
                 .filter(node -> node.getId() != null).forEach(node -> {
                     if (node.getId().equals("playButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.save();
+                            this.play();
                         });
                     else if (node.getId().equals("saveButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -271,49 +271,27 @@ public class MergeDetailController {
 
 
 
-
-
-
-
-
-
     @FXML
     private void play(){
-        System.out.println("Source: " + sourcePath.getText());
-        System.out.println("Target" + targetPath.getText());
-        int days = 0;
-        int hours = 0;
-        try{
-            days = Integer.parseInt(daysInterval.getText());
-            hours = Integer.parseInt(hoursInterval.getText());
-        }
-        catch (NumberFormatException e){
-            System.out.println("Not type of integer: " + e);
-        }
-
-        LocalDateTime startDate = LocalDateTime.now();
-        startDate = (datePicker != null && datePicker.getValue() != null)
-                ? datePicker.getValue().atTime(LocalTime.now())
-                : startDate;
-
-
-        timeService.setTiming(startDate, days, hours);
-        model.setSource(sourcePath.getText());
-        model.setTarget(targetPath.getText());
-        System.out.println("Meine Model Daten: " + "Source" +  model.getSource() + "Target" + model.getTarget());
-
-        if(!model.validate()){
-            MessageService.createMessage(model.getMessageList(),MessageTYPE.VALIDATION);
-            return;
-        }
-
-        mergeService.startMergeData(model);
+        System.out.println("---------METHOD PLAY STARTED -------------------------------");
+        save();
+        model.setPlayBackupOrder(true);
         saveData();
+        System.out.println("---------METHOD PLAY FINISHED -------------------------------");
 
     }
 
     @FXML
-    private void save(){
+    private void pause(){
+        System.out.println("---------METHOD Pause STARTED -------------------------------");
+        model.setPlayBackupOrder(false);
+        saveData();
+        System.out.println("---------METHOD Pause FINISHED -------------------------------");
+
+    }
+
+    @FXML
+    private boolean save(){
         System.out.println("Source: " + sourcePath.getText());
         System.out.println("Target: " + targetPath.getText());
         int days = 0;
@@ -339,15 +317,18 @@ public class MergeDetailController {
         model.setStartDate(startDate);
         model.setIntervalDays(days);
         model.setIntervalHours(hours);
+
         if(model.validate()){
             saveData();
             sceneUpdate.reloadView("mergeOverview.fxml");
             MessageService.createToast("Saved Successfully");
             Stage stage = (Stage) stackPane.getScene().getWindow();
             stage.close();
+            return true;
         }
         else {
             MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
+            return false;
         }
     }
 

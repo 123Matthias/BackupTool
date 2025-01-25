@@ -13,6 +13,7 @@ public class Router {
 
     private Stage mainStage;
     private Scene sceneMain;
+    private SceneBuilder sceneBuilderMergeOverview;
     private Scene sceneMergeOverview;
     private Scene sceneSettings;
     private Theme theme;
@@ -22,7 +23,7 @@ public class Router {
         this.theme = Theme.DARK;
         setToastStage();
         try {
-            setBaseOverviewScene(theme.toString());
+            setSceneBuilderBaseOverview(theme.toString());
         } catch (IOException e) {
             ExceptionController.handleException(e);
         }
@@ -36,6 +37,12 @@ public class Router {
             setSceneSettings(theme.toString());
         } catch (IOException e) {
             ExceptionController.handleException(e);
+        }
+
+        try {
+            setSceneMergeOverview(theme.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -118,7 +125,21 @@ public class Router {
                 .build();
     }
 
-    public void setBaseOverviewScene(String theme) throws IOException {
+    public void setSceneBuilderBaseOverview(String theme) throws IOException {
+        sceneBuilderMergeOverview = new SceneBuilder.Builder()
+                .setFXML("mergeOverview.fxml")
+                .setDimensions(800, 800)
+                .addStylesheet("css/basicWindow.css")
+                .addStylesheet("css/mergeOverview.css")
+                .addStylesheet("css/basicComponents.css")
+                .addStylesheet("css/cards.css")
+                .addStylesheet("css/toolBar.css")
+                .addStylesheet("css/themeElements.css")
+                .addStylesheet(theme)
+                .build();
+    }
+
+    public void setSceneMergeOverview(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("mergeOverview.fxml")
                 .setDimensions(800, 800)
@@ -133,10 +154,13 @@ public class Router {
         sceneMergeOverview = sceneBuilder.getScene();
     }
 
+    public SceneBuilder getSceneBuilderMergeOverview() {
+        return sceneBuilderMergeOverview;
+    }
+
     public Scene getSceneMergeOverview() {
         return sceneMergeOverview;
     }
-
 
     public Scene getSceneSettings() {
         return sceneSettings;
@@ -164,7 +188,8 @@ public class Router {
         try {
             setMainScene(theme.toString());
             setSceneSettings(theme.toString());
-            setBaseOverviewScene(theme.toString());
+            setSceneBuilderBaseOverview(theme.toString());
+            setSceneMergeOverview(theme.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

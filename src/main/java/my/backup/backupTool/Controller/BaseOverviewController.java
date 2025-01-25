@@ -1,5 +1,6 @@
 package my.backup.backupTool.Controller;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -18,11 +19,11 @@ import my.backup.backupTool.DataRepository.IStoreData;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.SceneBuilder;
+import my.backup.backupTool.Service.IMergeService;
+import my.backup.backupTool.Service.MergeService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 
 public class BaseOverviewController {
@@ -44,8 +45,11 @@ public class BaseOverviewController {
     IStoreData storeData;
 
 
+
+
     @FXML
     private void initialize() {
+
         // Listener für Änderungen an der Höhe der ToolBar
         toolBar.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -64,6 +68,8 @@ public class BaseOverviewController {
 
     @FXML
     public void addNewCard(IModel model) {
+
+
         // Randabstand
         Pane newCardPane = new Pane();
         newCardPane.getStyleClass().add("cardPane"); // Stile der Vorlage übernehmen
@@ -77,6 +83,9 @@ public class BaseOverviewController {
         //UUID
         String uid = model.getUid() != null && !model.getUid().isEmpty() ? model.getUid() : "";
         newCardBox.getStyleClass().add("card");
+        if(model.getCardWidth() != 0){
+            newCardBox.setStyle("-fx-pref-width:" + model.getCardWidth());
+        }
         newCardBox.setSpacing(5);
         newCardPane.setId(uid);
         enableDragAndDrop(newCardPane, flowPane);
@@ -99,6 +108,8 @@ public class BaseOverviewController {
             double currentWidth = newCardBox.getPrefWidth();
             newCardBox.setPrefWidth(currentWidth + 50);
             newCardBox.setStyle("-fx-pref-width: " + (currentWidth + 50) + "px;");
+            model.setCardWidth((int)newCardBox.getPrefWidth());
+            storeData.saveModelAsJSON(model);
         });
 
         Button decreaseWidthButton = new Button("-");
@@ -108,9 +119,10 @@ public class BaseOverviewController {
             if (currentWidth > 50) { // Mindestbreite beachten
                 newCardBox.setPrefWidth(currentWidth - 50);
                 newCardBox.setStyle("-fx-pref-width: " + (currentWidth - 50) + "px;");
+                model.setCardWidth((int)newCardBox.getPrefWidth());
+                storeData.saveModelAsJSON(model);
             }
         });
-
 
 // Pane als Platzhalter hinzufügen
         Region spacer = new Region();
@@ -120,7 +132,7 @@ public class BaseOverviewController {
 // Buttons zur HBox hinzufügen
         newTitleContainer.getChildren().addAll(titleLabel, spacer, increaseWidthButton, decreaseWidthButton);
 
-
+// CONTENT------------------------------------------------------------
         VBox contentBox = new VBox();
         contentBox.getStyleClass().add("cardContent");
         contentBox.setSpacing(5);
@@ -135,20 +147,46 @@ public class BaseOverviewController {
                 new Label("Target Path: " + model.getTarget())
         );
 
+
+
+// Neue ProgressBar
+        ProgressBar progressBar = new ProgressBar(0);  // Fort
+
+// Listener für Fortschrittsaktualisierung
+        model.addChangeListener(evt -> {
+            System.out.println("progressBar: " + progressBar.getProgress());
+            if ("progressState".equals(evt.getPropertyName())) {
+                double progress = (double) evt.getNewValue();
+                Platform.runLater(() -> progressBar.setProgress(progress));
+            }
+        });
+
+
         //EVENT LISTENER für Open Update View
         contentBox.setOnMouseClicked(event -> openMergeDetailWindow(uid));
 
         // Struktur aufbauen
-        newCardBox.getChildren().addAll(newTitleContainer, contentBox);
+        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressBar);
         newCardPane.getChildren().add(newCardBox);
+
+
 
 
         // Neue Karte in das FlowPane einfügen
         flowPane.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
-
+        if(model.hasPlayBackupOrder()){
+            IMergeService mergeService = new MergeService();
+            mergeService.startMergeData(model);
+        }
 
         System.out.println("...............Card Added ........................");
+
+
     }
+
+
+
+
 
 
     @FXML
@@ -167,7 +205,7 @@ public class BaseOverviewController {
 
             // Liste iterieren und Karten hinzufügen
             for (IModel entry : dataList) {
-                System.out.println("addCard: " + entry.getTitle());
+                System.out.println("AddCardFromList getAllCards() " + entry.getTitle());
                 addNewCard(entry);
             }
         } catch (IOException e) {
@@ -326,7 +364,5 @@ public class BaseOverviewController {
         // Drag abgeschlossen
         card.setOnDragDone(event -> event.consume());
     }
-
-
 
 }
