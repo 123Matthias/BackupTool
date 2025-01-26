@@ -3,6 +3,7 @@ package my.backup.backupTool.Model;
 import com.fasterxml.jackson.annotation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.IProgressBar;
 import my.backup.backupTool.Service.MergeService;
@@ -15,16 +16,11 @@ import java.time.LocalDateTime;
 
 public class BaseModel implements IModel {
 
+    @JsonIgnore
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     @JsonIgnore
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this); // Listener-Verwaltung
-
-    @JsonIgnore
-    private double progressState;
-
-    @JsonIgnore
-    private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0.0);
-
+    private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0);
 
     @JsonProperty("uid")
     private String uid;
@@ -60,6 +56,12 @@ public class BaseModel implements IModel {
 
     @JsonIgnore
     private IMessageList messages;
+
+    @JsonProperty("source-Hash")
+    private String sourceHash;
+
+    @JsonProperty("target-Hash")
+    private String targetHash;
 
 
     @JsonCreator
@@ -224,33 +226,6 @@ public class BaseModel implements IModel {
         return messages;
     }
 
-
-    @Override
-    @JsonIgnore
-    public double getProgressState() {
-        return this.progressState;
-    }
-
-    @Override
-    @JsonIgnore
-    public void setProgressState(double progressState) {
-        double oldProgressState = this.progressState;
-        this.progressState = progressState;
-        // Listener benachrichtigen
-        support.firePropertyChange("progressState", oldProgressState, progressState);
-    }
-
-    @Override
-    @JsonIgnore
-    public void addChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    @JsonIgnore
-    public void removeChangeListener(PropertyChangeListener listener) {
-        support.removePropertyChangeListener(listener);
-    }
     @JsonProperty("play-BackupOrder")
     public boolean hasPlayBackupOrder() {
         return playBackupOrder;
@@ -263,19 +238,31 @@ public class BaseModel implements IModel {
 
     @Override
     @JsonIgnore
-    public double getProgressStateProp() {
-        return progressStateProp.get();
-    }
-
-    @Override
-    @JsonIgnore
     public void setProgressStateProp(double progress) {
         this.progressStateProp.set(progress);
     }
 
     @Override
     @JsonIgnore
-    public DoubleProperty progressStateProperty() {
+    public DoubleProperty getProgressStateProp() {
         return progressStateProp;
     }
+
+    public String getTargetHash() {
+        return targetHash;
+    }
+
+    public void setTargetHash(String targetHash) {
+        this.targetHash = targetHash;
+    }
+
+    public String getSourceHash() {
+        return sourceHash;
+    }
+
+    public void setSourceHash(String sourceHash) {
+        this.sourceHash = sourceHash;
+    }
+
+
 }

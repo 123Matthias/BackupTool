@@ -1,11 +1,10 @@
 package my.backup.backupTool.Model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import my.backup.backupTool.Service.IMessageList;
 
-import java.beans.PropertyChangeListener;
 import java.time.LocalDateTime;
 
 public interface IModel {
@@ -42,28 +41,26 @@ public interface IModel {
 
     void setFlowPanePosition(int flowPanePosition);
 
-
     public int getCardWidth();
 
     public void setCardWidth(int cardWidth);
-
-    void setProgressState(double progressState);
-
-    double getProgressState();
-
-     void addChangeListener(PropertyChangeListener listener);
-
-     void removeChangeListener(PropertyChangeListener listener);
 
     public boolean hasPlayBackupOrder();
 
     public void setPlayBackupOrder(boolean playBackupOrder);
 
-
-    public double getProgressStateProp();
-
     public void setProgressStateProp(double progress);
 
-    public DoubleProperty progressStateProperty();
+    public DoubleProperty getProgressStateProp();
+
+
+    public String getTargetHash();
+
+    public void setTargetHash(String targetHash);
+
+    public String getSourceHash();
+
+    public void setSourceHash(String sourceHash);
+
 
 }

@@ -290,8 +290,8 @@ public class MergeDetailController {
 
     @FXML
     private boolean save(){
-        System.out.println("Source: " + sourcePath.getText());
-        System.out.println("Target: " + targetPath.getText());
+     //   System.out.println("Source: " + sourcePath.getText());
+     //   System.out.println("Target: " + targetPath.getText());
         int days = 0;
         int hours = 0;
         try{

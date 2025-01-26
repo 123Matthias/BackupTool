@@ -4,3 +4,21 @@
     -fx-background-radius: 5;
 }
 
+.flowPane{
+    -fx-padding: 50 0 0 0 !important;
+}
+
+.progress-bar {
+    -fx-min-height: 8;
+    -fx-max-height: 8;
+    -fx-accent: -fx-color3;
+    -fx-background-color: -fx-color23;
+    -fx-border-radius: 1;
+    -fx-background-radius: 1;
+    -fx-padding: 1;
+}
+.progress-bar .track{
+    -fx-min-height: 20;
+    -fx-background-color: -fx-Color3;
+    -fx-background-radius: 1;
+}

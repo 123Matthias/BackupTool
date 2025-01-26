@@ -18,7 +18,7 @@
                 pannable="true">
 
             <FlowPane fx:id="flowPane"
-                      alignment="TOP_LEFT"
+                      styleClass="flowPane"
                       style="-fx-background-color: transparent;">
                 <Pane fx:id="cardId" styleClass="cardPane">
                     <VBox fx:id="cardContainer" styleClass="card"  >

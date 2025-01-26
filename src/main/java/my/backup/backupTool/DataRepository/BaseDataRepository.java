@@ -84,7 +84,7 @@ public class BaseDataRepository implements IStoreData {
 
             objectMapper.writeValue(file, modelList);
 
-            System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
+         //   System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
             return true;
 
         } catch (IOException e) {
@@ -136,9 +136,6 @@ public class BaseDataRepository implements IStoreData {
                 sourceFile,
                 mapper.getTypeFactory().constructCollectionType(List.class, BaseModel.class)
         );
-
-        // Daten verarbeiten
-        dataList.forEach(System.out::println);
 
         return dataList;
     }

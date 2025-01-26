@@ -1,9 +1,8 @@
 package my.backup.backupTool.Controller;
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.Property;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -50,23 +49,14 @@ public class BaseOverviewController {
     @FXML
     private void initialize() {
 
-        // Listener für Änderungen an der Höhe der ToolBar
-        toolBar.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                // Sobald die Höhe der ToolBar sich ändert, das Padding des FlowPane anpassen
-                double toolBarHeight = toolBar.getHeight();
-                flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
-            }
-        });
-
+        double toolBarHeight = toolBar.getHeight();
+        flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
         model = new BaseModel();
         storeData = new BaseDataRepository();
         getAllCards();
     }
 
 
-    @FXML
     public void addNewCard(IModel model) {
 
 
@@ -145,21 +135,25 @@ public class BaseOverviewController {
                 new Label("Next Backup: " + model.getNextBackupLocalDateTime()),
                 new Label("Source Path: " + model.getSource()),
                 new Label("Target Path: " + model.getTarget())
+          //      new Label("Source Hash: " + model.getSourceHash()),
+         //       new Label("Target Hash: " + model.getTargetHash())
+
         );
 
+        ProgressBar progressBar = new ProgressBar(0);
+        progressBar.progressProperty().bind(model.getProgressStateProp());
+        progressBar.prefWidthProperty().bind(contentBox.widthProperty().subtract(10));
+        progressBar.translateXProperty().set(5);
+        Label progressLabel = new Label();
+        progressLabel.setPadding(new Insets(10, 0, 0, 5));
+        progressLabel.setLabelFor(progressBar);
+        progressLabel.setText("Progress");
 
-
-// Neue ProgressBar
-        ProgressBar progressBar = new ProgressBar(0);  // Fort
-
-        progressBar.progressProperty().bind(model.progressStateProperty());
-
-
-        //EVENT LISTENER für Open Update View
         contentBox.setOnMouseClicked(event -> openMergeDetailWindow(uid));
 
+
         // Struktur aufbauen
-        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressBar);
+        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabel, progressBar);
         newCardPane.getChildren().add(newCardBox);
 
 
@@ -178,11 +172,6 @@ public class BaseOverviewController {
     }
 
 
-
-
-
-
-    @FXML
     private void getAllCards() {
         ILoadData data = new BaseDataRepository();
         List<IModel> dataList = new ArrayList<>();

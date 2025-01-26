@@ -18,7 +18,7 @@ public class FileHashService {
         messageList = new MessageList();
     }
 
-    public static String calculateHash(Path file, String algorithm) throws NoSuchAlgorithmException, IOException {
+    public synchronized static String calculateHash(Path file, String algorithm) throws NoSuchAlgorithmException, IOException {
         MessageDigest digest = null;
 
             digest = MessageDigest.getInstance(algorithm);

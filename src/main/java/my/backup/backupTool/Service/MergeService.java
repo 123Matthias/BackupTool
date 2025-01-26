@@ -1,12 +1,9 @@
 package my.backup.backupTool.Service;
 
+
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import my.backup.backupTool.Controller.MessageController;
 import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.IModel;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,12 +11,14 @@ import java.io.OutputStream;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MergeService implements IMergeService,Runnable {
     private final IModel model;
     private IMessageList messageList;
+    private final int processors = Runtime.getRuntime().availableProcessors();
+    private double lastProgressState;
+
 
     public MergeService(IModel model) {
         this.messageList = new MessageList();
@@ -32,12 +31,17 @@ public class MergeService implements IMergeService,Runnable {
         thread.start();
     }
 
+
     @Override
     public void run() {
+
+        System.out.println("Thread STARTED: " + Thread.currentThread().getName());
+
         File sourceDir = new File(model.getSource());
         File targetDir = new File(model.getTarget());
         String sourceDisk = sourceDir.toString().substring(0, 2);
         String targetDisk = targetDir.toString().substring(0, 2);
+
 
         if (!model.validate()) {
             MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
@@ -60,7 +64,7 @@ public class MergeService implements IMergeService,Runnable {
                     Path targetDirPath = Paths.get(model.getTarget(), dir.toString().substring(model.getSource().length()));
                     if (!Files.exists(targetDirPath)) {
                         Files.createDirectories(targetDirPath);
-                        System.out.println("Verzeichnis erstellt: " + targetDirPath);
+                  //      System.out.println("Verzeichnis erstellt: " + targetDirPath);
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -75,14 +79,14 @@ public class MergeService implements IMergeService,Runnable {
 
                         if (sourceLastModifiedTime > targetLastModifiedTime) {
                             copyFileWithProgress(file, targetFilePath, processedSize, totalSize, model);
-                            System.out.println("Datei ersetzt (neuer): " + file);
+                 //           System.out.println("Datei ersetzt (neuer): " + file);
                         } else {
-                            System.out.println("Datei übersprungen (älter oder gleich): " + file);
-                            System.out.println("SourceTime: " + sourceLastModifiedTime + " / Target" + targetLastModifiedTime);
+                      //      System.out.println("Datei übersprungen (älter oder gleich): " + file);
+               //             System.out.println("SourceTime: " + sourceLastModifiedTime + " / Target" + targetLastModifiedTime);
                         }
                     } else {
                         copyFileWithProgress(file, targetFilePath, processedSize, totalSize, model);
-                        System.out.println("Datei kopiert: " + file);
+               //         System.out.println("Datei kopiert: " + file);
                     }
 
                     return FileVisitResult.CONTINUE;
@@ -105,14 +109,18 @@ public class MergeService implements IMergeService,Runnable {
                 }
             });
         } catch (IOException e) {
-            System.err.println("Fehler beim Durchsuchen des Verzeichnisses: " + e.getMessage());
+            //      System.err.println("Fehler beim Durchsuchen des Verzeichnisses: " + e.getMessage());
             messageList.addMessage(e.getMessage());
         }
+
+
+        // Hier fügst du das println für den Thread-Namen ein, wenn der Thread beendet ist
+        System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
     }
 
 
 
-    private void copyFileWithProgress(Path sourceFile, Path targetFile, AtomicLong processedSize, long totalSize, IModel model) {
+    private synchronized void copyFileWithProgress(Path sourceFile, Path targetFile, AtomicLong processedSize, long totalSize, IModel model) {
         String sourceFileHash = null;
         try {
             sourceFileHash = FileHashService.calculateHash(sourceFile, "SHA-256");
@@ -137,8 +145,8 @@ public class MergeService implements IMergeService,Runnable {
                         // Fortschritt berechnen
                         double progress = (double) processedSize.get() / totalSize;
 
-                        System.out.println("Processed size: " + processedSize.get());
-                        System.out.println("Progress: " + progress);
+                 //       System.out.println("Processed size: " + processedSize.get());
+                //        System.out.println("Progress: " + progress);
 
                         // Update progress auf der UI (in der JavaFX-Thread)
                         updateProgress(progress);
@@ -153,8 +161,9 @@ public class MergeService implements IMergeService,Runnable {
 
                     // Vergleichen der Hashes
                     if (sourceFileHash.equals(targetFileHash)) {
-                        System.out.println("Source File Hash: " + sourceFileHash);
-                        System.out.println("Target File Hash: " + sourceFileHash);
+                    //    System.out.println("Source File Hash: " + sourceFileHash);
+                    //    System.out.println("Target File Hash: " + sourceFileHash);
+
                     } else {
                         System.err.println("Fehler beim Besuchen der Datei: " + sourceFileHash);
                         System.err.println("Fehler beim schreiben der Datei: " + targetFileHash);
@@ -163,19 +172,18 @@ public class MergeService implements IMergeService,Runnable {
             } catch(IOException e) {
                     messageList.addMessage(e.getMessage());
             }
-
     }
 
-
-
-
-    private void updateProgress(double progress) {
+    private synchronized void updateProgress(double progress) {
         // Hier wird der Fortschritt an die UI übergeben
         // Je nach deinem UI-Framework (z.B. JavaFX) wird die ProgressBar oder ein anderes UI-Element aktualisiert
-        model.setProgressStateProp(progress);
 
+        if(progress > lastProgressState + 0.05 || progress == 1.0 ) {
+            lastProgressState = progress;
+            Platform.runLater(()->model.setProgressStateProp(progress));
+        }
 
-        System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressStateProp() * 100) + "%");
+        System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressStateProp().get() * 100) + "%");
     }
 
     private long calculateTotalSize(Path sourcePath) throws IOException {
