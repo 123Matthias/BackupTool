@@ -180,10 +180,10 @@ public class MergeService implements IMergeService,Runnable {
 
         if(progress > lastProgressState + 0.05 || progress == 1.0 ) {
             lastProgressState = progress;
-            Platform.runLater(()->model.setProgressStateProp(progress));
+            Platform.runLater(()->model.setProgressState(progress));
         }
 
-        System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressStateProp().get() * 100) + "%");
+        System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressState() * 100) + "%");
     }
 
     private long calculateTotalSize(Path sourcePath) throws IOException {

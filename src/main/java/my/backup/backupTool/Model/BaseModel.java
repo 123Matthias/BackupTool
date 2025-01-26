@@ -3,10 +3,7 @@ package my.backup.backupTool.Model;
 import com.fasterxml.jackson.annotation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
 import my.backup.backupTool.Service.IMessageList;
-import my.backup.backupTool.Service.IProgressBar;
-import my.backup.backupTool.Service.MergeService;
 import my.backup.backupTool.Service.MessageList;
 
 import java.beans.PropertyChangeListener;
@@ -17,10 +14,13 @@ import java.time.LocalDateTime;
 public class BaseModel implements IModel {
 
     @JsonIgnore
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this); // Listener-Verwaltung
 
     @JsonIgnore
-    private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0);
+    private double progressState;
+
+    @JsonIgnore
+    private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0.0);
 
     @JsonProperty("uid")
     private String uid;
@@ -236,17 +236,53 @@ public class BaseModel implements IModel {
     }
 
 
+
+    @JsonIgnore
+    @Override
+    public double getProgressStateProp() {
+        return progressStateProp.get();
+    }
+
     @Override
     @JsonIgnore
     public void setProgressStateProp(double progress) {
         this.progressStateProp.set(progress);
     }
 
-    @Override
     @JsonIgnore
-    public DoubleProperty getProgressStateProp() {
+    @Override
+    public DoubleProperty progressStateProperty() {
         return progressStateProp;
     }
+
+
+    @Override
+    @JsonIgnore
+    public double getProgressState() {
+        return this.progressState;
+    }
+
+    @Override
+    @JsonIgnore
+    public void setProgressState(double progressState) {
+        double oldProgressState = this.progressState;
+        this.progressState = progressState;
+        // Listener benachrichtigen
+        support.firePropertyChange("progressState", oldProgressState, progressState);
+    }
+
+    @JsonIgnore
+    @Override
+    public void addChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
+    }
+
+    @JsonIgnore
+    @Override
+    public void removeChangeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
+    }
+
 
     public String getTargetHash() {
         return targetHash;

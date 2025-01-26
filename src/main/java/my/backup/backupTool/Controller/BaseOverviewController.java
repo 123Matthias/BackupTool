@@ -141,7 +141,7 @@ public class BaseOverviewController {
         );
 
         ProgressBar progressBar = new ProgressBar(0);
-        progressBar.progressProperty().bind(model.getProgressStateProp());
+        progressBar.progressProperty().bind(model.progressStateProperty());
         progressBar.prefWidthProperty().bind(contentBox.widthProperty().subtract(10));
         progressBar.translateXProperty().set(5);
         Label progressLabel = new Label();
