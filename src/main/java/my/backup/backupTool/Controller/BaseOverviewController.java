@@ -134,10 +134,9 @@ public class BaseOverviewController {
                 new Label("Last Backup: " + model.getStartDate()),
                 new Label("Next Backup: " + model.getNextBackupLocalDateTime()),
                 new Label("Source Path: " + model.getSource()),
-                new Label("Target Path: " + model.getTarget())
-          //      new Label("Source Hash: " + model.getSourceHash()),
-         //       new Label("Target Hash: " + model.getTargetHash())
-
+                new Label("Target Path: " + model.getTarget()),
+                new Label("Source CRC32: " + model.getSourceHash()),
+                new Label("Target CRC32: " + model.getTargetHash())
         );
 
         ProgressBar progressBar = new ProgressBar(0);

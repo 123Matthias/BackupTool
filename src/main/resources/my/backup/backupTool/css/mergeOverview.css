@@ -9,16 +9,14 @@
 }
 
 .progress-bar {
-    -fx-min-height: 8;
-    -fx-max-height: 8;
-    -fx-accent: -fx-color3;
-    -fx-background-color: -fx-color23;
+    -fx-accent: -fx-color13;
+    -fx-background-color: transparent;
     -fx-border-radius: 1;
+    -fx-border-color: -fx-color3;
     -fx-background-radius: 1;
-    -fx-padding: 1;
 }
 .progress-bar .track{
-    -fx-min-height: 20;
-    -fx-background-color: -fx-Color3;
+    -fx-background-color: transparent;
+    -fx-pref-height: 10;
     -fx-background-radius: 1;
 }

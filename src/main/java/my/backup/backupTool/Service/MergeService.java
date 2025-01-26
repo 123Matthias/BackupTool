@@ -2,6 +2,8 @@ package my.backup.backupTool.Service;
 
 
 import javafx.application.Platform;
+import my.backup.backupTool.DataRepository.BaseDataRepository;
+import my.backup.backupTool.DataRepository.IStoreData;
 import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.IModel;
 import java.io.File;
@@ -11,18 +13,24 @@ import java.io.OutputStream;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.zip.CRC32;
 
 public class MergeService implements IMergeService,Runnable {
     private final IModel model;
+    private IStoreData dataStore;
     private IMessageList messageList;
+    private ArrayList<String> fileHashList;
     private final int processors = Runtime.getRuntime().availableProcessors();
     private double lastProgressState;
-
+    private byte[] sourceHash = new byte[8096];
+    private byte[] targetHash = new byte[8096];
 
     public MergeService(IModel model) {
         this.messageList = new MessageList();
         this.model = model;
+        this.dataStore = new BaseDataRepository();
     }
 
     @Override
@@ -116,17 +124,12 @@ public class MergeService implements IMergeService,Runnable {
 
         // Hier fügst du das println für den Thread-Namen ein, wenn der Thread beendet ist
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
+        model.setProgressState(0.0);
     }
 
 
 
     private synchronized void copyFileWithProgress(Path sourceFile, Path targetFile, AtomicLong processedSize, long totalSize, IModel model) {
-        String sourceFileHash = null;
-        try {
-            sourceFileHash = FileHashService.calculateHash(sourceFile, "SHA-256");
-        } catch (NoSuchAlgorithmException | IOException  e) {
-            messageList.addMessage(e.getMessage());
-        }
 
         try (InputStream in = Files.newInputStream(sourceFile);
             OutputStream out = Files.newOutputStream(targetFile,
@@ -151,23 +154,8 @@ public class MergeService implements IMergeService,Runnable {
                         // Update progress auf der UI (in der JavaFX-Thread)
                         updateProgress(progress);
                     }
-                    // Nach dem Kopieren den Hash der Ziel-Datei berechnen
-                    String targetFileHash = null;
-                    try {
-                        targetFileHash = FileHashService.calculateHash(targetFile, "SHA-256");
-                    } catch (NoSuchAlgorithmException e) {
-                        messageList.addMessage(e.getMessage());
-                    }
 
-                    // Vergleichen der Hashes
-                    if (sourceFileHash.equals(targetFileHash)) {
-                    //    System.out.println("Source File Hash: " + sourceFileHash);
-                    //    System.out.println("Target File Hash: " + sourceFileHash);
 
-                    } else {
-                        System.err.println("Fehler beim Besuchen der Datei: " + sourceFileHash);
-                        System.err.println("Fehler beim schreiben der Datei: " + targetFileHash);
-                    }
 
             } catch(IOException e) {
                     messageList.addMessage(e.getMessage());
@@ -180,10 +168,24 @@ public class MergeService implements IMergeService,Runnable {
 
         if(progress > lastProgressState + 0.05 || progress == 1.0 ) {
             lastProgressState = progress;
-            Platform.runLater(()->model.setProgressState(progress));
+            Platform.runLater(()->model.setProgressStateProp(progress));
         }
 
-        System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressState() * 100) + "%");
+        if(progress ==  1.0){
+            System.out.println("Making hashes");
+            long hash = FileHashService.calculateHashDirectory(model.getSource());
+            model.setSourceHash(String.valueOf(hash));
+            long hashBackup = FileHashService.calculateHashDirectory(model.getTarget());
+            model.setTargetHash(String.valueOf(hashBackup));
+
+            dataStore.saveModelAsJSON(model);
+
+            System.out.println("SOURCE HASH IS " + model.getSourceHash());
+            System.out.println("TARGET HASH IS " + model.getTargetHash());
+
+        }
+
+        System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressStateProp() * 100) + "%");
     }
 
     private long calculateTotalSize(Path sourcePath) throws IOException {
@@ -206,6 +208,8 @@ public class MergeService implements IMergeService,Runnable {
         System.out.println("Total Size: " + totalSize.get());
         return totalSize.get();
     }
+
+
 
 
 }
