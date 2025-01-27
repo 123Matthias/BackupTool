@@ -53,7 +53,6 @@ public abstract class BaseCalculationService {
         });
         System.out.println("Total Size: " + totalSize.get());
         return totalSize.get();
-
     }
 
     public double getLastProgressState() {

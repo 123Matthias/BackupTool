@@ -9,7 +9,6 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.CRC32;
 
 
@@ -34,7 +33,8 @@ public class FileHashService extends BaseCalculationService implements IFileHash
 
         try {
             digest = MessageDigest.getInstance(algorithm);
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
 
@@ -45,10 +45,10 @@ public class FileHashService extends BaseCalculationService implements IFileHash
             while ((bytesRead = is.read(buffer)) != -1) {
                 digest.update(buffer, 0, bytesRead);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
-
 
         byte[] hashBytes = digest.digest();
         return hashBytes;
@@ -58,13 +58,11 @@ public class FileHashService extends BaseCalculationService implements IFileHash
         MessageDigest digest = null;
 
         try {
-            // Initialisiere den MessageDigest für SHA-256 oder das gewünschte Algorithmus
             digest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-
-        // Füge den alten Hash und den neuen Hash zum Digest hinzu
         digest.update(oldHash);
         digest.update(newHash);
 
@@ -80,11 +78,27 @@ public class FileHashService extends BaseCalculationService implements IFileHash
         long oldValue = oldCRC32.getValue();
         long newValue = newCRC32.getValue();
 
-        // Update CRC32 mit den Werten der beiden CRC32-Objekte
-        crc32.update(longToByteArray(oldValue));  // Konvertiere den alten Wert in Bytes
-        crc32.update(longToByteArray(newValue));  // Konvertiere den neuen Wert in Bytes
+        // has to be a byte[]
+        crc32.update(longToByteArray(oldValue));
+        crc32.update(longToByteArray(newValue));
         return crc32;  // Gib das kombinierte CRC32-Objekt zurück
     }
+
+    class CRC32Concat {
+        private CRC32 crc32 = new CRC32();
+
+        public void update(CRC32 newCRC32) {
+            this.crc32 = concatCRC32(this.crc32, newCRC32);
+        }
+
+        public CRC32 getCRC32() {
+            return crc32;
+        }
+        public void reset(){
+            this.crc32.reset();
+        }
+    }
+
 
     // Hilfsmethode, um einen long-Wert in ein Byte-Array umzuwandeln
     private byte[] longToByteArray(long value) {
@@ -110,19 +124,19 @@ public class FileHashService extends BaseCalculationService implements IFileHash
             int bytesRead;
             long fileProcessedSize = 0;
 
-            // Lese die Datei Stück für Stück und berechne CRC32
             while ((bytesRead = bis.read(buffer)) != -1) {
-                crc32.update(buffer, 0, bytesRead);  // Update des CRC32 mit den gelesenen Bytes
+                crc32.update(buffer, 0, bytesRead);
                 fileProcessedSize += bytesRead;
                 this.progress = (double) fileProcessedSize / this.totalFileSize;
                 super.updateProgress(progress,this.model);
-
             }
-        } catch (IOException e) {
-            e.printStackTrace();  // Fehlerbehandlung
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return crc32;  // Gib den CRC32-Wert als long zurück
+        return crc32;
     }
 
 
@@ -136,28 +150,37 @@ public class FileHashService extends BaseCalculationService implements IFileHash
     }
 
 
-    public long calculateHashFromDirectory(String path) {
+    public long getCRC32FromDirectory(String path) {
         super.updateProgress(0.0,this.model);
         super.setLastProgressState(0.0);
         Path sourcePath = Paths.get(path);
-        AtomicReference<CRC32> oldCRC32 = new AtomicReference<>(new CRC32());
+        long valueCRC32 = 0;
         try {
             this.totalFileSize = super.calculateTotalSize(sourcePath);
+            valueCRC32 = calculateCRC32FromPath(sourcePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        try {
+
+        return valueCRC32;
+
+    }
+
+    private long calculateCRC32FromPath(Path sourcePath) throws IOException {
+
+        CRC32Concat crc32Root = new CRC32Concat();
+
             Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
 
-                // Besuche jede Datei im Verzeichnis
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     // Berechne den Hash der Datei
                     CRC32 newCRC32 = calculateCRC32(file.toFile());
                     System.out.println("next CRC32: " + newCRC32.getValue());
 
-                    oldCRC32.set(concatCRC32(oldCRC32.get(), newCRC32));
-                    System.out.println(oldCRC32.get().getValue());
+                    crc32Root.update(newCRC32);
+
+                    System.out.println(crc32Root.getCRC32().getValue());
 
                     return FileVisitResult.CONTINUE;
                 }
@@ -176,20 +199,15 @@ public class FileHashService extends BaseCalculationService implements IFileHash
                     return FileVisitResult.CONTINUE;
                 }
             });
-        } catch (IOException e) {
-            System.err.println("Fehler beim Durchlaufen des Verzeichnisses: " + e.getMessage());
-        }
-
-        return oldCRC32.get().getValue();
+        return crc32Root.getCRC32().getValue();
     }
-
 
 
     public boolean calculateAndSaveHashes() {
         System.out.println("Making hashes");
-        long hash = calculateHashFromDirectory(this.model.getSource());
+        long hash = getCRC32FromDirectory(this.model.getSource());
         this.model.setSourceHash(String.valueOf(hash));
-        long hashBackup = calculateHashFromDirectory(this.model.getTarget());
+        long hashBackup = getCRC32FromDirectory(this.model.getTarget());
         this.model.setTargetHash(String.valueOf(hashBackup));
         this.model.setPlayBackupOrder(false);
         dataStore.saveModelAsJSON(this.model);

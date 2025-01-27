@@ -1,7 +1,5 @@
 package my.backup.backupTool.Service;
 
-import my.backup.backupTool.Model.IModel;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.zip.CRC32;
@@ -19,7 +17,7 @@ public interface IFileHashService {
 
     String bytesToHex(byte[] bytes);
 
-    long calculateHashFromDirectory(String path);
+    long getCRC32FromDirectory(String path);
 
 
 }

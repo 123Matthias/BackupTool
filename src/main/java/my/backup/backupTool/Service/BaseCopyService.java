@@ -13,11 +13,10 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class BaseCopyService extends BaseCalculationService {
 
-    private IModel model;
+    private final IModel model;
 
 
     public BaseCopyService(IModel model) {
-
         this.model = model;
     }
 
@@ -39,15 +38,8 @@ public abstract class BaseCopyService extends BaseCalculationService {
 
                 // Fortschritt berechnen
                 double progress = (double) fileProcessedSize / totalSize;
-
-                //       System.out.println("Processed size: " + processedSize.get());
-                //        System.out.println("Progress: " + progress);
-
-                // Update progress auf der UI (in der JavaFX-Thread)
                 super.updateProgress(progress,this.model);
             }
-
-
 
         } catch(IOException e) {
             super.messageList.addMessage(e.getMessage());
@@ -55,8 +47,7 @@ public abstract class BaseCopyService extends BaseCalculationService {
     }
 
 
-
-    protected void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize, IModel model) {
+    protected void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize) {
         try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
 
@@ -73,15 +64,13 @@ public abstract class BaseCopyService extends BaseCalculationService {
 
                 double progress = (double) fileProcessedSize / totalSize;
 
-                super.updateProgress(progress,this.model);
+                super.updateProgress(progress, this.model);
             }
 
         } catch (IOException e) {
             super.messageList.addMessage(e.getMessage());
         }
-
     }
-
 
     protected IModel getModel() {
         return this.model;
