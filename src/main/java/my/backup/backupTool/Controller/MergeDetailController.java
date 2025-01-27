@@ -272,8 +272,10 @@ public class MergeDetailController {
     @FXML
     private void play(){
         System.out.println("---------METHOD PLAY STARTED -------------------------------");
-        save();
         model.setPlayBackupOrder(true);
+        model.setHashOrder(true);
+        model.setHashType(HashTYPE.CRC32.toString());
+        save();
         saveData();
         System.out.println("---------METHOD PLAY FINISHED -------------------------------");
 
@@ -318,6 +320,7 @@ public class MergeDetailController {
 
         if(model.validate()){
             saveData();
+            System.out.println("----------------METHOD SAVED ------------------------------");
             sceneUpdate.reloadView("mergeOverview.fxml");
             MessageService.createToast("Saved Successfully");
             Stage stage = (Stage) stackPane.getScene().getWindow();

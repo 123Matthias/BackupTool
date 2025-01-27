@@ -1,0 +1,90 @@
+package my.backup.backupTool.Service;
+
+import javafx.application.Platform;
+import my.backup.backupTool.Model.IModel;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.FileChannel;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.concurrent.atomic.AtomicLong;
+
+public abstract class BaseCopyService extends BaseCalculationService {
+
+    private IModel model;
+
+
+    public BaseCopyService(IModel model) {
+
+        this.model = model;
+    }
+
+
+    protected void copyFileWithStream(Path sourceFile, Path targetFile, long totalSize) {
+
+        try (InputStream in = Files.newInputStream(sourceFile);
+             OutputStream out = Files.newOutputStream(targetFile,
+                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+
+            byte[] buffer = new byte[8192]; // 8 KB Blockgröße
+
+            int bytesRead;
+            long fileProcessedSize = 0;
+
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+                fileProcessedSize += bytesRead;
+
+                // Fortschritt berechnen
+                double progress = (double) fileProcessedSize / totalSize;
+
+                //       System.out.println("Processed size: " + processedSize.get());
+                //        System.out.println("Progress: " + progress);
+
+                // Update progress auf der UI (in der JavaFX-Thread)
+                super.updateProgress(progress,this.model);
+            }
+
+
+
+        } catch(IOException e) {
+            super.messageList.addMessage(e.getMessage());
+        }
+    }
+
+
+
+    protected void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize, IModel model) {
+        try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
+             FileChannel targetChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
+
+            long fileProcessedSize = 0;
+            long transferChunkSize = 16 * 1024 * 1024; // 16 MB Blockgröße
+            long fileSize = sourceChannel.size();
+
+            while (fileProcessedSize < fileSize) {
+
+                // Kopiere einen Chunk der Datei von source to target
+                long bytesTransferred = sourceChannel.transferTo(fileProcessedSize, transferChunkSize, targetChannel);
+
+                fileProcessedSize += bytesTransferred;
+
+                double progress = (double) fileProcessedSize / totalSize;
+
+                super.updateProgress(progress,this.model);
+            }
+
+        } catch (IOException e) {
+            super.messageList.addMessage(e.getMessage());
+        }
+
+    }
+
+
+    protected IModel getModel() {
+        return this.model;
+    }
+
+}

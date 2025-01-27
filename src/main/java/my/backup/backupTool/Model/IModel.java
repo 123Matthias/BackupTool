@@ -76,6 +76,9 @@ public interface IModel {
 
     public void setSourceHash(String sourceHash);
 
-
+    void setHashType(String hashType);
+    String getHashType();
+    void setHashOrder(boolean orderHash);
+    boolean hasHashOrder();
 
 }

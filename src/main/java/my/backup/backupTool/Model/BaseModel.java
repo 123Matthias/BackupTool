@@ -25,7 +25,6 @@ public class BaseModel implements IModel {
     @JsonIgnore
     private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0.0);
 
-
     @JsonProperty("uid")
     private String uid;
 
@@ -61,8 +60,12 @@ public class BaseModel implements IModel {
     @JsonProperty("source-hash")
     private String sourceHash;
 
-    @JsonProperty("target-Hash")
+    @JsonProperty("target_Hash")
     private String targetHash;
+    @JsonProperty("hash_Order")
+    private boolean hashOrder;
+    @JsonProperty("hash_Type")
+    private String hashType;
 
     @JsonIgnore
     private IMessageList messages;
@@ -303,5 +306,26 @@ public class BaseModel implements IModel {
     @Override
     public void setTargetHash(String targetHash) {
         this.targetHash = targetHash;
+    }
+
+    @JsonProperty("hash_Order")
+    public boolean hasHashOrder() {
+        return hashOrder;
+    }
+    @JsonProperty("hash_Order")
+    public void setHashOrder(boolean hashOrder) {
+        this.hashOrder = hashOrder;
+    }
+
+
+    @JsonProperty("hash_Type")
+    public String getHashType() {
+        return hashType;
+    }
+
+
+    @JsonProperty("hash_Type")
+    public void setHashType(String hashType) {
+        this.hashType = hashType;
     }
 }
