@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BackupJobScheduler implements Subjekt {
 
-    List<IModel> models;
+    List<IModel> modelList;
     List<IModel> backupOrderList;
     IStoreData dataStore;
 
@@ -22,23 +22,23 @@ public class BackupJobScheduler implements Subjekt {
         dataStore = new BaseDataRepository();
 
         try {
-            this.models = dataStore.getAllAsList();
+            this.modelList = dataStore.getAllAsList();
         } catch (IOException e) {
-            this.models = new ArrayList<>();
+            this.modelList = new ArrayList<>();
         }
         this.backupOrderList = createBackupList();
         this.fireBackupEvent();
     }
     @Override
     public void add(IModel model) {
-        models.add(model);
+        modelList.add(model);
     }
 
     @Override
     public void remove(IModel model) {
-        for(IModel modelInList : models) {
+        for(IModel modelInList : modelList) {
             if(modelInList.getUid().equals(model.getUid()))
-                models.remove(modelInList);
+                modelList.remove(modelInList);
         }
     }
 
@@ -63,7 +63,7 @@ public class BackupJobScheduler implements Subjekt {
 
     public List<IModel> createBackupList(){
         List<IModel> backupList = new ArrayList<>();
-        for(IModel model : this.models) {
+        for(IModel model : this.modelList) {
             if (model.hasPlayBackupOrder()) {
                 backupList.add(model);
             }
@@ -92,8 +92,8 @@ public class BackupJobScheduler implements Subjekt {
         return backupOrderList;
     }
 
-    public List<IModel> getModels() {
-        return models;
+    public List<IModel> getModelList() {
+        return modelList;
     }
 }
 

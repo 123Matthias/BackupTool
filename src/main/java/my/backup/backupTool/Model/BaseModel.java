@@ -15,10 +15,6 @@ public class BaseModel implements IModel {
 
 
     @JsonIgnore
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
-
-    @JsonIgnore
     private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0.0);
 
     @JsonProperty("uid")
@@ -259,17 +255,9 @@ public class BaseModel implements IModel {
     @Override
     @JsonIgnore
     public void setProgressState(double progress) {
-        double oldProgress = progressStateProp.get();
-        progressStateProp.set(progress);
-        System.out.println("Progress updated: " + oldProgress + " -> " + progress);
-        pcs.firePropertyChange("progressState", oldProgress, progress);
-
-        pcs.addPropertyChangeListener("progressState", evt -> {
-            System.out.println("Progress state changed: " + evt.getOldValue() + " -> " + evt.getNewValue());
-        });
+        this.progressStateProp.set(progress);
 
     }
-
 
     @Override
     @JsonIgnore

@@ -10,8 +10,11 @@ public class App {
     public static BackupJobScheduler JobScheduler;
 
     public App() {
+        JobScheduler = new BackupJobScheduler(); //Muss als erstes Initialisiert werden da hier Daten geladen werden
         Router = new Router();
-        JobScheduler = new BackupJobScheduler();
+
+
+
     }
 
 }

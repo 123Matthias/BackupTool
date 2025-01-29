@@ -1,5 +1,7 @@
 package my.backup.backupTool.Controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import my.backup.backupTool.App;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
 import my.backup.backupTool.DataRepository.IStoreData;
@@ -137,6 +140,14 @@ public class BaseOverviewController {
         ProgressBar progressBar = new ProgressBar(0);
 
         progressBar.progressProperty().bind(model.getProgressStateProperty());
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(1), e -> {
+                    System.out.println("Current Progress: " + model.getProgressStateProperty().get());
+                })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE); // Timer läuft unendlich
+        timeline.play(); // Timer starten
+
         Label testLabel = new Label();
         testLabel.textProperty().bind(Bindings.format("%.2f", model.getProgressStateProperty()));
 
@@ -181,15 +192,10 @@ public class BaseOverviewController {
 
     private List<IModel> getModelsAsList() {
         List<IModel> dataList = new ArrayList<>();
-        try {
-            dataList = dataStore.getAllAsList();
+            dataList = App.JobScheduler.getModelList();
             dataList.sort(Comparator.comparingInt(IModel::getFlowPanePosition));
 
-        } catch (IOException e) {
-            // Fehler behandeln und eine klare Nachricht ausgeben
-            System.err.println("Fehler beim Laden der Daten: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
+
         return dataList;
     }
 
