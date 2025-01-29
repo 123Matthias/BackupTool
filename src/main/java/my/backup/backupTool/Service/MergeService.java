@@ -49,7 +49,6 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
 
 
         super.updateProgress(1.0, super.getModel());
-        this.calculateHashes();
 
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
 
@@ -113,12 +112,6 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
             }
         });
 
-    }
-
-
-    private void calculateHashes(){
-        FileHashService fileHashService = new FileHashService(super.getModel());
-        fileHashService.calculateAndSaveHashes();
     }
 
 }

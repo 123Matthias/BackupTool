@@ -3,7 +3,6 @@ package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
 import my.backup.backupTool.Service.IMessageList;
 
 import java.beans.PropertyChangeListener;
@@ -14,6 +13,9 @@ public interface IModel {
     String getUid();
 
     void setUid(String uid);
+    public BackupType getBackupType();
+
+    public void setBackupType(BackupType backupType);
     String getSource();
     void setSource(String source);
 
@@ -51,22 +53,13 @@ public interface IModel {
 
     public void setPlayBackupOrder(boolean playBackupOrder);
 
-    @JsonIgnore
-    double getProgressStateProp();
 
     public void setProgressStateProp(double progress);
 
     @JsonIgnore
     DoubleProperty progressStateProperty();
 
-    public double getProgressState();
-    public void setProgressState(double progressState);
-
-    @JsonIgnore
-    void addChangeListener(PropertyChangeListener listener);
-
-    @JsonIgnore
-    void removeChangeListener(PropertyChangeListener listener);
+    public double getProgressStateProp();
 
     public String getTargetHash();
 
@@ -76,8 +69,8 @@ public interface IModel {
 
     public void setSourceHash(String sourceHash);
 
-    void setHashType(String hashType);
-    String getHashType();
+    void setHashType(HashTYPE hashType);
+    HashTYPE getHashType();
     void setHashOrder(boolean orderHash);
     boolean hasHashOrder();
 

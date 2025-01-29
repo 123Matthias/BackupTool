@@ -4,7 +4,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.zip.CRC32;
 
-public interface IFileHashService {
+public interface IFileValidationService {
 
 
     byte[] calculateHash(Path file, String algorithm);
@@ -18,6 +18,6 @@ public interface IFileHashService {
     String bytesToHex(byte[] bytes);
 
     long getCRC32FromDirectory(String path);
-
+    boolean calculateAndSaveHashes();
 
 }

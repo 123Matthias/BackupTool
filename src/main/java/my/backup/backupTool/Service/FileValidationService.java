@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
 
 
-public class FileHashService extends BaseCalculationService implements IFileHashService {
+public class FileValidationService extends BaseCalculationService implements IFileValidationService {
 
     private long totalFileSize;
     private double progress;
@@ -21,7 +21,7 @@ public class FileHashService extends BaseCalculationService implements IFileHash
     private IStoreData dataStore;
     private IModel model;
 
-    public FileHashService(IModel model) {
+    public FileValidationService(IModel model) {
         messageList = new MessageList();
         dataStore = new BaseDataRepository();
         this.model = model;

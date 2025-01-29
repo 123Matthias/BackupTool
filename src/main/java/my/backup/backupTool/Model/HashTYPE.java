@@ -1,4 +1,4 @@
-package my.backup.backupTool.Service;
+package my.backup.backupTool.Model;
 
 public enum HashTYPE {
     CRC32("CRC32"),

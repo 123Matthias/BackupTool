@@ -10,8 +10,9 @@ module my.backup.backupTool {
     opens my.backup.backupTool to javafx.fxml;
     opens my.backup.backupTool.Controller to javafx.fxml;
     exports my.backup.backupTool;
+    exports my.backup.backupTool.JobManagement;
     exports my.backup.backupTool.Controller;
     exports my.backup.backupTool.Service;
-    exports my.backup.backupTool.Model to com.fasterxml.jackson.databind;
+    exports my.backup.backupTool.Model;
 }
 

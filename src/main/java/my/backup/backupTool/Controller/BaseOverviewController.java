@@ -1,6 +1,5 @@
 package my.backup.backupTool.Controller;
 
-import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -12,14 +11,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
-import my.backup.backupTool.DataRepository.ILoadData;
 import my.backup.backupTool.DataRepository.BaseDataRepository;
 import my.backup.backupTool.DataRepository.IStoreData;
-import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.SceneBuilder;
-import my.backup.backupTool.Service.IMergeService;
-import my.backup.backupTool.Service.MergeService;
 
 import java.io.IOException;
 import java.util.*;
@@ -39,26 +34,21 @@ public class BaseOverviewController {
     @FXML
     private VBox cardContainer;
 
-    IModel model;
-
-    IStoreData storeData;
-
-
-
+    IStoreData dataStore;
 
     @FXML
-    private void initialize() {
+    public void initialize() {
 
         double toolBarHeight = toolBar.getHeight();
         flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
-        model = new BaseModel();
-        storeData = new BaseDataRepository();
-        getAllCards();
+        dataStore = new BaseDataRepository();
+        List<IModel> list = getModelsAsList();
+        addAllCardsSorted(list);
+
     }
 
 
     public void addNewCard(IModel model) {
-
 
         // Randabstand
         Pane newCardPane = new Pane();
@@ -69,7 +59,6 @@ public class BaseOverviewController {
         Tooltip tooltip = new Tooltip("click for update this card");
         Tooltip.install(newCardBox, tooltip);
 
-
         //UUID
         String uid = model.getUid() != null && !model.getUid().isEmpty() ? model.getUid() : "";
         newCardBox.getStyleClass().add("card");
@@ -79,8 +68,6 @@ public class BaseOverviewController {
         newCardBox.setSpacing(5);
         newCardPane.setId(uid);
         enableDragAndDrop(newCardPane, flowPane);
-
-
 
 // Titel (HBox)
         HBox newTitleContainer = new HBox();
@@ -99,7 +86,7 @@ public class BaseOverviewController {
             newCardBox.setPrefWidth(currentWidth + 50);
             newCardBox.setStyle("-fx-pref-width: " + (currentWidth + 50) + "px;");
             model.setCardWidth((int)newCardBox.getPrefWidth());
-            storeData.saveModelAsJSON(model);
+            dataStore.saveModelAsJSON(model);
         });
 
         Button decreaseWidthButton = new Button("-");
@@ -110,7 +97,7 @@ public class BaseOverviewController {
                 newCardBox.setPrefWidth(currentWidth - 50);
                 newCardBox.setStyle("-fx-pref-width: " + (currentWidth - 50) + "px;");
                 model.setCardWidth((int)newCardBox.getPrefWidth());
-                storeData.saveModelAsJSON(model);
+                dataStore.saveModelAsJSON(model);
             }
         });
 
@@ -160,10 +147,6 @@ public class BaseOverviewController {
 
         // Neue Karte in das FlowPane einfügen
         flowPane.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
-        if(model.hasPlayBackupOrder()){
-            IMergeService mergeService = new MergeService(model);
-            mergeService.startMergeThread();
-        }
 
 
         System.out.println("...............Card Added ........................");
@@ -172,29 +155,26 @@ public class BaseOverviewController {
     }
 
 
-    private void getAllCards() {
-        ILoadData data = new BaseDataRepository();
+    private void addAllCardsSorted(List<IModel> list) {
+        list.sort(Comparator.comparingInt(IModel::getFlowPanePosition));
+        for (IModel entry : list) {
+            System.out.println("AddCardFromList getAllCards() " + entry.getTitle());
+            addNewCard(entry);
+        }
+    }
+
+    private List<IModel> getModelsAsList() {
         List<IModel> dataList = new ArrayList<>();
         try {
-            dataList = data.getAllAsList();
+            dataList = dataStore.getAllAsList();
             dataList.sort(Comparator.comparingInt(IModel::getFlowPanePosition));
 
-            // Prüfen, ob die Liste leer ist
-            if (dataList.isEmpty()) {
-                System.out.println("Die Liste ist leer. Vorgang wird abgebrochen.");
-                return; // Methode abbrechen, wenn die Liste leer ist
-            }
-
-            // Liste iterieren und Karten hinzufügen
-            for (IModel entry : dataList) {
-                System.out.println("AddCardFromList getAllCards() " + entry.getTitle());
-                addNewCard(entry);
-            }
         } catch (IOException e) {
             // Fehler behandeln und eine klare Nachricht ausgeben
             System.err.println("Fehler beim Laden der Daten: " + e.getMessage());
             throw new RuntimeException(e);
         }
+        return dataList;
     }
 
 
@@ -215,6 +195,8 @@ public class BaseOverviewController {
         setStageDimensions(stage, controller);
         stage.show();
     }
+
+
 
 
     @FXML
@@ -330,9 +312,9 @@ public class BaseOverviewController {
                     container.getChildren().remove(draggedCard); // Alte Karte entfernen
                     container.getChildren().add(dropIndex, draggedCard); // Neu einfügen
                     try {
-                        model = storeData.getModelById(card.getId());
+                        IModel model = dataStore.getModelById(card.getId());
                         model.setFlowPanePosition(container.getChildren().indexOf(card));
-                        storeData.saveModelAsJSON(model);
+                        dataStore.saveModelAsJSON(model);
                     } catch (IOException e) {
                         ExceptionController.handleException(e);
                     }
