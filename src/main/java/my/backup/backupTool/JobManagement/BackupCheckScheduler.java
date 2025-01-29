@@ -1,45 +1,35 @@
 package my.backup.backupTool.JobManagement;
 
 import my.backup.backupTool.App;
-import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
-import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.Model.HashTYPE;
 import my.backup.backupTool.Service.FileValidationService;
 import my.backup.backupTool.Service.IFileValidationService;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackupValidationScheduler {
+public class BackupCheckScheduler {
 
-    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this); // Listener-Verwaltung
     List<IModel> models;
     List<IModel> validationOrderList;
 
-    public BackupValidationScheduler() {
+    public BackupCheckScheduler() {
 
         this.models = App.dataStore.getAllAsList();
         this.validationOrderList = createValidationList();
     }
 
-    public void add(IModel model) {
-        models.add(model);
+
+    public void fireValidationEvent(IModel model) {
+            if(model.hasHashOrder()){
+                    IFileValidationService hashService = new FileValidationService(model);
+                    hashService.calculateAndSaveHashes();
+            }
     }
 
 
-    public void remove(IModel model) {
-        for(IModel modelInList : models) {
-            if(modelInList.getUid().equals(model.getUid()))
-                models.remove(modelInList);
-        }
-    }
-
-
-    public void fireValidationEvent() {
+    public void fireAllValidationEvents() {
         for(IModel modelInList : models) {
             if(modelInList.hasHashOrder()){
                 if(modelInList.getHashType() == HashTYPE.CRC32){
@@ -50,30 +40,15 @@ public class BackupValidationScheduler {
         }
     }
 
-    public void addChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removeChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
-    }
-
-    public void fireProgressStateValidation(double progressState) {
-        for(IModel model : validationOrderList) {
-            double oldProgressState = model.getProgressState();
-            model.setProgressState(progressState);
-            propertyChangeSupport.firePropertyChange("progressState", oldProgressState, progressState);
-        }
-    }
 
     public List<IModel> createValidationList(){
-        List<IModel> backupList = new ArrayList<>();
+        validationOrderList = new ArrayList<>();
         for(IModel model : this.models) {
             if (model.hasHashOrder()) {
                 validationOrderList.add(model);
             }
         }
-        return backupList;
+        return validationOrderList;
     }
 
     public void removeValidationOrderFromList(IModel model) {

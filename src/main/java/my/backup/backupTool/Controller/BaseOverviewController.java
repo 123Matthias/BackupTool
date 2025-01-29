@@ -127,21 +127,21 @@ public class BaseOverviewController {
                 new Label("Last Backup: " + model.getStartDate()),
                 new Label("Next Backup: " + model.getNextBackupLocalDateTime()),
                 new Label("Source Path: " + model.getSource()),
-                new Label("Target Path: " + model.getTarget()),
-                new Label("Source CRC32: " + model.getSourceHash()),
-                new Label("Target CRC32: " + model.getTargetHash())
+                new Label("Target Path: " + model.getTarget())
         );
+
+        HBox sourceHashBox = new HBox(10, new Label("Source CRC32: "), new Label() {{
+            textProperty().bind(model.getSourceHashProperty());
+        }});
+
+        HBox targetHashBox = new HBox(10, new Label("Target CRC32: "), new Label() {{
+            textProperty().bind(model.getTargetHashProperty());
+        }});
+
 
         ProgressBar progressBar = new ProgressBar(0);
 
         progressBar.progressProperty().bind(model.getProgressStateProperty());
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(1), e -> {
-                    System.out.println("Current Progress: " + model.getProgressStateProperty().get());
-                })
-        );
-        timeline.setCycleCount(Timeline.INDEFINITE); // Timer läuft unendlich
-        timeline.play(); // Timer starten
 
         Label testLabel = new Label();
         testLabel.textProperty().bind(Bindings.format("%.2f", model.getProgressStateProperty()));
@@ -160,7 +160,7 @@ public class BaseOverviewController {
 
 
         // Struktur aufbauen
-        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabel, progressBar, testLabel);
+        newCardBox.getChildren().addAll(newTitleContainer, contentBox, sourceHashBox, targetHashBox, progressLabel, progressBar);
         newCardPane.getChildren().add(newCardBox);
 
 

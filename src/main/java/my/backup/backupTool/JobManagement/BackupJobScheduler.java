@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackupJobScheduler implements Subjekt {
+public class BackupJobScheduler {
 
     List<IModel> modelList;
     List<IModel> backupOrderList;
@@ -23,20 +23,8 @@ public class BackupJobScheduler implements Subjekt {
         this.backupOrderList = createBackupList();
         this.fireBackupEvent();
     }
-    @Override
-    public void add(IModel model) {
-        modelList.add(model);
-    }
 
-    @Override
-    public void remove(IModel model) {
-        for(IModel modelInList : modelList) {
-            if(modelInList.getUid().equals(model.getUid()))
-                modelList.remove(modelInList);
-        }
-    }
 
-    @Override
     public void fireBackupEvent() {
         for(IModel modelInList : backupOrderList) {
                 if(modelInList.getBackupType() == BackupType.MERGE){
@@ -53,7 +41,6 @@ public class BackupJobScheduler implements Subjekt {
 
         }
     }
-
 
     public List<IModel> createBackupList(){
         List<IModel> backupList = new ArrayList<>();

@@ -3,6 +3,8 @@ package my.backup.backupTool.Model;
 import com.fasterxml.jackson.annotation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.MessageList;
 
@@ -52,13 +54,16 @@ public class BaseModel implements IModel {
     @JsonProperty("play-BackupOrder")
     private boolean playBackupOrder;
 
-    @JsonProperty("source-hash")
-    private String sourceHash;
 
-    @JsonProperty("target_Hash")
-    private String targetHash;
+    @JsonIgnore
+    private StringProperty sourceHashProperty = new SimpleStringProperty("no value");
+
+    @JsonIgnore
+    private StringProperty targetHashProperty = new SimpleStringProperty("no value");
+
     @JsonProperty("hash_Order")
     private boolean hashOrder;
+
     @JsonProperty("hash_Type")
     private HashTYPE hashType;
 
@@ -265,27 +270,39 @@ public class BaseModel implements IModel {
         return this.progressStateProp;
     }
 
-
-
-    @Override
+    // Getter für die Serialisierung
+    @JsonProperty("source-hash-property")
     public String getSourceHash() {
-        return sourceHash;
+        return sourceHashProperty.get();
     }
 
-    @Override
-    public void setSourceHash(String sourceHash) {
-        this.sourceHash = sourceHash;
-    }
-
-    @Override
+    @JsonProperty("target_Hash_property")
     public String getTargetHash() {
-        return targetHash;
+        return targetHashProperty.get();
     }
 
-    @Override
-    public void setTargetHash(String targetHash) {
-        this.targetHash = targetHash;
+    // Setter für die Deserialisierung
+    @JsonProperty("source-hash-property")
+    public void setSourceHash(String value) {
+        this.sourceHashProperty.set(value);
     }
+
+    @JsonProperty("target_Hash_property")
+    public void setTargetHash(String value) {
+        this.targetHashProperty.set(value);
+    }
+
+    @JsonIgnore
+    public StringProperty getTargetHashProperty(){
+        return this.targetHashProperty;
+    }
+
+    @JsonIgnore
+    public StringProperty getSourceHashProperty(){
+        return this.sourceHashProperty;
+    }
+
+
 
     @JsonProperty("hash_Order")
     public boolean hasHashOrder() {

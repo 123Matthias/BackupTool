@@ -1,5 +1,6 @@
 package my.backup.backupTool.Service;
 
+import javafx.application.Platform;
 import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
 import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.IModel;
@@ -206,9 +207,9 @@ public class FileValidationService extends BaseCalculationService implements IFi
     public boolean calculateAndSaveHashes() {
         System.out.println("Making hashes");
         long hash = getCRC32FromDirectory(this.model.getSource());
-        this.model.setSourceHash(String.valueOf(hash));
+        Platform.runLater(()->this.model.setSourceHash(String.valueOf(hash)));
         long hashBackup = getCRC32FromDirectory(this.model.getTarget());
-        this.model.setTargetHash(String.valueOf(hashBackup));
+        Platform.runLater(()->this.model.setTargetHash(String.valueOf(hashBackup)));
         this.model.setPlayBackupOrder(false);
         dataStore.saveModelAsJSON(this.model);
         this.model.setHashOrder(false);

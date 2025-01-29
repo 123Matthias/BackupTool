@@ -3,6 +3,7 @@ package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.StringProperty;
 import my.backup.backupTool.Service.IMessageList;
 
 import java.time.LocalDateTime;
@@ -60,17 +61,21 @@ public interface IModel {
 
     public double getProgressState();
 
-    public String getTargetHash();
-
-    public void setTargetHash(String targetHash);
-
-    public String getSourceHash();
-
-    public void setSourceHash(String sourceHash);
 
     void setHashType(HashTYPE hashType);
     HashTYPE getHashType();
     void setHashOrder(boolean orderHash);
     boolean hasHashOrder();
+
+    public String getSourceHash();
+
+    public String getTargetHash();
+
+    public void setSourceHash(String value);
+
+    public void setTargetHash(String value);
+
+    StringProperty getSourceHashProperty();
+    StringProperty getTargetHashProperty();
 
 }

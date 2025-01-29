@@ -270,7 +270,7 @@ public class MergeDetailController {
     private void play(){
         System.out.println("---------METHOD PLAY STARTED -------------------------------");
         model.setPlayBackupOrder(true);
-      //  model.setHashOrder(true);
+        model.setHashOrder(true);
         model.setHashType(HashTYPE.CRC32);
         save();
         saveData();
