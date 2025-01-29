@@ -2,7 +2,6 @@ package my.backup.backupTool.Controller;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -16,8 +15,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import my.backup.backupTool.App;
-import my.backup.backupTool.DataRepository.BaseDataRepository;
-import my.backup.backupTool.DataRepository.IStoreData;
+import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
+import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.SceneBuilder;
 
@@ -40,8 +39,6 @@ public class BaseOverviewController {
     private VBox cardContainer;
 
 
-    IStoreData dataStore;
-
     List<IModel> modelList;
 
     @FXML
@@ -49,10 +46,8 @@ public class BaseOverviewController {
 
         double toolBarHeight = toolBar.getHeight();
         flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
-        dataStore = new BaseDataRepository();
         modelList = getModelsAsList();
         addAllCardsSorted(modelList);
-
 
     }
 
@@ -97,7 +92,7 @@ public class BaseOverviewController {
             newCardBox.setPrefWidth(currentWidth + 50);
             newCardBox.setStyle("-fx-pref-width: " + (currentWidth + 50) + "px;");
             model.setCardWidth((int)newCardBox.getPrefWidth());
-            dataStore.saveModelAsJSON(model);
+            App.dataStore.saveModelAsJSON(model);
         });
 
         Button decreaseWidthButton = new Button("-");
@@ -108,7 +103,7 @@ public class BaseOverviewController {
                 newCardBox.setPrefWidth(currentWidth - 50);
                 newCardBox.setStyle("-fx-pref-width: " + (currentWidth - 50) + "px;");
                 model.setCardWidth((int)newCardBox.getPrefWidth());
-                dataStore.saveModelAsJSON(model);
+                App.dataStore.saveModelAsJSON(model);
             }
         });
 
@@ -333,13 +328,11 @@ public class BaseOverviewController {
                     int dropIndex = container.getChildren().indexOf(card); // Zielposition
                     container.getChildren().remove(draggedCard); // Alte Karte entfernen
                     container.getChildren().add(dropIndex, draggedCard); // Neu einfügen
-                    try {
-                        IModel model = dataStore.getModelById(card.getId());
-                        model.setFlowPanePosition(container.getChildren().indexOf(card));
-                        dataStore.saveModelAsJSON(model);
-                    } catch (IOException e) {
-                        ExceptionController.handleException(e);
-                    }
+
+                    IModel model = App.dataStore.getModelById(card.getId());
+                    model.setFlowPanePosition(container.getChildren().indexOf(card));
+                    App.dataStore.saveModelAsJSON(model);
+
                     success = true;
                 }
             }

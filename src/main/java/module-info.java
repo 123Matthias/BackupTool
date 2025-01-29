@@ -14,5 +14,6 @@ module my.backup.backupTool {
     exports my.backup.backupTool.Controller;
     exports my.backup.backupTool.Service;
     exports my.backup.backupTool.Model;
+    exports my.backup.backupTool.DataRepository;
 }
 

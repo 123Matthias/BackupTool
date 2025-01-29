@@ -2,7 +2,7 @@ package my.backup.backupTool.DataRepository;
 
 import my.backup.backupTool.Model.IModel;
 
-public interface IStoreData extends ILoadData {
+public interface IDataStore extends ILoadData {
 
     boolean saveModelAsJSON(IModel modelList);
 }

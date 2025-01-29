@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class BaseDataRepository implements IStoreData {
+public class BaseDataStoreRepository implements IDataStore {
 
 
     private String storagePath;
@@ -21,12 +21,12 @@ public class BaseDataRepository implements IStoreData {
     private ArrayList<IModel> modelList;
 
     // Standardkonstruktor
-    public BaseDataRepository() {
+    public BaseDataStoreRepository() {
         modelList = new ArrayList<>();
     }
 
     // Konstruktor mit benutzerdefiniertem Pfad
-    public BaseDataRepository(String storagePath) {
+    public BaseDataStoreRepository(String storagePath) {
         this();
         this.storagePath = storagePath;
     }
@@ -68,7 +68,7 @@ public class BaseDataRepository implements IStoreData {
             //Update oder Create wenn uid schon existiert
             if (model.getUid() != null && !model.getUid().isEmpty()) {
                 for (int i = 0; i < modelList.size(); i++) {
-                    if(modelList.get(i).getUid() == null) {
+                    if (modelList.get(i).getUid() == null) {
                         continue;
                     }
                     if (modelList.get(i).getUid().equals(model.getUid())) {
@@ -76,15 +76,14 @@ public class BaseDataRepository implements IStoreData {
                         break;
                     }
                 }
-            }
-            else{
+            } else {
                 model.setUid(UUID.randomUUID().toString());
                 modelList.add(model);
             }
 
             objectMapper.writeValue(file, modelList);
 
-         //   System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
+            //   System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
             return true;
 
         } catch (IOException e) {
@@ -116,7 +115,7 @@ public class BaseDataRepository implements IStoreData {
 
 
     @Override
-    public List<IModel> getAllAsList() throws IOException {
+    public List<IModel> getAllAsList() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -124,7 +123,7 @@ public class BaseDataRepository implements IStoreData {
         File sourceFile = new File(getStoragePath());
         createDefaultStorageFile();
         if (!sourceFile.exists()) {
-            throw new IOException("Die Datei existiert nicht: " + sourceFile.getAbsolutePath());
+            System.out.println("Die Datei existiert nicht: " + sourceFile.getAbsolutePath());
         }
 
         if (sourceFile.length() == 0) {
@@ -132,15 +131,23 @@ public class BaseDataRepository implements IStoreData {
         }
 
         // Daten in eine Liste von BaseModel-Objekten einlesen
-        List<IModel> dataList = mapper.readValue(
-                sourceFile,
-                mapper.getTypeFactory().constructCollectionType(List.class, BaseModel.class)
-        );
+        List<IModel> dataList = null;
+
+        try {
+            dataList = mapper.readValue(
+                    sourceFile,
+                    mapper.getTypeFactory().constructCollectionType(List.class, BaseModel.class)
+            );
+        } catch (IOException e) {
+            dataList = new ArrayList<>();
+            System.out.println(e.getMessage());
+        }
+
 
         return dataList;
     }
 
-    public IModel getModelById(String id) throws IOException {
+    public IModel getModelById(String id) {
         List<IModel> dataList = this.getAllAsList();
         for (IModel entry : dataList) {
             if (entry.getUid() != null && entry.getUid().equals(id)) {
@@ -148,7 +155,7 @@ public class BaseDataRepository implements IStoreData {
                 return entry;
             }
         }
-        throw new FileNotFoundException("Not Found: " + id);
+        return null;
     }
 }
 

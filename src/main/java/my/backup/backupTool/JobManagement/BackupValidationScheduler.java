@@ -1,7 +1,8 @@
 package my.backup.backupTool.JobManagement;
 
-import my.backup.backupTool.DataRepository.BaseDataRepository;
-import my.backup.backupTool.DataRepository.IStoreData;
+import my.backup.backupTool.App;
+import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
+import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.Model.HashTYPE;
 import my.backup.backupTool.Service.FileValidationService;
@@ -17,17 +18,11 @@ public class BackupValidationScheduler {
 
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this); // Listener-Verwaltung
     List<IModel> models;
-    IStoreData dataStore;
     List<IModel> validationOrderList;
 
     public BackupValidationScheduler() {
-        dataStore = new BaseDataRepository();
 
-        try {
-            this.models = dataStore.getAllAsList();
-        } catch (IOException e) {
-            this.models = new ArrayList<>();
-        }
+        this.models = App.dataStore.getAllAsList();
         this.validationOrderList = createValidationList();
     }
 

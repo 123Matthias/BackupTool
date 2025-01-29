@@ -1,7 +1,7 @@
 package my.backup.backupTool.Service;
 
-import my.backup.backupTool.DataRepository.BaseDataRepository;
-import my.backup.backupTool.DataRepository.IStoreData;
+import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
+import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.IModel;
 
 import java.io.*;
@@ -18,12 +18,12 @@ public class FileValidationService extends BaseCalculationService implements IFi
     private double progress;
 
     private IMessageList messageList;
-    private IStoreData dataStore;
+    private IDataStore dataStore;
     private IModel model;
 
     public FileValidationService(IModel model) {
         messageList = new MessageList();
-        dataStore = new BaseDataRepository();
+        dataStore = new BaseDataStoreRepository();
         this.model = model;
         System.out.println("Model Hash Service:" + this.model);
     }

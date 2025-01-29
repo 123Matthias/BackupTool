@@ -12,7 +12,7 @@ import my.backup.backupTool.Model.HashTYPE;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
 import my.backup.backupTool.Model.IModel;
-import my.backup.backupTool.DataRepository.BaseDataRepository;
+import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +74,7 @@ public class MergeDetailController {
 
     ITimeService timeService;
     IModel model;
-    BaseDataRepository dataStore;
+    BaseDataStoreRepository dataStore;
     IUpdateScene sceneUpdate;
 
 
@@ -94,7 +94,7 @@ public class MergeDetailController {
         });
         // MVC Model Initialisierung für MergeController;
         model = new MergeModel();
-        dataStore = new BaseDataRepository();
+        dataStore = new BaseDataStoreRepository();
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
     }
@@ -335,11 +335,7 @@ public class MergeDetailController {
 
     public void openUpdateSceneByUID(String uid){
 
-        try {
-            model = dataStore.getModelById(uid);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        model = dataStore.getModelById(uid);
 
 
         title.setText(model.getTitle() != null ? model.getTitle() : "");

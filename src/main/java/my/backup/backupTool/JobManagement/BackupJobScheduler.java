@@ -1,7 +1,8 @@
 package my.backup.backupTool.JobManagement;
 
-import my.backup.backupTool.DataRepository.BaseDataRepository;
-import my.backup.backupTool.DataRepository.IStoreData;
+import my.backup.backupTool.App;
+import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
+import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.Service.IMergeService;
@@ -16,16 +17,9 @@ public class BackupJobScheduler implements Subjekt {
 
     List<IModel> modelList;
     List<IModel> backupOrderList;
-    IStoreData dataStore;
 
     public BackupJobScheduler() {
-        dataStore = new BaseDataRepository();
-
-        try {
-            this.modelList = dataStore.getAllAsList();
-        } catch (IOException e) {
-            this.modelList = new ArrayList<>();
-        }
+        this.modelList = App.dataStore.getAllAsList();
         this.backupOrderList = createBackupList();
         this.fireBackupEvent();
     }
@@ -82,10 +76,6 @@ public class BackupJobScheduler implements Subjekt {
 
     public void addBackupOrderToList(IModel model) {
         this.backupOrderList.add(model);
-    }
-
-    public IStoreData getDataStore() {
-        return dataStore;
     }
 
     public List<IModel> getBackupOrderList() {

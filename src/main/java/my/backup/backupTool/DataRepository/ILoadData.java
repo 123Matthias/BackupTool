@@ -6,6 +6,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ILoadData {
-    List<IModel> getAllAsList() throws IOException;
-    IModel getModelById(String id) throws IOException;
+    List<IModel> getAllAsList();
+    IModel getModelById(String id);
 }
