@@ -12,6 +12,7 @@ public class MergeOverviewController extends BaseOverviewController {
 
     @FXML
     public void initialize(){
+        super.initialize();
 
     }
 

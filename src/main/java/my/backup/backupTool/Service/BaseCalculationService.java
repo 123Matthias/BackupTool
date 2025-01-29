@@ -27,9 +27,10 @@ public abstract class BaseCalculationService {
 
         if(progress > lastProgressState + 0.05 || progress == 1.0) {
             lastProgressState = progress;
-            Platform.runLater(()->model.setProgressStateProp(progress));
-            System.out.println("Progress: " + progress);
-            System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressStateProp() * 100) + "%");
+            Platform.runLater(()-> model.setProgressState(progress));
+
+          //  System.out.println("Progress_Property: " + model.getProgressStateProperty());
+          //  System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressState() * 100) + "%");
         }
     }
 

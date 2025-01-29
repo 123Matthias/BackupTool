@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import my.backup.backupTool.MessageTYPE;
+import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.HashTYPE;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
@@ -269,10 +270,11 @@ public class MergeDetailController {
     private void play(){
         System.out.println("---------METHOD PLAY STARTED -------------------------------");
         model.setPlayBackupOrder(true);
-        model.setHashOrder(true);
+      //  model.setHashOrder(true);
         model.setHashType(HashTYPE.CRC32);
         save();
         saveData();
+
         System.out.println("---------METHOD PLAY FINISHED -------------------------------");
 
     }
@@ -313,6 +315,7 @@ public class MergeDetailController {
         model.setStartDate(startDate);
         model.setIntervalDays(days);
         model.setIntervalHours(hours);
+        model.setBackupType(BackupType.MERGE);
 
         if(model.validate()){
             saveData();

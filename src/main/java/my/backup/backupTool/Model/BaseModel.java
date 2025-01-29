@@ -5,10 +5,17 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.MessageList;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.time.LocalDateTime;
 
 public class BaseModel implements IModel {
+
+
+    @JsonIgnore
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 
     @JsonIgnore
@@ -77,11 +84,11 @@ public class BaseModel implements IModel {
     }
 
     public BackupType getBackupType() {
-        return backupType;
+        return this.backupType;
     }
 
-    public void setBackupType(BackupType backupTpe) {
-        backupType = backupType;
+    public void setBackupType(BackupType backupType) {
+        this.backupType = backupType;
     }
 
     // Getter und Setter
@@ -245,21 +252,32 @@ public class BaseModel implements IModel {
 
     @Override
     @JsonIgnore
-    public double getProgressStateProp() {
+    public double getProgressState() {
         return progressStateProp.get();
     }
 
     @Override
     @JsonIgnore
-    public void setProgressStateProp(double progress) {
-        this.progressStateProp.set(progress);
+    public void setProgressState(double progress) {
+        double oldProgress = progressStateProp.get();
+        progressStateProp.set(progress);
+        System.out.println("Progress updated: " + oldProgress + " -> " + progress);
+        pcs.firePropertyChange("progressState", oldProgress, progress);
+
+        pcs.addPropertyChangeListener("progressState", evt -> {
+            System.out.println("Progress state changed: " + evt.getOldValue() + " -> " + evt.getNewValue());
+        });
+
     }
+
 
     @Override
     @JsonIgnore
-    public DoubleProperty progressStateProperty() {
-        return progressStateProp;
+    public DoubleProperty getProgressStateProperty() {
+        return this.progressStateProp;
     }
+
+
 
     @Override
     public String getSourceHash() {
@@ -301,4 +319,6 @@ public class BaseModel implements IModel {
     public void setHashType(HashTYPE hashType) {
         this.hashType = hashType;
     }
+
+
 }

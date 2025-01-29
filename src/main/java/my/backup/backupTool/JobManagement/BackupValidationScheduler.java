@@ -65,8 +65,8 @@ public class BackupValidationScheduler {
 
     public void fireProgressStateValidation(double progressState) {
         for(IModel model : validationOrderList) {
-            double oldProgressState = model.getProgressStateProp();
-            model.setProgressStateProp(progressState);
+            double oldProgressState = model.getProgressState();
+            model.setProgressState(progressState);
             propertyChangeSupport.firePropertyChange("progressState", oldProgressState, progressState);
         }
     }

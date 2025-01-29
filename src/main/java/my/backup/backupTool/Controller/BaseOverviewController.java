@@ -1,5 +1,7 @@
 package my.backup.backupTool.Controller;
 
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -34,7 +36,10 @@ public class BaseOverviewController {
     @FXML
     private VBox cardContainer;
 
+
     IStoreData dataStore;
+
+    List<IModel> modelList;
 
     @FXML
     public void initialize() {
@@ -42,10 +47,13 @@ public class BaseOverviewController {
         double toolBarHeight = toolBar.getHeight();
         flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
         dataStore = new BaseDataRepository();
-        List<IModel> list = getModelsAsList();
-        addAllCardsSorted(list);
+        modelList = getModelsAsList();
+        addAllCardsSorted(modelList);
+
 
     }
+
+
 
 
     public void addNewCard(IModel model) {
@@ -127,7 +135,14 @@ public class BaseOverviewController {
         );
 
         ProgressBar progressBar = new ProgressBar(0);
-        progressBar.progressProperty().bind(model.progressStateProperty());
+
+        progressBar.progressProperty().bind(model.getProgressStateProperty());
+        Label testLabel = new Label();
+        testLabel.textProperty().bind(Bindings.format("%.2f", model.getProgressStateProperty()));
+
+
+
+
         progressBar.prefWidthProperty().bind(contentBox.widthProperty().subtract(10));
         progressBar.translateXProperty().set(5);
         Label progressLabel = new Label();
@@ -139,7 +154,7 @@ public class BaseOverviewController {
 
 
         // Struktur aufbauen
-        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabel, progressBar);
+        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabel, progressBar, testLabel);
         newCardPane.getChildren().add(newCardBox);
 
 
@@ -156,6 +171,7 @@ public class BaseOverviewController {
 
 
     private void addAllCardsSorted(List<IModel> list) {
+        System.out.println("-----Im in Method addAllCardsSorted-----");
         list.sort(Comparator.comparingInt(IModel::getFlowPanePosition));
         for (IModel entry : list) {
             System.out.println("AddCardFromList getAllCards() " + entry.getTitle());

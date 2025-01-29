@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.DoubleProperty;
 import my.backup.backupTool.Service.IMessageList;
 
-import java.beans.PropertyChangeListener;
 import java.time.LocalDateTime;
 
 public interface IModel {
@@ -54,12 +53,12 @@ public interface IModel {
     public void setPlayBackupOrder(boolean playBackupOrder);
 
 
-    public void setProgressStateProp(double progress);
+    public void setProgressState(double progress);
 
     @JsonIgnore
-    DoubleProperty progressStateProperty();
+    DoubleProperty getProgressStateProperty();
 
-    public double getProgressStateProp();
+    public double getProgressState();
 
     public String getTargetHash();
 

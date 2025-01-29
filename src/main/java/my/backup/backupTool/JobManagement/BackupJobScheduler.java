@@ -7,15 +7,13 @@ import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.Service.IMergeService;
 import my.backup.backupTool.Service.MergeService;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BackupJobScheduler implements Subjekt {
 
-    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this); // Listener-Verwaltung
     List<IModel> models;
     List<IModel> backupOrderList;
     IStoreData dataStore;
@@ -46,11 +44,11 @@ public class BackupJobScheduler implements Subjekt {
 
     @Override
     public void fireBackupEvent() {
-        for(IModel modelInList : models) {
-            if(modelInList.hasPlayBackupOrder()){
+        for(IModel modelInList : backupOrderList) {
                 if(modelInList.getBackupType() == BackupType.MERGE){
                     IMergeService mergeService = new MergeService(modelInList);
                     mergeService.startMergeThread();
+                    System.out.println("----------Merge Service in Job Scheduler started--------------");
                 }
                 if(modelInList.getBackupType() == BackupType.FULL){
                     //TODO
@@ -58,26 +56,10 @@ public class BackupJobScheduler implements Subjekt {
                 if(modelInList.getBackupType() == BackupType.SYNCHRONIZED){
                     //TODO
                 }
-            }
+
         }
     }
 
-
-    public void addChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removeChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
-    }
-
-    public void fireProgressStateBackup(double progressState) {
-        for(IModel model : backupOrderList) {
-                double oldProgressState = model.getProgressStateProp();
-                model.setProgressStateProp(progressState);
-                propertyChangeSupport.firePropertyChange("progressState", oldProgressState, progressState);
-        }
-    }
 
     public List<IModel> createBackupList(){
         List<IModel> backupList = new ArrayList<>();
@@ -102,4 +84,17 @@ public class BackupJobScheduler implements Subjekt {
         this.backupOrderList.add(model);
     }
 
+    public IStoreData getDataStore() {
+        return dataStore;
+    }
+
+    public List<IModel> getBackupOrderList() {
+        return backupOrderList;
+    }
+
+    public List<IModel> getModels() {
+        return models;
+    }
 }
+
+
