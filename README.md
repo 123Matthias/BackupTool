@@ -36,4 +36,4 @@ Timing can be Adjusted on creation.
 ---
 
 ## Conclusion
-An MSI installer link is here:
+An MSI installer link is coming.
