@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import my.backup.backupTool.App;
 import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
@@ -73,7 +74,6 @@ public class MergeDetailController {
 
     ITimeService timeService;
     BaseModel model;
-    BaseDataStoreRepository dataStore;
     IUpdateScene sceneUpdate;
 
 
@@ -93,7 +93,6 @@ public class MergeDetailController {
         });
         // MVC Model Initialisierung für MergeController;
         model = new MergeModel();
-        dataStore = new BaseDataStoreRepository();
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
     }
@@ -334,7 +333,7 @@ public class MergeDetailController {
 
     public void openUpdateSceneByUID(String uid){
 
-        model = dataStore.getModelById(uid);
+        model = App.DataStore.getModelById(uid);
 
 
         title.setText(model.getTitle() != null ? model.getTitle() : "");
@@ -350,7 +349,7 @@ public class MergeDetailController {
     }
 
     private boolean saveData(){
-        return dataStore.saveModelAsJSON(model);
+        return App.DataStore.saveModelAsJSON(model);
     }
 
 }

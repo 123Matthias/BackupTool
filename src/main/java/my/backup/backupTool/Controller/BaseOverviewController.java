@@ -34,15 +34,14 @@ public class BaseOverviewController {
     private VBox cardContainer;
 
 
-    List<BaseModel> modelList;
 
     @FXML
     public void initialize() {
 
         double toolBarHeight = toolBar.getHeight();
         flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
-        modelList = getModelsAsList();
-        addAllCardsSorted(modelList);
+
+        addAllCardsSorted(App.DataStore.getAllAsList());
 
     }
 
