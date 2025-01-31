@@ -2,7 +2,7 @@ package my.backup.backupTool;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import my.backup.backupTool.Model.IModel;
+import my.backup.backupTool.Model.BaseModel;
 
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public static App App;
         App.Router.setMainStage(stage);  // Sicherstellen, dass app.Router hier nicht null ist
         App.Router.getMainStage().show();
 
-        for(IModel m : App.JobScheduler.getBackupOrderList()){
+        for(BaseModel m : App.JobScheduler.getBackupOrderList()){
             System.out.println("Job Scheduler UID: " + m.getUid() +
                     "\n Title: " + m.getTitle() +
                     "\n Backup Order: " + m.hasPlayBackupOrder() +

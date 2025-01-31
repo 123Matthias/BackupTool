@@ -3,10 +3,8 @@ package my.backup.backupTool.DataRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.Model.IModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,7 @@ public class BaseDataStoreRepository implements IDataStore {
     private String storagePath;
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
 
-    private ArrayList<IModel> modelList;
+    private ArrayList<BaseModel> modelList;
 
     // Standardkonstruktor
     public BaseDataStoreRepository() {
@@ -36,11 +34,11 @@ public class BaseDataStoreRepository implements IDataStore {
         this.storagePath = storagePath;
     }
 
-    public ArrayList<IModel> getModelList() {
+    public ArrayList<BaseModel> getModelList() {
         return modelList;
     }
 
-    public void setModelList(ArrayList<IModel> modelList) {
+    public void setModelList(ArrayList<BaseModel> modelList) {
         this.modelList = modelList;
     }
 
@@ -51,13 +49,13 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    public boolean saveModelAsJSON(IModel model) {
+    public boolean saveModelAsJSON(BaseModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
 
         try {
-            List<IModel> modelList = new ArrayList<>();
+            List<BaseModel> modelList = new ArrayList<>();
 
             if (file.exists() && file.length() > 0) {
                 modelList = objectMapper.readValue(file, objectMapper
@@ -115,7 +113,7 @@ public class BaseDataStoreRepository implements IDataStore {
 
 
     @Override
-    public List<IModel> getAllAsList() {
+    public List<BaseModel> getAllAsList() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -131,7 +129,7 @@ public class BaseDataStoreRepository implements IDataStore {
         }
 
         // Daten in eine Liste von BaseModel-Objekten einlesen
-        List<IModel> dataList = null;
+        List<BaseModel> dataList = null;
 
         try {
             dataList = mapper.readValue(
@@ -147,9 +145,9 @@ public class BaseDataStoreRepository implements IDataStore {
         return dataList;
     }
 
-    public IModel getModelById(String id) {
-        List<IModel> dataList = this.getAllAsList();
-        for (IModel entry : dataList) {
+    public BaseModel getModelById(String id) {
+        List<BaseModel> dataList = this.getAllAsList();
+        for (BaseModel entry : dataList) {
             if (entry.getUid() != null && entry.getUid().equals(id)) {
                 System.out.println("GetModel.ByID:" + entry.getUid());
                 return entry;

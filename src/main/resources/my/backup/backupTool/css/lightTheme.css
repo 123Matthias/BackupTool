@@ -39,6 +39,8 @@
     -fx-color5: black;
     -fx-color6: rgba(253, 229, 207, 1);
     -fx-color66: rgba(233, 209, 187, 1); /* Background Color hover*/
+    -fx-effect19: dropshadow(gaussian, rgba(50, 50, 50, 0.98), 10, 0.0, 0.0, 0.0);/*Cards shadow with 9 for hover*/
+
 
     /*---------- END OF CARDS-------------- */
 

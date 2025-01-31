@@ -14,10 +14,6 @@
     -fx-font-family: "Segoe UI", sans-serif;
 }
 
-.card:hover {
-    -fx-border-width: 4;
-}
-
 /* Card Content Styles */
 .cardContent {
     -fx-padding: 5;

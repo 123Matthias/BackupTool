@@ -3,7 +3,8 @@ package my.backup.backupTool.Service;
 
 import my.backup.backupTool.App;
 import my.backup.backupTool.MessageTYPE;
-import my.backup.backupTool.Model.IModel;
+import my.backup.backupTool.Model.BaseModel;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -14,7 +15,7 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
 
     private IMessageList messageList;
 
-    public MergeService(IModel model) {
+    public MergeService(BaseModel model) {
         super(model);
         this.messageList = new MessageList();
     }

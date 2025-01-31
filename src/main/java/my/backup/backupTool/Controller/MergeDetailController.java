@@ -8,14 +8,13 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.BackupType;
+import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Model.HashTYPE;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
-import my.backup.backupTool.Model.IModel;
 import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -73,7 +72,7 @@ public class MergeDetailController {
 
 
     ITimeService timeService;
-    IModel model;
+    BaseModel model;
     BaseDataStoreRepository dataStore;
     IUpdateScene sceneUpdate;
 

@@ -1,7 +1,7 @@
 package my.backup.backupTool.Service;
 
 import javafx.application.Platform;
-import my.backup.backupTool.Model.IModel;
+import my.backup.backupTool.Model.BaseModel;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -21,7 +21,7 @@ public abstract class BaseCalculationService {
 
     private double lastProgressState = 0;
 
-    protected void updateProgress(double progress, IModel model) {
+    protected void updateProgress(double progress, BaseModel model) {
         // Hier wird der Fortschritt an die UI übergeben
         // Je nach deinem UI-Framework (z.B. JavaFX) wird die ProgressBar oder ein anderes UI-Element aktualisiert
 

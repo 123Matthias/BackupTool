@@ -12,8 +12,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Base64;
 
-public class BaseModel implements IModel {
+public class BaseModel {
 
 
     @JsonIgnore
@@ -69,6 +70,15 @@ public class BaseModel implements IModel {
 
     @JsonIgnore
     private IMessageList messages;
+
+    @JsonProperty("secret-key")
+    private Base64 secretKey;
+
+    @JsonProperty("init-Vector")
+    private Base64 initVector;
+
+    @JsonProperty("encryption-Order")
+    private boolean encryptionOrder;
 
 
     @JsonCreator
@@ -234,7 +244,6 @@ public class BaseModel implements IModel {
         this.cardWidth = cardWidth;
     }
 
-    @Override
     @JsonIgnore
     public IMessageList getMessageList() {
         return messages;
@@ -251,20 +260,16 @@ public class BaseModel implements IModel {
     }
 
 
-    @Override
     @JsonIgnore
     public double getProgressState() {
         return progressStateProp.get();
     }
 
-    @Override
     @JsonIgnore
     public void setProgressState(double progress) {
         this.progressStateProp.set(progress);
-
     }
 
-    @Override
     @JsonIgnore
     public DoubleProperty getProgressStateProperty() {
         return this.progressStateProp;
@@ -326,4 +331,27 @@ public class BaseModel implements IModel {
     }
 
 
+    public Base64 getInitVector() {
+        return initVector;
+    }
+
+    public void setInitVector(Base64 initVector) {
+        this.initVector = initVector;
+    }
+
+    public Base64 getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(Base64 secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public boolean hasEncryptionOrder() {
+        return encryptionOrder;
+    }
+
+    public void setEncryptionOrder(boolean encryptionOrder) {
+        this.encryptionOrder = encryptionOrder;
+    }
 }

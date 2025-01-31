@@ -1,22 +1,20 @@
 package my.backup.backupTool.Service;
 
-import javafx.application.Platform;
-import my.backup.backupTool.Model.IModel;
+import my.backup.backupTool.Encryption.AesService;
+import my.backup.backupTool.Model.BaseModel;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class BaseCopyService extends BaseCalculationService {
 
-    private final IModel model;
+    private final BaseModel model;
 
 
-    public BaseCopyService(IModel model) {
+    public BaseCopyService(BaseModel model) {
         this.model = model;
     }
 
@@ -28,10 +26,20 @@ public abstract class BaseCopyService extends BaseCalculationService {
                      StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 
             byte[] buffer = new byte[8192]; // 8 KB Blockgröße
-
             int bytesRead;
             long fileProcessedSize = 0;
 
+            //Encryption Service usage
+            if(model.hasEncryptionOrder()) {
+                AesService aes = new AesService(out,AesService.generateAESKey(),AesService.generateIV());
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    aes.write(buffer, 0, bytesRead);
+                    fileProcessedSize += bytesRead;
+                    double progress = (double) fileProcessedSize / totalSize;
+                }
+            }
+
+            //END OF Encryption Service usage
             while ((bytesRead = in.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesRead);
                 fileProcessedSize += bytesRead;
@@ -72,7 +80,7 @@ public abstract class BaseCopyService extends BaseCalculationService {
         }
     }
 
-    protected IModel getModel() {
+    protected BaseModel getModel() {
         return this.model;
     }
 

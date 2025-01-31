@@ -11,10 +11,10 @@ public class App {
     public static Router Router;
     public static BackupJobScheduler JobScheduler;
     public static BackupCheckScheduler CheckScheduler;
-    public static IDataStore dataStore;
+    public static IDataStore DataStore;
 
     public App() {
-        dataStore = new BaseDataStoreRepository();
+        DataStore = new BaseDataStoreRepository();
         JobScheduler = new BackupJobScheduler(); //Muss als erstes Initialisiert werden da hier Daten geladen werden
         CheckScheduler = new BackupCheckScheduler();
         Router = new Router();

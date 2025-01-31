@@ -40,8 +40,7 @@
     -fx-color5: black;
     -fx-color6: rgba(28, 26, 26, 1); /* Background Color */
     -fx-color66: rgba(38, 36, 36, 1); /* Background Color hover*/
-
-    /*---------- END OF CARDS-------------- */
+    -fx-effect19: dropshadow(gaussian, rgba(50, 50, 50, 0), 10, 0.0, 0.0, 0.0);/*Cards shadow with 9 for hover*/    /*---------- END OF CARDS-------------- */
 
 
     /*----------------------- COMPONENTS (Toggler Switch)---------------------------------- */

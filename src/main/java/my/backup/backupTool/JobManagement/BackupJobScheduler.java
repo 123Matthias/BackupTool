@@ -1,32 +1,29 @@
 package my.backup.backupTool.JobManagement;
 
 import my.backup.backupTool.App;
-import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
-import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.BackupType;
-import my.backup.backupTool.Model.IModel;
+import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Service.IMergeService;
 import my.backup.backupTool.Service.MergeService;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BackupJobScheduler {
 
-    List<IModel> modelList;
-    List<IModel> backupOrderList;
+    List<BaseModel> modelList;
+    List<BaseModel> backupOrderList;
 
     public BackupJobScheduler() {
-        this.modelList = App.dataStore.getAllAsList();
+        this.modelList = App.DataStore.getAllAsList();
         this.backupOrderList = createBackupList();
         this.fireBackupEvent();
     }
 
 
     public void fireBackupEvent() {
-        for(IModel modelInList : backupOrderList) {
+        for(BaseModel modelInList : backupOrderList) {
                 if(modelInList.getBackupType() == BackupType.MERGE){
                     IMergeService mergeService = new MergeService(modelInList);
                     mergeService.startMergeThread();
@@ -42,9 +39,9 @@ public class BackupJobScheduler {
         }
     }
 
-    public List<IModel> createBackupList(){
-        List<IModel> backupList = new ArrayList<>();
-        for(IModel model : this.modelList) {
+    public List<BaseModel> createBackupList(){
+        List<BaseModel> backupList = new ArrayList<>();
+        for(BaseModel model : this.modelList) {
             if (model.hasPlayBackupOrder()) {
                 backupList.add(model);
             }
@@ -52,7 +49,7 @@ public class BackupJobScheduler {
         return backupList;
     }
 
-    public void removeBackupOrderFromList(IModel model) {
+    public void removeBackupOrderFromList(BaseModel model) {
         for(int i = 0; i < backupOrderList.size(); i++) {
             if(backupOrderList.get(i).getUid().equals(model.getUid())) {
                 this.backupOrderList.remove(i);
@@ -61,15 +58,15 @@ public class BackupJobScheduler {
         }
     }
 
-    public void addBackupOrderToList(IModel model) {
+    public void addBackupOrderToList(BaseModel model) {
         this.backupOrderList.add(model);
     }
 
-    public List<IModel> getBackupOrderList() {
+    public List<BaseModel> getBackupOrderList() {
         return backupOrderList;
     }
 
-    public List<IModel> getModelList() {
+    public List<BaseModel> getModelList() {
         return modelList;
     }
 }

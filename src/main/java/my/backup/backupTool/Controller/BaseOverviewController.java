@@ -1,7 +1,5 @@
 package my.backup.backupTool.Controller;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -13,11 +11,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import my.backup.backupTool.App;
-import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
-import my.backup.backupTool.DataRepository.IDataStore;
-import my.backup.backupTool.Model.IModel;
+import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.SceneBuilder;
 
 import java.io.IOException;
@@ -39,7 +34,7 @@ public class BaseOverviewController {
     private VBox cardContainer;
 
 
-    List<IModel> modelList;
+    List<BaseModel> modelList;
 
     @FXML
     public void initialize() {
@@ -54,7 +49,7 @@ public class BaseOverviewController {
 
 
 
-    public void addNewCard(IModel model) {
+    public void addNewCard(BaseModel model) {
 
         // Randabstand
         Pane newCardPane = new Pane();
@@ -92,7 +87,7 @@ public class BaseOverviewController {
             newCardBox.setPrefWidth(currentWidth + 50);
             newCardBox.setStyle("-fx-pref-width: " + (currentWidth + 50) + "px;");
             model.setCardWidth((int)newCardBox.getPrefWidth());
-            App.dataStore.saveModelAsJSON(model);
+            App.DataStore.saveModelAsJSON(model);
         });
 
         Button decreaseWidthButton = new Button("-");
@@ -103,7 +98,7 @@ public class BaseOverviewController {
                 newCardBox.setPrefWidth(currentWidth - 50);
                 newCardBox.setStyle("-fx-pref-width: " + (currentWidth - 50) + "px;");
                 model.setCardWidth((int)newCardBox.getPrefWidth());
-                App.dataStore.saveModelAsJSON(model);
+                App.DataStore.saveModelAsJSON(model);
             }
         });
 
@@ -176,19 +171,19 @@ public class BaseOverviewController {
     }
 
 
-    private void addAllCardsSorted(List<IModel> list) {
+    private void addAllCardsSorted(List<BaseModel> list) {
         System.out.println("-----Im in Method addAllCardsSorted-----");
-        list.sort(Comparator.comparingInt(IModel::getFlowPanePosition));
-        for (IModel entry : list) {
+        list.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
+        for (BaseModel entry : list) {
             System.out.println("AddCardFromList getAllCards() " + entry.getTitle());
             addNewCard(entry);
         }
     }
 
-    private List<IModel> getModelsAsList() {
-        List<IModel> dataList = new ArrayList<>();
-            dataList = App.JobScheduler.getModelList();
-            dataList.sort(Comparator.comparingInt(IModel::getFlowPanePosition));
+    private List<BaseModel> getModelsAsList() {
+        List<BaseModel> dataList = new ArrayList<>();
+            dataList = App.DataStore.getAllAsList();
+            dataList.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
 
 
         return dataList;
@@ -329,9 +324,9 @@ public class BaseOverviewController {
                     container.getChildren().remove(draggedCard); // Alte Karte entfernen
                     container.getChildren().add(dropIndex, draggedCard); // Neu einfügen
 
-                    IModel model = App.dataStore.getModelById(card.getId());
+                    BaseModel model = App.DataStore.getModelById(card.getId());
                     model.setFlowPanePosition(container.getChildren().indexOf(card));
-                    App.dataStore.saveModelAsJSON(model);
+                    App.DataStore.saveModelAsJSON(model);
 
                     success = true;
                 }

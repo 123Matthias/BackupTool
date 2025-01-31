@@ -3,8 +3,7 @@ package my.backup.backupTool.Service;
 import javafx.application.Platform;
 import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
 import my.backup.backupTool.DataRepository.IDataStore;
-import my.backup.backupTool.Model.IModel;
-
+import my.backup.backupTool.Model.BaseModel;
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -20,9 +19,9 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
     private IMessageList messageList;
     private IDataStore dataStore;
-    private IModel model;
+    private BaseModel model;
 
-    public FileValidationService(IModel model) {
+    public FileValidationService(BaseModel model) {
         messageList = new MessageList();
         dataStore = new BaseDataStoreRepository();
         this.model = model;

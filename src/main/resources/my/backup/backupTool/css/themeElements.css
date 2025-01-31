@@ -119,7 +119,7 @@
 .card {
     -fx-border-color: -fx-color1;
     -fx-background-color: -fx-color6;
-    -fx-effect: -fx-effect1;
+    -fx-effect: -fx-effect19;
 }
 
 .cardContent > Label {
@@ -140,7 +140,7 @@
 
 .card:hover {
     -fx-border-color: -fx-color13;
-    -fx-background-color: -fx-color66;
+    -fx-effect: -fx-effect9;
 }
 
 Label{
