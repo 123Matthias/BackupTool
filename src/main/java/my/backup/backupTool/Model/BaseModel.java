@@ -55,7 +55,6 @@ public class BaseModel {
     @JsonProperty("play-BackupOrder")
     private boolean playBackupOrder;
 
-
     @JsonIgnore
     private StringProperty sourceHashProperty = new SimpleStringProperty("no value");
 
@@ -71,13 +70,13 @@ public class BaseModel {
     @JsonIgnore
     private IMessageList messages;
 
-    @JsonProperty("secret-key")
-    private Base64 secretKey;
+    @JsonIgnore
+    private String secretKey;
 
-    @JsonProperty("init-Vector")
-    private Base64 initVector;
+    @JsonIgnore
+    private String initVector;
 
-    @JsonProperty("encryption-Order")
+    @JsonIgnore
     private boolean encryptionOrder;
 
 
@@ -330,28 +329,37 @@ public class BaseModel {
         this.hashType = hashType;
     }
 
-
-    public Base64 getInitVector() {
+    @JsonProperty("init-vector")
+    public String getInitVector() {
         return initVector;
     }
 
-    public void setInitVector(Base64 initVector) {
+    @JsonProperty("init-vector")
+    public void setInitVector(String initVector) {
         this.initVector = initVector;
     }
 
-    public Base64 getSecretKey() {
+    @JsonProperty("secret-key")
+    public String getSecretKey() {
         return secretKey;
     }
 
-    public void setSecretKey(Base64 secretKey) {
+    @JsonProperty("secret-key")
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
 
+    @JsonProperty("encryption-Order")
     public boolean hasEncryptionOrder() {
         return encryptionOrder;
     }
 
+    @JsonProperty("encryption-Order")
     public void setEncryptionOrder(boolean encryptionOrder) {
         this.encryptionOrder = encryptionOrder;
     }
+
+
 }
+
+

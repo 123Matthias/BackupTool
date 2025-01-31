@@ -29,6 +29,7 @@ public abstract class BaseCopyService extends BaseCalculationService {
             int bytesRead;
             long fileProcessedSize = 0;
 
+            /*
             //Encryption Service usage
             if(model.hasEncryptionOrder()) {
                 AesService aes = new AesService(out,AesService.generateAESKey(),AesService.generateIV());
@@ -38,6 +39,8 @@ public abstract class BaseCopyService extends BaseCalculationService {
                     double progress = (double) fileProcessedSize / totalSize;
                 }
             }
+            */
+
 
             //END OF Encryption Service usage
             while ((bytesRead = in.read(buffer)) != -1) {
@@ -46,7 +49,7 @@ public abstract class BaseCopyService extends BaseCalculationService {
 
                 // Fortschritt berechnen
                 double progress = (double) fileProcessedSize / totalSize;
-                super.updateProgress(progress,this.model);
+                super.updateProgress(progress, this.model);
             }
 
         } catch(IOException e) {
