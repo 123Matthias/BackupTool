@@ -16,7 +16,11 @@ import my.backup.backupTool.JobManagement.BackupJobScheduler;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.SceneBuilder;
 
+import javax.swing.text.DateFormatter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -77,7 +81,7 @@ public class BaseOverviewController {
 
 // Buttons
         Button increaseWidthButton = new Button("+");
-        increaseWidthButton.setStyle("-fx-font-size: 16; -fx-padding: 0");
+        increaseWidthButton.setStyle("-fx-font-size: 18; -fx-padding: 0");
         increaseWidthButton.setOnMouseClicked(event -> {
             double currentWidth = newCardBox.getPrefWidth();
             newCardBox.setPrefWidth(currentWidth + 50);
@@ -87,7 +91,7 @@ public class BaseOverviewController {
         });
 
         Button decreaseWidthButton = new Button("-");
-        decreaseWidthButton.setStyle("-fx-font-size: 16; -fx-padding: 0");
+        decreaseWidthButton.setStyle("-fx-font-size: 18; -fx-padding: 0");
         decreaseWidthButton.setOnMouseClicked(event -> {
             double currentWidth = newCardBox.getPrefWidth();
             if (currentWidth > 50) { // Mindestbreite beachten
@@ -112,11 +116,14 @@ public class BaseOverviewController {
         contentBox.setSpacing(5);
         //UID Label
         Label uuidLabel = new Label("UUID: " + uid);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String lastDate = model.getStartDate() == null ? "no Date" : model.getStartDate().format(formatter);
+        String nextDate = model.getNextBackupLocalDateTime() == null ? "no Date" : model.getNextBackupLocalDateTime().format(formatter);
 
         contentBox.getChildren().addAll(
                 uuidLabel,
-                new Label("Last Backup: " + model.getStartDate()),
-                new Label("Next Backup: " + model.getNextBackupLocalDateTime()),
+                new Label("Last Backup: " + lastDate),
+                new Label("Next Backup: " + nextDate),
                 new Label("Source Path: " + model.getSource()),
                 new Label("Target Path: " + model.getTarget())
         );
@@ -148,19 +155,10 @@ public class BaseOverviewController {
             targetHashLabel.setStyle(style);
         });
 
-
-
-
-
         ProgressBar progressBar = new ProgressBar(0);
-
         progressBar.progressProperty().bind(model.getProgressStateProperty());
-
         Label testLabel = new Label();
         testLabel.textProperty().bind(Bindings.format("%.2f", model.getProgressStateProperty()));
-
-
-
 
         progressBar.prefWidthProperty().bind(contentBox.widthProperty().subtract(10));
         progressBar.translateXProperty().set(5);
@@ -171,13 +169,9 @@ public class BaseOverviewController {
 
         contentBox.setOnMouseClicked(event -> openMergeDetailWindow(uid));
 
-
         // Struktur aufbauen
         newCardBox.getChildren().addAll(newTitleContainer, contentBox, sourceHashBox, targetHashBox, progressLabel, progressBar);
         newCardPane.getChildren().add(newCardBox);
-
-
-
 
         // Neue Karte in das FlowPane einfügen
         flowPane.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein

@@ -71,7 +71,6 @@ public class MergeDetailController {
     private boolean isSourceButtonClicked = false;
     private boolean isTargetButtonClicked = false;
 
-    ITimeService timeService;
     BaseModel model;
     IUpdateScene sceneUpdate;
 
@@ -92,7 +91,6 @@ public class MergeDetailController {
         });
         // MVC Model Initialisierung für MergeController;
         model = new MergeModel();
-        timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
 
 
@@ -278,7 +276,7 @@ public class MergeDetailController {
             catch (NumberFormatException e){
                 System.out.println("Not type of integer: " + e);
             }
-            model.setNextBackupLocalDateTime(timeService.setTiming(startDate, days, hours));
+            model.setNextBackupLocalDateTime(TimeService.calculateNextBackupTime(startDate, days, hours));
         }
         else{
             model.setNextBackupLocalDateTime(null);

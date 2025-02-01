@@ -201,8 +201,8 @@ public class BaseModel {
     }
 
     private boolean validateStartDate(){
-        if (startDate == null || startDate.toLocalDate().isBefore(LocalDate.now())){
-            messages.addMessage("BACKUP DATE has to be in FUTURE.");
+        if (startDate == null){
+            messages.addMessage("BACKUP START Date is NULL.");
             return false;
         }
         return true;

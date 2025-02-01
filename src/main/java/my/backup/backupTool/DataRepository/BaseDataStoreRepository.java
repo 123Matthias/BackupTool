@@ -108,6 +108,7 @@ public class BaseDataStoreRepository implements IDataStore {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // JSON-Datei einlesen
         File sourceFile = new File(getStoragePath());
+        System.out.println("------Storage Path: " + sourceFile.getAbsolutePath());
         createDefaultStorageFile();
         if (!sourceFile.exists()) {
             System.out.println("Die Datei existiert nicht: " + sourceFile.getAbsolutePath());
