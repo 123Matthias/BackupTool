@@ -7,18 +7,15 @@ import java.time.LocalDateTime;
 public class TimeService implements ITimeService {
     public LocalDateTime setTiming(LocalDateTime startDate, int intervalDays, int intervalHours) {
 
-        LocalDateTime calculateNextBackupTime = LocalDateTime.now();
+        LocalDateTime nextBackupTime = startDate == null ? LocalDateTime.now() : startDate;
 
-        if (startDate != null && startDate.isAfter(LocalDateTime.now())) {
-            calculateNextBackupTime = startDate;
-        }
         if (intervalDays > 0) {
-            calculateNextBackupTime = calculateNextBackupTime.plusDays(intervalDays);
+            nextBackupTime = nextBackupTime.plusDays(intervalDays);
         }
         if (intervalHours > 0) {
-            calculateNextBackupTime = calculateNextBackupTime.plusHours(intervalHours);
+            nextBackupTime = nextBackupTime.plusHours(intervalHours);
         }
 
-        return calculateNextBackupTime;
+        return nextBackupTime;
     }
 }

@@ -15,10 +15,8 @@ public class App {
 
     public App() {
         DataStore = new BaseDataStoreRepository();
-        JobScheduler = new BackupJobScheduler(); //Muss als erstes Initialisiert werden da hier Daten geladen werden
+        JobScheduler = new BackupJobScheduler();
         CheckScheduler = new BackupCheckScheduler();
         Router = new Router();
-
     }
-
 }

@@ -1,6 +1,7 @@
 package my.backup.backupTool.Service;
 
 
+import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.BaseModel;
@@ -36,7 +37,7 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
         File targetDir = new File(super.getModel().getTarget());
 
         if (!super.getModel().validate()) {
-            MessageService.createMessage(super.getModel().getMessageList(), MessageTYPE.VALIDATION);
+            Platform.runLater(() -> MessageService.createMessage(super.getModel().getMessageList(), MessageTYPE.VALIDATION));
             return;
         }
 
@@ -50,16 +51,12 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
         }
 
 
-        super.updateProgress(1.0, super.getModel());
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         super.updateProgress(0.0, super.getModel());
-        App.CheckScheduler.fireValidationEvent(super.getModel());
+
+
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
+
+
     }
 
     private void copyFileTree(long totalFileSize) throws IOException {

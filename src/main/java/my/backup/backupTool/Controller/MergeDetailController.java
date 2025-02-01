@@ -13,11 +13,11 @@ import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Model.HashTYPE;
 import my.backup.backupTool.Model.MergeModel;
 import my.backup.backupTool.Service.*;
-import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.function.UnaryOperator;
 
 
 public class MergeDetailController {
@@ -48,7 +48,7 @@ public class MergeDetailController {
     private TextField hoursInterval;
 
     @FXML
-    private DatePicker datePicker;
+    private DatePicker startDateDatePicker;
 
     @FXML
     private TextArea sourcePath;
@@ -70,7 +70,6 @@ public class MergeDetailController {
 
     private boolean isSourceButtonClicked = false;
     private boolean isTargetButtonClicked = false;
-
 
     ITimeService timeService;
     BaseModel model;
@@ -95,6 +94,21 @@ public class MergeDetailController {
         model = new MergeModel();
         timeService = new TimeService();
         sceneUpdate = new SceneUpdateFXMLService();
+
+
+        //Delegate filter nur zahlen
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if (text.matches("[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+
+        // Anwendeung des "Delegate"
+        TextFormatter<String> formatter = new TextFormatter<>(filter);
+        daysInterval.setTextFormatter(formatter);
+        hoursInterval.setTextFormatter(new TextFormatter<>(filter));
     }
 
     public StackPane getStackPane() {
@@ -113,11 +127,11 @@ public class MergeDetailController {
                 .filter(node -> node.getId() != null).forEach(node -> {
                     if (node.getId().equals("playButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.play();
+                            this.playButtonClicked();
                         });
                     else if (node.getId().equals("saveButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.save();
+                            this.saveButtonClicked();
                         });
                     else if (node.getId().equals("restoreButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -154,7 +168,6 @@ public class MergeDetailController {
         changeRestoreModeColor(false);
 }
 
-
     private void changeRestoreModeColor(boolean restoreMode) {
 
 
@@ -166,52 +179,6 @@ public class MergeDetailController {
             stackPane.getStyleClass().add("basicBackground");
         }
     }
-
-
-
-/*
-    private void enableAllToolbarButtons(){
-        toolbar.getItems().stream()
-                .filter(node -> node.getId() != null && node.getId().contains("Button"))
-                .forEach(node -> {node.setVisible(true); node.setManaged(true);});
-    }
-
-    private void disableAllToolbarButtons(){
-        toolbar.getItems().stream()
-                .filter(node -> node.getId() != null && node.getId().contains("Button"))
-                .forEach(node -> {node.setVisible(false); node.setManaged(false);});
-    }
-
-
-    @FXML
-    private void enableBackupMode(){
-        disableAllToolbarButtons();
-        toolbar.getItems().stream()
-                .filter(node -> node.getId() != null && node.getId().contains("Button")
-                        && !node.getId().equals("backupButton")
-                        && !node.getId().equals("playReverseButton"))
-                .forEach(node -> {node.setVisible(true); node.setManaged(true);});
-        header.setText("Backup Mode");
-        changeModeColor();
-    }
-
-
-    @FXML
-    private void enableRestoreMode() {
-        enableAllToolbarButtons();
-        toolbar.getItems().stream()
-                .filter(node -> node.getId() != null && node.getId().contains("Button")
-                        && !node.getId().equals("backupButton")
-                        && !node.getId().equals("playReverseButton"))
-                .forEach(node -> {node.setVisible(false); node.setManaged(false);});
-        header.setText("Restore Mode");
-        changeModeColor();
-    }
-
-*/
-
-    /*----------------------END------------------------------------*/
-
 
 
     @FXML
@@ -226,7 +193,7 @@ public class MergeDetailController {
     @FXML
     public void toggleDate() {
         boolean enable = checkBoxStartDate.isSelected();
-        datePicker.setDisable(!enable);
+        startDateDatePicker.setDisable(!enable);
     }
 
     @FXML
@@ -263,71 +230,74 @@ public class MergeDetailController {
     }
 
 
-
     @FXML
-    private void play(){
-        System.out.println("---------METHOD PLAY STARTED -------------------------------");
-        model.setPlayBackupOrder(true);
-        model.setHashOrder(true);
-        model.setHashType(HashTYPE.CRC32);
-        save();
-        saveData();
-
-        System.out.println("---------METHOD PLAY FINISHED -------------------------------");
-
+    private void playButtonClicked(){
+        this.setModelValues(true,true);
+        if(model.validate()){
+            App.DataStore.saveModelAsJSON(model);
+            App.JobScheduler.fireBackupEvent(model);
+            closeDetailAndReloadOverview();
+            System.out.println("----------playButtonClickedDoneSuccessfully-----------");
+        }
+        else {
+            MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
+        }
     }
 
     @FXML
     private void pause(){
-        System.out.println("---------METHOD Pause STARTED -------------------------------");
         model.setPlayBackupOrder(false);
-        saveData();
-        System.out.println("---------METHOD Pause FINISHED -------------------------------");
-
+        App.DataStore.saveModelAsJSON(model);
     }
 
     @FXML
-    private boolean save(){
-     //   System.out.println("Source: " + sourcePath.getText());
-     //   System.out.println("Target: " + targetPath.getText());
-        int days = 0;
-        int hours = 0;
-        try{
-            days = Integer.parseInt(daysInterval.getText());
-            hours = Integer.parseInt(hoursInterval.getText());
-        }
-        catch (NumberFormatException e){
-            System.out.println("Not type of integer: " + e);
-        }
-
-        LocalDateTime startDate = LocalDateTime.now();
-        startDate = (datePicker != null && datePicker.getValue() != null)
-                ? datePicker.getValue().atTime(LocalTime.now())
-                : startDate;
-
-
-        timeService.setTiming(startDate, days, hours);
-        model.setSource(sourcePath.getText());
-        model.setTarget(targetPath.getText());
-        model.setTitle(title.getText());
-        model.setStartDate(startDate);
-        model.setIntervalDays(days);
-        model.setIntervalHours(hours);
-        model.setBackupType(BackupType.MERGE);
-
+    private void saveButtonClicked(){
+        this.setModelValues(false,false);
         if(model.validate()){
-            saveData();
-            System.out.println("----------------METHOD SAVED ------------------------------");
-            sceneUpdate.reloadView("mergeOverview.fxml");
-            MessageService.createToast("Saved Successfully");
-            Stage stage = (Stage) stackPane.getScene().getWindow();
-            stage.close();
-            return true;
+            App.DataStore.saveModelAsJSON(model);
+            closeDetailAndReloadOverview();
         }
         else {
             MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
-            return false;
         }
+    }
+
+    private void setModelValues(boolean backupOrder, boolean hashOrder){
+        if(checkBoxStartDate.isSelected() || checkBoxIntervalDays.isSelected() || checkBoxIntervalHours.isSelected()){
+            LocalDateTime startDate;
+            startDate = checkBoxStartDate.isSelected() ? startDateDatePicker.getValue().atTime(LocalTime.now())  : LocalDateTime.now();
+            model.setStartDate(startDate);
+            int days = 0;
+            int hours = 0;
+            try{
+                days = checkBoxIntervalDays.isSelected() ? Integer.parseInt(daysInterval.getText()):0;
+                hours = checkBoxIntervalHours.isSelected() ? Integer.parseInt(hoursInterval.getText()):0;
+                model.setIntervalDays(days);
+                model.setIntervalHours(hours);
+            }
+            catch (NumberFormatException e){
+                System.out.println("Not type of integer: " + e);
+            }
+            model.setNextBackupLocalDateTime(timeService.setTiming(startDate, days, hours));
+        }
+        else{
+            model.setNextBackupLocalDateTime(null);
+        }
+
+        model.setSource(sourcePath.getText());
+        model.setTarget(targetPath.getText());
+        model.setTitle(title.getText());
+        model.setBackupType(BackupType.MERGE);
+        model.setPlayBackupOrder(backupOrder);
+        model.setHashOrder(hashOrder);
+        model.setHashType(HashTYPE.CRC32);
+    }
+
+    private void closeDetailAndReloadOverview(){
+        sceneUpdate.reloadView("mergeOverview.fxml");
+        MessageService.createToast("Saved Successfully");
+        Stage stage = (Stage) stackPane.getScene().getWindow();
+        stage.close();
     }
 
 
@@ -339,17 +309,23 @@ public class MergeDetailController {
         title.setText(model.getTitle() != null ? model.getTitle() : "");
         sourcePath.setText(model.getSource() != null ? model.getSource() : "");
         targetPath.setText(model.getTarget() != null ? model.getTarget() : "");
-        if (model.getStartDate() != null) {
-            datePicker.setValue(model.getStartDate().toLocalDate());
-        }
+
+
+        checkBoxStartDate.setSelected(model.getStartDate() != null);
+        LocalDateTime startDate = model.getStartDate();  // Dein LocalDateTime-Wert
+        startDateDatePicker.setValue(startDate.toLocalDate());
+
+
+        checkBoxIntervalDays.setSelected(model.getIntervalDays() != 0);
         daysInterval.setText(String.valueOf(model.getIntervalDays()));
+        checkBoxIntervalHours.setSelected(model.getIntervalHours() != 0);
         hoursInterval.setText(String.valueOf(model.getIntervalHours()));
 
+        this.toggleDate();
+        this.toggleDays();
+        this.toggleHours();
 
     }
 
-    private boolean saveData(){
-        return App.DataStore.saveModelAsJSON(model);
-    }
 
 }

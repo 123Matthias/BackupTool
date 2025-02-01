@@ -1,18 +1,13 @@
 package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.*;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.MessageList;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Base64;
 
 public class BaseModel {
 
@@ -79,6 +74,8 @@ public class BaseModel {
     @JsonIgnore
     private boolean encryptionOrder;
 
+    @JsonIgnore
+    private BooleanProperty isBackupSuccessfullyProperty = new SimpleBooleanProperty(false);
 
     @JsonCreator
     public BaseModel() {
@@ -163,7 +160,7 @@ public class BaseModel {
 
     public boolean validate(){
         messages = new MessageList();
-        return validatePath() & validateDateTime() & validateIntervalDays() & validateIntervalHours();
+        return validatePath() & validateStartDate() & validateIntervalDays() & validateIntervalHours();
     }
 
 
@@ -203,8 +200,8 @@ public class BaseModel {
         return valid;
     }
 
-    private boolean validateDateTime(){
-        if (startDate == null || startDate.isBefore(LocalDateTime.now())){
+    private boolean validateStartDate(){
+        if (startDate == null || startDate.toLocalDate().isBefore(LocalDate.now())){
             messages.addMessage("BACKUP DATE has to be in FUTURE.");
             return false;
         }
@@ -250,7 +247,7 @@ public class BaseModel {
 
 
     @JsonProperty("play-BackupOrder")
-    public boolean hasPlayBackupOrder() {
+    public boolean hasplaybackuporder() {
         return playBackupOrder;
     }
     @JsonProperty("play-BackupOrder")
@@ -357,6 +354,21 @@ public class BaseModel {
     @JsonProperty("encryption-Order")
     public void setEncryptionOrder(boolean encryptionOrder) {
         this.encryptionOrder = encryptionOrder;
+    }
+
+    @JsonIgnore
+    public BooleanProperty getIsBackupSuccessfullyProperty() {
+        return isBackupSuccessfullyProperty;
+    }
+
+    @JsonProperty("backup-Successfully")
+    public boolean isBackupSuccessfully(){
+        return this.isBackupSuccessfullyProperty.get();
+    }
+
+    @JsonProperty("backup-Successfully")
+    public void setBackupSuccessfully(boolean value){
+        this.isBackupSuccessfullyProperty.set(value);
     }
 
 

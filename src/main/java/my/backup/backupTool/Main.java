@@ -17,13 +17,6 @@ public static App App;
         App.Router.setMainStage(stage);  // Sicherstellen, dass app.Router hier nicht null ist
         App.Router.getMainStage().show();
 
-        for(BaseModel m : App.JobScheduler.getBackupOrderList()){
-            System.out.println("Job Scheduler UID: " + m.getUid() +
-                    "\n Title: " + m.getTitle() +
-                    "\n Backup Order: " + m.hasPlayBackupOrder() +
-                    "\n Backup Type: " + m.getBackupType());
-        }
-
     }
 
 

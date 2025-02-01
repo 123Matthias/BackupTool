@@ -16,6 +16,7 @@ public abstract class BaseCopyService extends BaseCalculationService {
 
     public BaseCopyService(BaseModel model) {
         this.model = model;
+        System.out.println("Model BaseCopyService: " + this.model);
     }
 
 
@@ -28,19 +29,6 @@ public abstract class BaseCopyService extends BaseCalculationService {
             byte[] buffer = new byte[8192]; // 8 KB Blockgröße
             int bytesRead;
             long fileProcessedSize = 0;
-
-            /*
-            //Encryption Service usage
-            if(model.hasEncryptionOrder()) {
-                AesService aes = new AesService(out,AesService.generateAESKey(),AesService.generateIV());
-                while ((bytesRead = in.read(buffer)) != -1) {
-                    aes.write(buffer, 0, bytesRead);
-                    fileProcessedSize += bytesRead;
-                    double progress = (double) fileProcessedSize / totalSize;
-                }
-            }
-            */
-
 
             //END OF Encryption Service usage
             while ((bytesRead = in.read(buffer)) != -1) {
@@ -56,7 +44,6 @@ public abstract class BaseCopyService extends BaseCalculationService {
             super.messageList.addMessage(e.getMessage());
         }
     }
-
 
     protected void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize) {
         try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);

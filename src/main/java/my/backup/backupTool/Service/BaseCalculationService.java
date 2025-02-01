@@ -29,8 +29,9 @@ public abstract class BaseCalculationService {
             lastProgressState = progress;
             Platform.runLater(()-> model.setProgressState(progress));
 
-          //  System.out.println("Progress_Property: " + model.getProgressStateProperty());
-          //  System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressState() * 100) + "%");
+            System.out.println("Model BaseCalculationService: " + model);
+           // System.out.println("Progress_Property: " + model.getProgressStateProperty());
+           // System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressState() * 100) + "%");
         }
     }
 

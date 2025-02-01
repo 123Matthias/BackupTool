@@ -1,6 +1,7 @@
 package my.backup.backupTool.Service;
 
 import javafx.application.Platform;
+import my.backup.backupTool.App;
 import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
 import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.BaseModel;
@@ -9,6 +10,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.zip.CRC32;
 
 
@@ -18,12 +21,10 @@ public class FileValidationService extends BaseCalculationService implements IFi
     private double progress;
 
     private IMessageList messageList;
-    private IDataStore dataStore;
     private BaseModel model;
 
     public FileValidationService(BaseModel model) {
         messageList = new MessageList();
-        dataStore = new BaseDataStoreRepository();
         this.model = model;
         System.out.println("Model Hash Service:" + this.model);
     }
@@ -209,10 +210,9 @@ public class FileValidationService extends BaseCalculationService implements IFi
         Platform.runLater(()->this.model.setSourceHash(String.valueOf(hash)));
         long hashBackup = getCRC32FromDirectory(this.model.getTarget());
         Platform.runLater(()->this.model.setTargetHash(String.valueOf(hashBackup)));
-        this.model.setPlayBackupOrder(false);
-        dataStore.saveModelAsJSON(this.model);
         this.model.setHashOrder(false);
         super.updateProgress(0.0,this.model);
+        App.DataStore.saveModelAsJSON(this.model);
 
         System.out.println("SOURCE HASH IS " + this.model.getSourceHash());
         System.out.println("TARGET HASH IS " + this.model.getTargetHash());

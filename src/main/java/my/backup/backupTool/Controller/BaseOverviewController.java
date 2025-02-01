@@ -12,6 +12,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
+import my.backup.backupTool.JobManagement.BackupJobScheduler;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.SceneBuilder;
 
@@ -40,12 +41,8 @@ public class BaseOverviewController {
 
         double toolBarHeight = toolBar.getHeight();
         flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
-
-        addAllCardsSorted(App.DataStore.getAllAsList());
-
+        addAllCardsSorted(App.DataStore.getModelList());
     }
-
-
 
 
     public void addNewCard(BaseModel model) {
@@ -124,13 +121,34 @@ public class BaseOverviewController {
                 new Label("Target Path: " + model.getTarget())
         );
 
-        HBox sourceHashBox = new HBox(10, new Label("Source CRC32: "), new Label() {{
-            textProperty().bind(model.getSourceHashProperty());
-        }});
+// Labels direkt erstellen
+        Label sourceHashLabel = new Label();
+        Label targetHashLabel = new Label();
 
-        HBox targetHashBox = new HBox(10, new Label("Target CRC32: "), new Label() {{
-            textProperty().bind(model.getTargetHashProperty());
-        }});
+// HBox mit Labels erstellen
+        HBox sourceHashBox = new HBox(10, new Label("Source CRC32: "), sourceHashLabel);
+        HBox targetHashBox = new HBox(10, new Label("Target CRC32: "), targetHashLabel);
+
+// Die Text-Eigenschaften binden
+        sourceHashLabel.textProperty().bind(model.getSourceHashProperty());
+        targetHashLabel.textProperty().bind(model.getTargetHashProperty());
+
+
+        boolean initialStatus = model.getIsBackupSuccessfullyProperty().get();
+        String initialStyle = initialStatus ? "-fx-text-fill: green" : "-fx-text-fill: red";
+        sourceHashLabel.setStyle(initialStyle);
+        targetHashLabel.setStyle(initialStyle);
+
+// Listener für das Backup-Status
+        model.getIsBackupSuccessfullyProperty().addListener((observable, oldValue, newValue) -> {
+            // Direkt im Listener die Farbe setzen
+            String style = newValue ? "-fx-text-fill: green" : "-fx-text-fill: red";
+            sourceHashLabel.setStyle(style);
+            targetHashLabel.setStyle(style);
+        });
+
+
+
 
 
         ProgressBar progressBar = new ProgressBar(0);
@@ -166,7 +184,6 @@ public class BaseOverviewController {
 
         System.out.println("...............Card Added ........................");
 
-
     }
 
 
@@ -181,7 +198,7 @@ public class BaseOverviewController {
 
     private List<BaseModel> getModelsAsList() {
         List<BaseModel> dataList = new ArrayList<>();
-            dataList = App.DataStore.getAllAsList();
+            dataList = App.DataStore.getModelList();
             dataList.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
 
 

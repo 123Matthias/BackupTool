@@ -66,7 +66,7 @@
       <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxStartDate" onAction="#toggleDate" />
       <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="3" GridPane.columnIndex="1">
          <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Start Date</Label>
-         <DatePicker disable="true" fx:id="datePicker" promptText="01.01.1990"/>
+         <DatePicker disable="true" fx:id="startDateDatePicker" promptText="01.01.1990"/>
       </VBox>
 
       <CheckBox fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" />

@@ -16,13 +16,13 @@ public class BackupCheckScheduler {
 
     public BackupCheckScheduler() {
 
-        this.models = App.DataStore.getAllAsList();
-        this.validationOrderList = createValidationList();
+        this.models = App.DataStore.getModelList();
     }
 
 
     public void fireValidationEvent(BaseModel model) {
-            if(model.hasHashOrder()){
+        model = App.DataStore.getModelById(model.getUid());
+        if(model.hasHashOrder()){
                     IFileValidationService hashService = new FileValidationService(model);
                     hashService.calculateAndSaveHashes();
             }
@@ -38,30 +38,6 @@ public class BackupCheckScheduler {
                 }
             }
         }
-    }
-
-
-    public List<BaseModel> createValidationList(){
-        validationOrderList = new ArrayList<>();
-        for(BaseModel model : this.models) {
-            if (model.hasHashOrder()) {
-                validationOrderList.add(model);
-            }
-        }
-        return validationOrderList;
-    }
-
-    public void removeValidationOrderFromList(BaseModel model) {
-        for(int i = 0; i < validationOrderList.size(); i++) {
-            if(validationOrderList.get(i).getUid().equals(model.getUid())) {
-                this.validationOrderList.remove(i);
-                break;
-            }
-        }
-    }
-
-    public void addValidationOrderToList(BaseModel model) {
-        this.validationOrderList.add(model);
     }
 
 

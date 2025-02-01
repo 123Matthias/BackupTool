@@ -1,6 +1,8 @@
 package my.backup.backupTool.JobManagement;
 
 import my.backup.backupTool.App;
+import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
+import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Service.IMergeService;
@@ -12,63 +14,50 @@ import java.util.List;
 
 public class BackupJobScheduler {
 
-    List<BaseModel> modelList;
-    List<BaseModel> backupOrderList;
 
     public BackupJobScheduler() {
-        this.modelList = App.DataStore.getAllAsList();
-        this.backupOrderList = createBackupList();
-        this.fireBackupEvent();
+      //  this.fireBackupEvent();
     }
 
 
-    public void fireBackupEvent() {
-        for(BaseModel modelInList : backupOrderList) {
-                if(modelInList.getBackupType() == BackupType.MERGE){
-                    IMergeService mergeService = new MergeService(modelInList);
+    public void fireAllBackupEvents() {
+        for(BaseModel model : App.DataStore.getModelList()) {
+                if(model.getBackupType() == BackupType.MERGE && model.hasplaybackuporder()){
+                    IMergeService mergeService = new MergeService(model);
                     mergeService.startMergeThread();
+                    System.out.println("Model JobScheduler: " + model);
+
                     System.out.println("----------Merge Service in Job Scheduler started--------------");
                 }
-                if(modelInList.getBackupType() == BackupType.FULL){
+                if(model.getBackupType() == BackupType.FULL){
                     //TODO
                 }
-                if(modelInList.getBackupType() == BackupType.SYNCHRONIZED){
+                if(model.getBackupType() == BackupType.SYNCHRONIZED){
                     //TODO
                 }
 
         }
     }
 
-    public List<BaseModel> createBackupList(){
-        List<BaseModel> backupList = new ArrayList<>();
-        for(BaseModel model : this.modelList) {
-            if (model.hasPlayBackupOrder()) {
-                backupList.add(model);
+    public void fireBackupEvent(BaseModel model) {
+            model = App.DataStore.getModelById(model.getUid());
+            if(model.getBackupType() == BackupType.MERGE && model.hasplaybackuporder()){
+                IMergeService mergeService = new MergeService(model);
+                mergeService.startMergeThread();
+                System.out.println("Model JobScheduler: " + model);
+
+                System.out.println("----------Merge Service in Job Scheduler started--------------");
+            }
+            if(model.getBackupType() == BackupType.FULL){
+                //TODO
+            }
+            if(model.getBackupType() == BackupType.SYNCHRONIZED){
+                //TODO
             }
         }
-        return backupList;
-    }
 
-    public void removeBackupOrderFromList(BaseModel model) {
-        for(int i = 0; i < backupOrderList.size(); i++) {
-            if(backupOrderList.get(i).getUid().equals(model.getUid())) {
-                this.backupOrderList.remove(i);
-                break;
-            }
-        }
-    }
 
-    public void addBackupOrderToList(BaseModel model) {
-        this.backupOrderList.add(model);
-    }
 
-    public List<BaseModel> getBackupOrderList() {
-        return backupOrderList;
-    }
-
-    public List<BaseModel> getModelList() {
-        return modelList;
-    }
 }
 
 

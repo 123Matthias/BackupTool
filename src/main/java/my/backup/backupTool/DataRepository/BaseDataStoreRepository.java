@@ -12,42 +12,33 @@ import java.util.UUID;
 
 public class BaseDataStoreRepository implements IDataStore {
 
-
     private String storagePath;
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
+    private List<BaseModel> modelList;
 
-    private ArrayList<BaseModel> modelList;
-
-    // Standardkonstruktor
     public BaseDataStoreRepository() {
-        modelList = new ArrayList<>();
+        modelList = getJSONasList();
     }
 
-    // Konstruktor mit benutzerdefiniertem Pfad
     public BaseDataStoreRepository(String storagePath) {
         this();
         this.storagePath = storagePath;
     }
 
-    // Getter und Setter für storagePath und modelList
+
+
+    public List<BaseModel> getModelList() {
+        return this.modelList;
+    }
+
     public void setStoragePath(String storagePath) {
         this.storagePath = storagePath;
     }
 
-    public ArrayList<BaseModel> getModelList() {
-        return modelList;
-    }
-
-    public void setModelList(ArrayList<BaseModel> modelList) {
-        this.modelList = modelList;
-    }
-
-    // Methode, die den Pfad für das Speichern der Daten zurückgibt
     public String getStoragePath() {
 
         return storagePath == null ? DEFAULT_STORAGE_PATH : storagePath;
     }
-
 
     public boolean saveModelAsJSON(BaseModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -82,6 +73,7 @@ public class BaseDataStoreRepository implements IDataStore {
             objectMapper.writeValue(file, modelList);
 
             //   System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
+            this.modelList = getJSONasList();
             return true;
 
         } catch (IOException e) {
@@ -89,7 +81,6 @@ public class BaseDataStoreRepository implements IDataStore {
             return false;
         }
     }
-
 
     public boolean createDefaultStorageFile() {
         try {
@@ -111,9 +102,7 @@ public class BaseDataStoreRepository implements IDataStore {
         }
     }
 
-
-    @Override
-    public List<BaseModel> getAllAsList() {
+    private List<BaseModel> getJSONasList() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -141,13 +130,11 @@ public class BaseDataStoreRepository implements IDataStore {
             System.out.println(e.getMessage());
         }
 
-
         return dataList;
     }
 
     public BaseModel getModelById(String id) {
-        List<BaseModel> dataList = this.getAllAsList();
-        for (BaseModel entry : dataList) {
+        for (BaseModel entry : this.modelList) {
             if (entry.getUid() != null && entry.getUid().equals(id)) {
                 System.out.println("GetModel.ByID:" + entry.getUid());
                 return entry;
