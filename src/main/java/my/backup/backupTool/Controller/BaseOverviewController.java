@@ -130,6 +130,7 @@ public class BaseOverviewController {
         HBox targetHashBox = new HBox(10, new Label("Target CRC32: "), targetHashLabel);
 
 // Die Text-Eigenschaften binden
+
         sourceHashLabel.textProperty().bind(model.getSourceHashProperty());
         targetHashLabel.textProperty().bind(model.getTargetHashProperty());
 
