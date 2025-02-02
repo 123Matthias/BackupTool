@@ -3,6 +3,8 @@ package my.backup.backupTool.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -46,6 +48,18 @@ public class MergeDetailController {
 
     @FXML
     private TextField hoursInterval;
+
+    @FXML
+    private CheckBox checkBoxEncryption;
+
+    @FXML
+    private ComboBox encryptionDropdown;
+
+    @FXML
+    private CheckBox checkBoxCheckSum;
+
+    @FXML
+    private ComboBox checkSumDropdown;
 
     @FXML
     private DatePicker startDateDatePicker;
@@ -107,6 +121,8 @@ public class MergeDetailController {
         TextFormatter<String> formatter = new TextFormatter<>(filter);
         daysInterval.setTextFormatter(formatter);
         hoursInterval.setTextFormatter(new TextFormatter<>(filter));
+        encryptionDropdown.getSelectionModel().select("AES-CBC");
+        checkSumDropdown.getSelectionModel().select("CRC32");
     }
 
     public StackPane getStackPane() {
@@ -206,6 +222,18 @@ public class MergeDetailController {
         hoursInterval.setDisable(!enable);
     }
 
+    @FXML
+    public void toggleEncryption(){
+        boolean enable = checkBoxEncryption.isSelected();
+        encryptionDropdown.setDisable(!enable);
+    }
+
+    @FXML
+    public void toggleCheckSum(){
+        boolean enable = checkBoxCheckSum.isSelected();
+        checkSumDropdown.setDisable(!enable);
+    }
+
     public void openDirectoryChooser() {
         // Erstelle ein FileChooser-Objekt
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -292,7 +320,7 @@ public class MergeDetailController {
     }
 
     private void closeDetailAndReloadOverview(){
-        sceneUpdate.reloadView("mergeOverview.fxml");
+        sceneUpdate.reloadView("baseOverview.fxml");
         MessageService.createToast("Saved Successfully");
         Stage stage = (Stage) stackPane.getScene().getWindow();
         stage.close();

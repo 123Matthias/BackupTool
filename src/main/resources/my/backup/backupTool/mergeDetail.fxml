@@ -13,6 +13,9 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.DatePicker?>
 
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.ComboBox?>
+<?import java.lang.String?>
 <StackPane fx:id="stackPane" fx:controller="my.backup.backupTool.Controller.MergeDetailController" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            styleClass="basicBackground" >
 
@@ -29,57 +32,91 @@
              style="-fx-padding: 40 0 0 0; -fx-background-color: transparent" >
       <!-- Column for Full Width -->
       <columnConstraints>
-         <ColumnConstraints hgrow="ALWAYS" percentWidth="10" />
-         <ColumnConstraints hgrow="ALWAYS" percentWidth="90" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="11.1" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="22.2" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="11.1" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="22.2" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="11.1" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="22.2" />
       </columnConstraints>
 
       <!-- 15 Rows -->
       <rowConstraints>
-         <RowConstraints minHeight="25" percentHeight="10" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="35" percentHeight="20" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="35" percentHeight="20" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="25" percentHeight="10" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="20" percentHeight="10" vgrow="SOMETIMES" />
-         <RowConstraints minHeight="20" percentHeight="10" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="25" percentHeight="16" vgrow="ALWAYS" />
+         <RowConstraints minHeight="35" percentHeight="17" vgrow="ALWAYS" />
+         <RowConstraints minHeight="35" percentHeight="17" vgrow="ALWAYS" />
+         <RowConstraints minHeight="25" percentHeight="10" vgrow="ALWAYS" />
+         <RowConstraints minHeight="20" percentHeight="10" vgrow="ALWAYS" />
+         <RowConstraints minHeight="20" percentHeight="10" vgrow="ALWAYS" />
       </rowConstraints>
 
 
 
-      <VBox spacing="10" style="-fx-padding: 5;" GridPane.rowIndex="0" GridPane.columnIndex="1">
+      <VBox spacing="3" style="-fx-padding: 20 10 0 10;" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="6">
          <Label text="Title" />
-         <TextField fx:id="title" editable="true" text="Title"/>
+         <TextField fx:id="title" styleClass="title" editable="true" text="Title"/>
       </VBox>
 
       <!-- Source Path -->
-      <VBox spacing="10" style="-fx-padding: 5;" GridPane.rowIndex="1" GridPane.columnIndex="1">
+      <VBox spacing="3" style="-fx-padding: 0 10 0 10;" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="6">
          <Label styleClass="text" text="Source Path" />
          <TextArea fx:id="sourcePath" promptText="Enter source path..."></TextArea>
          <Button fx:id="sourceButton" styleClass="browseButton" text="Browse..." />
       </VBox>
 
-      <VBox spacing="10" style="-fx-padding: 5;" GridPane.rowIndex="2" GridPane.columnIndex="1">
+      <VBox spacing="3" style="-fx-padding: 0 10 0 10;" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
          <Label text="Target Path" />
          <TextArea fx:id="targetPath" promptText="Enter target path..."></TextArea>
          <Button fx:id="targetButton" styleClass="browseButton" text="Browse..." />
       </VBox>
 
+
+
       <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxStartDate" onAction="#toggleDate" />
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="3" GridPane.columnIndex="1">
-         <Label GridPane.rowIndex="5" GridPane.columnIndex="1">Start Date</Label>
+      <VBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-padding: 0 10 0 0">
+         <Label >Start Date</Label>
          <DatePicker disable="true" fx:id="startDateDatePicker" promptText="01.01.1990"/>
       </VBox>
 
       <CheckBox fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="CENTER" />
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="4" GridPane.columnIndex="1">
+      <VBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-padding: 0 10 0 0">
          <Label>Days Interval</Label>
-         <TextField fx:id="daysInterval" disable="true" editable="true" text="0" />
+         <TextField fx:id="daysInterval" style="-fx-alignment: center"  disable="true" editable="true" text="0" />
       </VBox>
 
       <CheckBox fx:id="checkBoxIntervalHours" onAction="#toggleHours" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.halignment="CENTER"  />
-      <VBox spacing="5" style="-fx-padding: 10;" GridPane.rowIndex="5" GridPane.columnIndex="1">
+      <VBox spacing="5" GridPane.rowIndex="5" GridPane.columnIndex="1" style="-fx-padding: 0 10 0 0">
          <Label>Hours Interval</Label>
-         <TextField fx:id="hoursInterval" disable="true" editable="true" text="0"/>
+         <TextField fx:id="hoursInterval" style="-fx-alignment: center" disable="true" editable="true" text="0"/>
       </VBox>
+
+
+      <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxEncryption" onAction="#toggleEncryption" />
+      <VBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
+         <Label >Encryption Algorithm</Label>
+         <ComboBox fx:id="encryptionDropdown" disable="true" prefWidth="Infinity">
+            <items>
+               <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="AES-CBC"/>
+               </FXCollections>
+            </items>
+         </ComboBox>
+      </VBox>
+
+      <CheckBox GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxCheckSum" onAction="#toggleCheckSum" />
+      <VBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
+         <Label >Validation Algorithm</Label>
+         <ComboBox fx:id="checkSumDropdown" disable="true" prefWidth="Infinity">
+            <items>
+               <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="CRC32"/>
+               </FXCollections>
+            </items>
+         </ComboBox>
+      </VBox>
+
+
+
       <!-- Button -->
 
 

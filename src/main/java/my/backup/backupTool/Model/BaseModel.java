@@ -160,7 +160,7 @@ public class BaseModel {
 
     public boolean validate(){
         messages = new MessageList();
-        return validatePath() & validateStartDate() & validateIntervalDays() & validateIntervalHours();
+        return validatePath() & validateIntervalDays() & validateIntervalHours();
     }
 
 
@@ -200,13 +200,6 @@ public class BaseModel {
         return valid;
     }
 
-    private boolean validateStartDate(){
-        if (startDate == null){
-            messages.addMessage("BACKUP START Date is NULL.");
-            return false;
-        }
-        return true;
-    }
 
     private boolean validateIntervalHours(){
         if(intervalHours < 0){

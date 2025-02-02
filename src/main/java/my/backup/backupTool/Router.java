@@ -122,10 +122,10 @@ public class Router {
 
     public void setSceneMergeOverview(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
-                .setFXML("mergeOverview.fxml")
+                .setFXML("baseOverview.fxml")
                 .setDimensions(800, 800)
                 .addStylesheet("css/basicWindow.css")
-                .addStylesheet("css/mergeOverview.css")
+                .addStylesheet("css/baseOverview.css")
                 .addStylesheet("css/basicComponents.css")
                 .addStylesheet("css/cards.css")
                 .addStylesheet("css/toolBar.css")

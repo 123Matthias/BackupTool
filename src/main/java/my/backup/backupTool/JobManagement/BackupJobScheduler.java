@@ -45,6 +45,7 @@ public class BackupJobScheduler {
 
     public void fireBackupEvent(BaseModel model) {
             model = App.DataStore.getModelById(model.getUid());
+            System.out.println("Model JobScheduler: " + model);
             if(model.getBackupType() == BackupType.MERGE && model.hasplaybackuporder()){
                 IMergeService mergeService = new MergeService(model);
                 mergeService.startMergeThread();

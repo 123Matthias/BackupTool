@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
-public class BaseOverviewController {
+public abstract class BaseOverviewController {
 
 
     @FXML
@@ -167,7 +167,7 @@ public class BaseOverviewController {
         progressLabel.setLabelFor(progressBar);
         progressLabel.setText("Progress");
 
-        contentBox.setOnMouseClicked(event -> openMergeDetailWindow(uid));
+        contentBox.setOnMouseClicked(event -> openDetailWindow(uid));
 
         // Struktur aufbauen
         newCardBox.getChildren().addAll(newTitleContainer, contentBox, sourceHashBox, targetHashBox, progressLabel, progressBar);
@@ -180,7 +180,6 @@ public class BaseOverviewController {
         System.out.println("...............Card Added ........................");
 
     }
-
 
     private void addAllCardsSorted(List<BaseModel> list) {
         System.out.println("-----Im in Method addAllCardsSorted-----");
@@ -201,54 +200,8 @@ public class BaseOverviewController {
     }
 
 
-    @FXML
-    public void openMergeDetailWindow(String uid) {
-        System.out.println("UID Nummer: " + uid);
-        Stage stage = new Stage();
-        SceneBuilder newScene = App.Router.createMergeDetail(App.Router.getTheme().toString());
-
-        try {
-            stage.setScene(newScene.getScene());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        MergeDetailController controller = newScene.getController();
-        controller.openUpdateSceneByUID(uid);
-        setStageDimensions(stage, controller);
-        stage.show();
-    }
-
-
-
-
-    @FXML
-    public void openMergeDetailWindow() throws IOException {
-
-        Stage stage = new Stage();
-        SceneBuilder sceneBuilder = App.Router.createMergeDetail(App.Router.getTheme().toString());
-        stage.setScene(sceneBuilder.getScene());
-        MergeDetailController controller = sceneBuilder.getController();
-        setStageDimensions(stage, controller);
-        stage.show();
-    }
-
-    private void setStageDimensions(Stage stage, MergeDetailController controller) {
-
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UTILITY);
-        stage.setMinWidth(600);
-        stage.setMaxWidth(600);
-        stage.setMinHeight(750);
-        stage.setMaxHeight(750);
-
-        controller.getStackPane().setMinWidth(stage.getMinWidth());
-        controller.getStackPane().setMaxWidth(stage.getMaxWidth());
-        controller.getStackPane().setMinHeight(stage.getMinHeight());
-        controller.getStackPane().setMaxHeight(stage.getMaxHeight());
-
-    }
-
+    public void openDetailWindow(String uid) {};
+    public void openDetailWindow() {};
 
 
 
@@ -258,51 +211,6 @@ public class BaseOverviewController {
         App.Router.getMainStage().setScene(App.Router.getSceneMain());
         App.Router.getMainStage().show();
     }
-
-/*
-    @FXML
-    private void handleScroll(ScrollEvent event) {
-        // Berechne die neue Y-Position der ToolBar
-        double deltaY = event.getDeltaY();
-        System.out.println(deltaY);
-        System.out.println(scrollPane.getVvalue());
-        // Wenn das Scrollen am unteren Ende des ScrollPane angekommen ist und deltaY > 0 (nach unten scrollen), nichts weiter tun
-
-        // Wenn das Scrollen am oberen Ende des ScrollPane angekommen ist und deltaY < 0 (nach oben scrollen), nichts weiter tun
-        if (scrollPane.getVvalue() == 0.0) {
-            return; // Verhindert das Scrollen nach oben
-        }
-        if (scrollPane.getVvalue() == 0.0 && deltaY < 0) {
-            toolBar.setTranslateY(toolBar.getTranslateY() - deltaY);
-        }
-
-        if (scrollPane.getVvalue() == 1 && deltaY > 0) {
-            toolBar.setTranslateY(toolBar.getTranslateY() - deltaY);
-            return;
-        }
-
-
-        if (scrollPane.getVvalue() == 1) {
-            return; // Verhindert das Scrollen nach unten
-        }
-
-
-        System.out.println(toolBar.getTranslateY());
-        // Passe die Y-Position der ToolBar an
-        toolBar.setTranslateY(toolBar.getTranslateY() - deltaY);
-
-        // Verhindern, dass die ToolBar nach oben hinaus verschoben wird
-        if (toolBar.getTranslateY() < 0) {
-            toolBar.setTranslateY(0);
-        }
-
-        // Optional: Wenn die ToolBar zu weit nach unten verschoben wird, setze sie auf 0 zurück
-        if (toolBar.getTranslateY() > scrollPane.getHeight()) {
-            toolBar.setTranslateY(scrollPane.getHeight());
-        }
-    }
-
-*/
 
 
     private void enableDragAndDrop(Pane card, FlowPane container) {

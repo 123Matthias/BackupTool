@@ -56,7 +56,7 @@
             </Button>
 
 
-            <Button fx:id="addButton" onAction="#openMergeDetailWindow" styleClass="basicButton" alignment="CENTER"
+            <Button fx:id="addButton" onAction="#openDetailWindow" styleClass="basicButton" alignment="CENTER"
                     minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
                 <tooltip>
                     <Tooltip text="add new Backup"/>
