@@ -27,4 +27,10 @@ public class TimeService {
 
         return nextBackupTime;
     }
+
+    public static LocalDateTime calculateLastBackupTime(LocalDateTime nextBackupTime) {
+
+        LocalDateTime lastBackupTime = nextBackupTime;
+        return lastBackupTime;
+    }
 }

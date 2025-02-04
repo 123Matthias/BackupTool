@@ -152,25 +152,58 @@ Label{
     -fx-text-fill: -fx-color12;
 }
 
-TextArea, TextField{
+
+/* ---------------- DetailVIEW Elements  ------------------      */
+
+
+TextField, TextArea {
+    -fx-background-color: -fx-color2;
+    -fx-text-fill: -fx-color12;
+    -fx-border-color: -fx-color3;
+}
+TextArea .content{
+    -fx-background-color: -fx-color2;
+    -fx-text-fill: -fx-color12;
+    -fx-border-color: none;
+}
+
+.combo-box, .combo-box .cell, .date-picker .text-field, .date-picker .day-cell, .combo-box .cell:selected {
     -fx-background-color: -fx-color2;
     -fx-text-fill: -fx-color12;
     -fx-border-color: -fx-color3;
 }
 
-TextArea {
-    -fx-control-inner-background: -fx-color2;  /* Hintergrund des Textbereichs */
+.combo-box-popup .list-cell:hover, .date-picker .day-cell:hover {
+    -fx-background-color: -fx-color13;
 }
 
+.combo-box .arrow-button, .date-picker .arrow-button, .date-picker-popup, .date-picker .month-year-pane,
+.date-picker .calendar-grid, .date-picker .week-number-cell {
+    -fx-background-color: -fx-color2;
+}
 
-VBox > .browseButton{
+.combo-box .arrow-button:hover, .date-picker .arrow-button:hover {
+    -fx-background-color: -fx-color13;
+}
+
+.date-picker .day-cell:selected {
+    -fx-background-color: -fx-color13;
+    -fx-text-fill: -fx-color2;
+}
+
+.browseButton{
     -fx-text-fill: -fx-color7;
-    -fx-border-color: -fx-color7;
+    -fx-border-color: none;
 }
 
 .browseButton:hover{
     -fx-effect: -fx-effect4;
 }
+
+
+/* ---------------- DetailVIEW Elements  ------------------      */
+
+
 
 .standardButton{
     -fx-text-fill: -fx-color7;
@@ -179,6 +212,7 @@ VBox > .browseButton{
 .standardButton:hover {
     -fx-effect: -fx-effect4;
 }
+
 
 /* ScrollBar Customization */
 .scroll-bar:vertical .track,

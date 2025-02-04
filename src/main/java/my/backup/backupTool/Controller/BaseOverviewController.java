@@ -8,18 +8,9 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
-import my.backup.backupTool.JobManagement.BackupJobScheduler;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.SceneBuilder;
 
-import javax.swing.text.DateFormatter;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -117,7 +108,7 @@ public abstract class BaseOverviewController {
         //UID Label
         Label uuidLabel = new Label("UUID: " + uid);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String lastDate = model.getStartDate() == null ? "no Date" : model.getStartDate().format(formatter);
+        String lastDate = model.getLastBackupLocalDateTime() == null ? "no Date" : model.getLastBackupLocalDateTime().format(formatter);
         String nextDate = model.getNextBackupLocalDateTime() == null ? "no Date" : model.getNextBackupLocalDateTime().format(formatter);
 
         contentBox.getChildren().addAll(
@@ -138,8 +129,8 @@ public abstract class BaseOverviewController {
 
 // Die Text-Eigenschaften binden
 
-        sourceHashLabel.textProperty().bind(model.getSourceHashProperty());
-        targetHashLabel.textProperty().bind(model.getTargetHashProperty());
+        sourceHashLabel.textProperty().bind(model.getSourceValidationProperty());
+        targetHashLabel.textProperty().bind(model.getTargetValidationProperty());
 
 
         boolean initialStatus = model.getIsBackupSuccessfullyProperty().get();

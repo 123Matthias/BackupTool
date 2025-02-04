@@ -44,23 +44,21 @@
     -fx-pref-height: 35;
 }
 
-VBox > .browseButton{
+.browseButton{
     -fx-border-radius: 10;
     -fx-background-color: none;
 }
 
-
-TextField, TextArea{
+TextField, TextArea, TextArea .content{
     -fx-background-radius: 10;
     -fx-border-radius: 10;
     -fx-pref-height: 12;
     -fx-font-size: 14;
-
 }
 
 .title{
     -fx-pref-height: 15;
-    -fx-font-size: 16;
+    -fx-font-size: 20;
 }
 
 .custom-tooltip {
@@ -78,5 +76,20 @@ TextField, TextArea{
     -fx-border-width: 2px;
 }
 
+.combo-box {
+    -fx-border-width: 1px;
+}
+
+.combo-box .arrow-button {
+    -fx-border-width: 0px; /* Verhindert einen Rand um den Pfeil */
+}
+
+.combo-box-popup .list-cell {
+    -fx-border-width: 0px; /* Verhindert den Rand um die Zellen im Dropdown */
+}
+
+.combo-box .cell {
+    -fx-border-width: 0px; /* Entfernt den Rand der einzelnen Zellen */
+}
 
 

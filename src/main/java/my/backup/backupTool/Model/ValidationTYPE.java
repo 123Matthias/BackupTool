@@ -1,12 +1,12 @@
 package my.backup.backupTool.Model;
 
-public enum HashTYPE {
+public enum ValidationTYPE {
     CRC32("CRC32"),
     SHA256("SHA-256");
 
     private final String name;
 
-    HashTYPE(String name) {
+    ValidationTYPE(String name) {
         this.name = name;
     }
 

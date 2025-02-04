@@ -11,8 +11,8 @@
     /*----------- Text and Text Areas---------------- */
 
     -fx-color1: white; /* Text Fill Color */
-    -fx-color2: white; /* Background Text Areas */
-    -fx-color12: black; /* Text Fill in Text Areas*/
+    -fx-color2: #303030; /* Background Text Areas */
+    -fx-color12: white; /* Text Fill in Text Areas*/
     /*----------- END OF Text and Text Areas---------------- */
 
     /*----------- BORDERS ----------- */

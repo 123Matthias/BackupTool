@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
 
 public class MergeService extends BaseCopyService implements IMergeService,Runnable {
 
@@ -50,13 +51,13 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
             throw new RuntimeException(e);
         }
 
-
         super.updateProgress(0.0, super.getModel());
-
+        LocalDateTime lastBackupTime = TimeService.calculateLastBackupTime(LocalDateTime.now());
+        LocalDateTime nextBackupTime = TimeService.calculateNextBackupTime(super.getModel().getLastBackupLocalDateTime(),super.getModel().getIntervalDays(), super.getModel().getIntervalHours());
+        super.getModel().setNextBackupLocalDateTime(nextBackupTime);
+        super.getModel().setLastBackupLocalDateTime(lastBackupTime);
 
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
-
-
     }
 
     private void copyFileTree(long totalFileSize) throws IOException {

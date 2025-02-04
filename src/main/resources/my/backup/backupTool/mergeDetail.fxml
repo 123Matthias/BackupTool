@@ -16,6 +16,7 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.ComboBox?>
 <?import java.lang.String?>
+
 <StackPane fx:id="stackPane" fx:controller="my.backup.backupTool.Controller.MergeDetailController" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            styleClass="basicBackground" >
 
@@ -52,22 +53,26 @@
 
 
 
-      <VBox spacing="3" style="-fx-padding: 20 10 0 10;" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="6">
-         <Label text="Title" />
-         <TextField fx:id="title" styleClass="title" editable="true" text="Title"/>
+      <VBox spacing="3" style="-fx-padding: 20 50 0 50;" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="6">
+         <TextField fx:id="title" alignment="CENTER" styleClass="title" editable="true" text="Title"/>
       </VBox>
 
       <!-- Source Path -->
       <VBox spacing="3" style="-fx-padding: 0 10 0 10;" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="6">
-         <Label styleClass="text" text="Source Path" />
+         <HBox alignment="BASELINE_LEFT">
+            <Label styleClass="text" text="Source Path" />
+            <Button fx:id="sourceButton" styleClass="browseButton" text="Browse..." />
+         </HBox>
          <TextArea fx:id="sourcePath" promptText="Enter source path..."></TextArea>
-         <Button fx:id="sourceButton" styleClass="browseButton" text="Browse..." />
       </VBox>
 
       <VBox spacing="3" style="-fx-padding: 0 10 0 10;" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
-         <Label text="Target Path" />
+         <HBox alignment="BASELINE_LEFT">
+            <Label text="Target Path" />
+            <Button fx:id="targetButton" styleClass="browseButton" text="Browse..." />
+         </HBox>
+
          <TextArea fx:id="targetPath" promptText="Enter target path..."></TextArea>
-         <Button fx:id="targetButton" styleClass="browseButton" text="Browse..." />
       </VBox>
 
 
@@ -94,7 +99,7 @@
       <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxEncryption" onAction="#toggleEncryption" />
       <VBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
          <Label >Encryption Algorithm</Label>
-         <ComboBox fx:id="encryptionDropdown" disable="true" prefWidth="Infinity">
+         <ComboBox fx:id="encryptionJobDropdown" disable="true" prefWidth="Infinity">
             <items>
                <FXCollections fx:factory="observableArrayList">
                   <String fx:value="AES-CBC"/>
@@ -103,10 +108,10 @@
          </ComboBox>
       </VBox>
 
-      <CheckBox GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxCheckSum" onAction="#toggleCheckSum" />
+      <CheckBox GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxValidationJob" onAction="#toggleValidationType" />
       <VBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
          <Label >Validation Algorithm</Label>
-         <ComboBox fx:id="checkSumDropdown" disable="true" prefWidth="Infinity">
+         <ComboBox fx:id="validationJobDropdown" disable="true" prefWidth="Infinity">
             <items>
                <FXCollections fx:factory="observableArrayList">
                   <String fx:value="CRC32"/>

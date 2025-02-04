@@ -6,7 +6,6 @@ import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.MessageList;
 
 import java.io.File;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class BaseModel {
@@ -18,7 +17,7 @@ public class BaseModel {
     @JsonProperty("uid")
     private String uid;
 
-    @JsonProperty("backup_Type")
+    @JsonProperty("backup_type")
     private BackupType backupType;
 
     @JsonProperty("flowPane-Position")
@@ -26,41 +25,60 @@ public class BaseModel {
 
     @JsonProperty("title")
     private String title;
-    @JsonProperty("source_path") // JSON Name wird geändert
+    @JsonProperty("source-path") // JSON Name wird geändert
     private String source;
 
-    @JsonProperty("target_path") // JSON Name wird geändert
+    @JsonProperty("target-path") // JSON Name wird geändert
     private String target;
+
+    @JsonProperty("checkBox-startDate")
+    private boolean checkBoxStartDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Format für das Datum
     private LocalDateTime startDate;
 
-    @JsonProperty("interval_days") // JSON Name wird geändert
+    @JsonProperty("checkBox-daysInterval")
+    private boolean checkBoxDaysInterval;
+
+    @JsonProperty("interval-days") // JSON Name wird geändert
     private int intervalDays;
 
-    @JsonProperty("interval_hours") // JSON Name wird geändert
+    @JsonProperty("checkBox-hoursInterval")
+    private boolean checkBoxHoursInterval;
+
+    @JsonProperty("interval-hours") // JSON Name wird geändert
     private int intervalHours;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Format für das Datum
+    private LocalDateTime lastBackupLocalDateTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Format für das Datum
     private LocalDateTime nextBackupLocalDateTime;
 
-    @JsonProperty("Cardwidth")
+    @JsonProperty("card-width")
     private int cardWidth;
 
-    @JsonProperty("play-BackupOrder")
-    private boolean playBackupOrder;
+    @JsonProperty("backup-job")
+    private boolean backupJob;
 
     @JsonIgnore
-    private StringProperty sourceHashProperty = new SimpleStringProperty("no value");
+    private StringProperty sourceValidationProperty = new SimpleStringProperty("no value");
 
     @JsonIgnore
-    private StringProperty targetHashProperty = new SimpleStringProperty("no value");
+    private StringProperty targetValidationProperty = new SimpleStringProperty("no value");
 
-    @JsonProperty("hash_Order")
-    private boolean hashOrder;
 
-    @JsonProperty("hash_Type")
-    private HashTYPE hashType;
+    @JsonProperty("checkBox-validationJob")
+    private boolean checkBoxValidationJob;
+
+    @JsonProperty("validation-job")
+    private boolean validationJob;
+
+    @JsonProperty("validation-type")
+    private ValidationTYPE validationType;
+
+    @JsonProperty("encryption-type")
+    private EncryptionTYPE encryptionType;
 
     @JsonIgnore
     private IMessageList messages;
@@ -71,8 +89,11 @@ public class BaseModel {
     @JsonIgnore
     private String initVector;
 
+    @JsonProperty("checkBox-encryptionJob")
+    private boolean checkBoxEncryptionJob;
+
     @JsonIgnore
-    private boolean encryptionOrder;
+    private boolean encryptionJob;
 
     @JsonIgnore
     private BooleanProperty isBackupSuccessfullyProperty = new SimpleBooleanProperty(false);
@@ -147,6 +168,38 @@ public class BaseModel {
         this.nextBackupLocalDateTime = nextBackupLocalDateTime;
     }
 
+    public LocalDateTime getLastBackupLocalDateTime() {
+        return lastBackupLocalDateTime;
+    }
+
+    public void setLastBackupLocalDateTime(LocalDateTime lastBackupLocalDateTime) {
+        this.lastBackupLocalDateTime = lastBackupLocalDateTime;
+    }
+
+    public boolean getCheckBoxHoursInterval() {
+        return checkBoxHoursInterval;
+    }
+
+    public void setCheckBoxHoursInterval(boolean checkBoxHoursInterval) {
+        this.checkBoxHoursInterval = checkBoxHoursInterval;
+    }
+
+    public boolean getCheckBoxDaysInterval() {
+        return checkBoxDaysInterval;
+    }
+
+    public void setCheckBoxDaysInterval(boolean checkBoxDaysInterval) {
+        this.checkBoxDaysInterval = checkBoxDaysInterval;
+    }
+
+    public boolean getCheckBoxStartDate() {
+        return checkBoxStartDate;
+    }
+
+    public void setCheckBoxStartDate(boolean checkBoxStartDate) {
+        this.checkBoxStartDate = checkBoxStartDate;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -154,9 +207,6 @@ public class BaseModel {
     public void setTitle(String title) {
         this.title = title;
     }
-
-
-
 
     public boolean validate(){
         messages = new MessageList();
@@ -239,15 +289,30 @@ public class BaseModel {
     }
 
 
-    @JsonProperty("play-BackupOrder")
-    public boolean hasplaybackuporder() {
-        return playBackupOrder;
+    @JsonProperty("backup-job")
+    public boolean hasBackupJob() {
+        return backupJob;
     }
-    @JsonProperty("play-BackupOrder")
-    public void setPlayBackupOrder(boolean playBackupOrder) {
-        this.playBackupOrder = playBackupOrder;
+    @JsonProperty("backup-job")
+    public void setBackupJob(boolean backupJob) {
+        this.backupJob = backupJob;
     }
 
+    public boolean getCheckBoxValidationJob() {
+        return checkBoxValidationJob;
+    }
+
+    public void setCheckBoxValidationJob(boolean checkBoxValidationJob) {
+        this.checkBoxValidationJob = checkBoxValidationJob;
+    }
+
+    public boolean getCheckBoxEncryptionJob() {
+        return checkBoxEncryptionJob;
+    }
+
+    public void setCheckBoxEncryptionJob(boolean checkBoxEncryptionJob) {
+        this.checkBoxEncryptionJob = checkBoxEncryptionJob;
+    }
 
     @JsonIgnore
     public double getProgressState() {
@@ -265,58 +330,65 @@ public class BaseModel {
     }
 
     // Getter für die Serialisierung
-    @JsonProperty("source-hash-property")
-    public String getSourceHash() {
-        return sourceHashProperty.get();
+    @JsonProperty("source-validation-property")
+    public String getSourceValidationValue() {
+        return sourceValidationProperty.get();
     }
 
-    @JsonProperty("target_Hash_property")
-    public String getTargetHash() {
-        return targetHashProperty.get();
+    @JsonProperty("target-validation-property")
+    public String getTargetValidationValue() {
+        return targetValidationProperty.get();
     }
 
     // Setter für die Deserialisierung
-    @JsonProperty("source-hash-property")
-    public void setSourceHash(String value) {
-        this.sourceHashProperty.set(value);
+    @JsonProperty("source-validation-property")
+    public void setSourceValidationValue(String value) {
+        this.sourceValidationProperty.set(value);
     }
 
-    @JsonProperty("target_Hash_property")
-    public void setTargetHash(String value) {
-        this.targetHashProperty.set(value);
-    }
-
-    @JsonIgnore
-    public StringProperty getTargetHashProperty(){
-        return this.targetHashProperty;
+    @JsonProperty("target-validation-property")
+    public void setTargetValidationValue(String value) {
+        this.targetValidationProperty.set(value);
     }
 
     @JsonIgnore
-    public StringProperty getSourceHashProperty(){
-        return this.sourceHashProperty;
+    public StringProperty getTargetValidationProperty(){
+        return this.targetValidationProperty;
     }
 
-
-
-    @JsonProperty("hash_Order")
-    public boolean hasHashOrder() {
-        return hashOrder;
-    }
-    @JsonProperty("hash_Order")
-    public void setHashOrder(boolean hashOrder) {
-        this.hashOrder = hashOrder;
+    @JsonIgnore
+    public StringProperty getSourceValidationProperty(){
+        return this.sourceValidationProperty;
     }
 
-
-    @JsonProperty("hash_Type")
-    public HashTYPE getHashType() {
-        return hashType;
+    @JsonProperty("validation-job")
+    public boolean hasValidationJob() {
+        return validationJob;
     }
 
+    @JsonProperty("validation-job")
+    public void setValidationJob(boolean validationJob) {
+        this.validationJob = validationJob;
+    }
 
-    @JsonProperty("hash_Type")
-    public void setHashType(HashTYPE hashType) {
-        this.hashType = hashType;
+    @JsonProperty("validation-type")
+    public ValidationTYPE getValidationType() {
+        return validationType;
+    }
+
+    @JsonProperty("validation-type")
+    public void setValidationType(ValidationTYPE validationType) {
+        this.validationType = validationType;
+    }
+
+    @JsonProperty("encryption-type")
+    public EncryptionTYPE getEncryptionType() {
+        return encryptionType;
+    }
+
+    @JsonProperty("encryption-type")
+    public void setEncryptionTYPE(EncryptionTYPE encryptionType) {
+        this.encryptionType = encryptionType;
     }
 
     @JsonProperty("init-vector")
@@ -340,13 +412,13 @@ public class BaseModel {
     }
 
     @JsonProperty("encryption-Order")
-    public boolean hasEncryptionOrder() {
-        return encryptionOrder;
+    public boolean hasEncryptionJob() {
+        return encryptionJob;
     }
 
     @JsonProperty("encryption-Order")
-    public void setEncryptionOrder(boolean encryptionOrder) {
-        this.encryptionOrder = encryptionOrder;
+    public void setEncryptionJob(boolean encryptionJob) {
+        this.encryptionJob = encryptionJob;
     }
 
     @JsonIgnore
@@ -354,12 +426,12 @@ public class BaseModel {
         return isBackupSuccessfullyProperty;
     }
 
-    @JsonProperty("backup-Successfully")
+    @JsonProperty("backup-successfully")
     public boolean isBackupSuccessfully(){
         return this.isBackupSuccessfullyProperty.get();
     }
 
-    @JsonProperty("backup-Successfully")
+    @JsonProperty("backup-successfully")
     public void setBackupSuccessfully(boolean value){
         this.isBackupSuccessfullyProperty.set(value);
     }

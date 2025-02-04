@@ -2,16 +2,12 @@ package my.backup.backupTool.Service;
 
 import javafx.application.Platform;
 import my.backup.backupTool.App;
-import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
-import my.backup.backupTool.DataRepository.IDataStore;
 import my.backup.backupTool.Model.BaseModel;
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.zip.CRC32;
 
 
@@ -207,17 +203,17 @@ public class FileValidationService extends BaseCalculationService implements IFi
     public boolean calculateAndSaveHashes() {
         System.out.println("Making hashes");
         long hash = getCRC32FromDirectory(this.model.getSource());
-        Platform.runLater(()->this.model.setSourceHash(String.valueOf(hash)));
+        Platform.runLater(()->this.model.setSourceValidationValue(String.valueOf(hash)));
         long hashBackup = getCRC32FromDirectory(this.model.getTarget());
-        Platform.runLater(()->this.model.setTargetHash(String.valueOf(hashBackup)));
-        this.model.setHashOrder(false);
+        Platform.runLater(()->this.model.setTargetValidationValue(String.valueOf(hashBackup)));
+        this.model.setValidationJob(false);
         super.updateProgress(0.0,this.model);
         App.DataStore.saveModelAsJSON(this.model);
 
-        System.out.println("SOURCE HASH IS " + this.model.getSourceHash());
-        System.out.println("TARGET HASH IS " + this.model.getTargetHash());
+        System.out.println("SOURCE HASH IS " + this.model.getSourceValidationValue());
+        System.out.println("TARGET HASH IS " + this.model.getTargetValidationValue());
 
-        return !this.model.getSourceHash().isEmpty() && !this.model.getTargetHash().isEmpty();
+        return !this.model.getSourceValidationValue().isEmpty() && !this.model.getTargetValidationValue().isEmpty();
 
     }
 }
