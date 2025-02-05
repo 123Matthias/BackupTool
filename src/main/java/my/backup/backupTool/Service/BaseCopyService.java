@@ -26,18 +26,23 @@ public abstract class BaseCopyService extends BaseCalculationService {
              OutputStream out = Files.newOutputStream(targetFile,
                      StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 
-            byte[] buffer = new byte[8192]; // 8 KB Blockgröße
+            byte[] buffer = new byte[8192];
             int bytesRead;
-            long fileProcessedSize = 0;
+            double fileProcessedSize = 0;
 
             //END OF Encryption Service usage
             while ((bytesRead = in.read(buffer)) != -1) {
+                long iterationStartTime = System.nanoTime();
+
                 out.write(buffer, 0, bytesRead);
                 fileProcessedSize += bytesRead;
 
                 // Fortschritt berechnen
-                double progress = (double) fileProcessedSize / totalSize;
+                double progress = fileProcessedSize / totalSize;
                 super.updateProgress(progress, this.model);
+
+                long iterationEndTime = System.nanoTime();
+                super.calculateWorkingSpeed(fileProcessedSize,totalSize,this.model);
             }
 
         } catch(IOException e) {

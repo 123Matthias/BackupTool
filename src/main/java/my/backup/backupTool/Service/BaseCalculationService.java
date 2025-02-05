@@ -14,26 +14,54 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class BaseCalculationService {
 
+    private long lastTime = System.nanoTime();
+    private double lastProcessedSize = 0;
     IMessageList messageList;
     public BaseCalculationService() {
         messageList = new MessageList();
     }
-
     private double lastProgressState = 0;
 
-    protected void updateProgress(double progress, BaseModel model) {
-        // Hier wird der Fortschritt an die UI übergeben
-        // Je nach deinem UI-Framework (z.B. JavaFX) wird die ProgressBar oder ein anderes UI-Element aktualisiert
 
-        if(progress > lastProgressState + 0.05 || progress == 1.0) {
+
+    protected void finishCalculations(BaseModel model) {
+        Platform.runLater(()->{ model.setProgressState(0.0);
+                                model.setWorkingSpeed(0);
+                                });
+
+    }
+
+    protected void updateProgress(double progress, BaseModel model) {
+        if(progress == 0.0 || progress > lastProgressState + 0.05 || progress == 1.0) {
             lastProgressState = progress;
             Platform.runLater(()-> model.setProgressState(progress));
 
-            System.out.println("Model BaseCalculationService: " + model);
+           // System.out.println("Model BaseCalculationService: " + model);
            // System.out.println("Progress_Property: " + model.getProgressStateProperty());
            // System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressState() * 100) + "%");
         }
     }
+
+
+    protected void calculateWorkingSpeed(double fileProcessedSize, long totalSize, BaseModel model) {
+        long nextTime = System.nanoTime();
+        double elapsedTime = (nextTime - this.lastTime) / 1_000_000_000.0;
+
+        if (elapsedTime < 3) {
+            return;
+        }
+        else{
+            this.lastTime = nextTime;
+            double workingSpeed = ((fileProcessedSize - lastProcessedSize) / (1024.0 * 1024.0)) / elapsedTime;
+            this.lastProcessedSize = fileProcessedSize;
+            Platform.runLater(()-> model.setWorkingSpeed(workingSpeed));
+
+        }
+
+    }
+
+
+
 
     protected long calculateTotalSize(Path sourcePath) throws IOException {
         AtomicLong totalSize = new AtomicLong(0);

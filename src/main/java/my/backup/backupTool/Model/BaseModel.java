@@ -67,6 +67,8 @@ public class BaseModel {
     @JsonIgnore
     private StringProperty targetValidationProperty = new SimpleStringProperty("no value");
 
+    @JsonIgnore
+    private DoubleProperty workingSpeedProperty = new SimpleDoubleProperty(0);
 
     @JsonProperty("checkBox-validationJob")
     private boolean checkBoxValidationJob;
@@ -340,6 +342,17 @@ public class BaseModel {
         return targetValidationProperty.get();
     }
 
+    public double getWorkingSpeed() {
+        return workingSpeedProperty.get();
+    }
+    public void setWorkingSpeed(double workingSpeed) {
+        this.workingSpeedProperty.set(workingSpeed);
+    }
+
+    public DoubleProperty getWorkingSpeedProperty() {
+        return this.workingSpeedProperty;
+    }
+
     // Setter für die Deserialisierung
     @JsonProperty("source-validation-property")
     public void setSourceValidationValue(String value) {
@@ -373,7 +386,7 @@ public class BaseModel {
 
     @JsonProperty("validation-type")
     public ValidationTYPE getValidationType() {
-        return validationType;
+        return validationType != null ? validationType : ValidationTYPE.NONE;
     }
 
     @JsonProperty("validation-type")

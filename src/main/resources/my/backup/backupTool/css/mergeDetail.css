@@ -59,6 +59,7 @@ TextField, TextArea, TextArea .content{
 .title{
     -fx-pref-height: 15;
     -fx-font-size: 20;
+    -fx-font-style: italic;
 }
 
 .custom-tooltip {

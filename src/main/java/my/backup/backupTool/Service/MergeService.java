@@ -51,7 +51,7 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
             throw new RuntimeException(e);
         }
 
-        super.updateProgress(0.0, super.getModel());
+        super.finishCalculations(super.getModel());
         LocalDateTime lastBackupTime = TimeService.calculateLastBackupTime(LocalDateTime.now());
         LocalDateTime nextBackupTime = TimeService.calculateNextBackupTime(super.getModel().getLastBackupLocalDateTime(),super.getModel().getIntervalDays(), super.getModel().getIntervalHours());
         super.getModel().setNextBackupLocalDateTime(nextBackupTime);

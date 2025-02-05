@@ -3,6 +3,7 @@ package my.backup.backupTool.Controller;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -105,64 +106,95 @@ public abstract class BaseOverviewController {
         VBox contentBox = new VBox();
         contentBox.getStyleClass().add("cardContent");
         contentBox.setSpacing(5);
-        //UID Label
-        Label uuidLabel = new Label("UUID: " + uid);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String lastDate = model.getLastBackupLocalDateTime() == null ? "no Date" : model.getLastBackupLocalDateTime().format(formatter);
         String nextDate = model.getNextBackupLocalDateTime() == null ? "no Date" : model.getNextBackupLocalDateTime().format(formatter);
 
+
+// Inhalte hinzufügen
         contentBox.getChildren().addAll(
-                uuidLabel,
-                new Label("Last Backup: " + lastDate),
-                new Label("Next Backup: " + nextDate),
-                new Label("Source Path: " + model.getSource()),
-                new Label("Target Path: " + model.getTarget())
-        );
+                createLabeledRow("UUID:", uid),
+                createLabeledRow("Last Backup:", lastDate),
+                createLabeledRow("Next Backup:", nextDate),
+                createLabeledRow("Source Path:", model.getSource()));
 
-// Labels direkt erstellen
-        Label sourceHashLabel = new Label();
-        Label targetHashLabel = new Label();
-
-// HBox mit Labels erstellen
-        HBox sourceHashBox = new HBox(10, new Label("Source CRC32: "), sourceHashLabel);
-        HBox targetHashBox = new HBox(10, new Label("Target CRC32: "), targetHashLabel);
-
-// Die Text-Eigenschaften binden
-
-        sourceHashLabel.textProperty().bind(model.getSourceValidationProperty());
-        targetHashLabel.textProperty().bind(model.getTargetValidationProperty());
+                HBox row;
+                HBox rowEncType;
+                if(model.hasEncryptionJob()){
+                    row = createLabeledRow("Target Path:", model.getTarget() + " 🔒");
+                    rowEncType = createLabeledRow("Encryprion:", model.getEncryptionType().toString());
+                    contentBox.getChildren().addAll(row,rowEncType);
+                }
+                else {
+                    row = createLabeledRow("Target Path:", model.getTarget());
+                    contentBox.getChildren().addAll(row);
+                }
 
 
-        boolean initialStatus = model.getIsBackupSuccessfullyProperty().get();
-        String initialStyle = initialStatus ? "-fx-text-fill: green" : "-fx-text-fill: red";
-        sourceHashLabel.setStyle(initialStyle);
-        targetHashLabel.setStyle(initialStyle);
 
-// Listener für das Backup-Status
-        model.getIsBackupSuccessfullyProperty().addListener((observable, oldValue, newValue) -> {
-            // Direkt im Listener die Farbe setzen
-            String style = newValue ? "-fx-text-fill: green" : "-fx-text-fill: red";
-            sourceHashLabel.setStyle(style);
-            targetHashLabel.setStyle(style);
-        });
+        HBox sourceValidation;
+        HBox targetValidation;
+        HBox validationType;
+        if(model.hasValidationJob()){
+            // Labels direkt erstellen
+            Label sourceHashLabel = new Label();
+            Label targetHashLabel = new Label();
+            sourceHashLabel.textProperty().bind(model.getSourceValidationProperty());
+            targetHashLabel.textProperty().bind(model.getTargetValidationProperty());
 
+            // HBox mit Labels erstellen (Label direkt übergeben!)
+            sourceValidation = createLabeledRow("Source: ", sourceHashLabel);
+            targetValidation = createLabeledRow("Target: ", targetHashLabel);
+            validationType = createLabeledRow("Validation: ", model.getValidationType().toString());
+
+            boolean initialStatus = model.getIsBackupSuccessfullyProperty().get();
+            String initialStyle = initialStatus == true ? "-fx-text-fill: green" : "-fx-text-fill: red";
+            sourceHashLabel.setStyle(initialStyle);
+            targetHashLabel.setStyle(initialStyle);
+
+            model.getIsBackupSuccessfullyProperty().addListener((observable, oldValue, newValue) -> {
+                String style = newValue ? "-fx-text-fill: green" : "-fx-text-fill: red";
+                sourceHashLabel.setStyle(style);
+                targetHashLabel.setStyle(style);
+
+            });
+
+            // Add Content to Card
+            contentBox.getChildren().addAll(sourceValidation,targetValidation, validationType);
+        }
+        else {
+            sourceValidation = createLabeledRow("","");
+            targetValidation = createLabeledRow("","");
+
+            // Add Content to Card spacing null row
+            contentBox.getChildren().addAll(sourceValidation,targetValidation);
+        }
+
+        //Progress Bar
         ProgressBar progressBar = new ProgressBar(0);
         progressBar.progressProperty().bind(model.getProgressStateProperty());
-        Label testLabel = new Label();
-        testLabel.textProperty().bind(Bindings.format("%.2f", model.getProgressStateProperty()));
 
-        progressBar.prefWidthProperty().bind(contentBox.widthProperty().subtract(10));
-        progressBar.translateXProperty().set(5);
+        progressBar.prefWidthProperty().bind(contentBox.widthProperty());
+
         Label progressLabel = new Label();
-        progressLabel.setPadding(new Insets(10, 0, 0, 5));
+        progressLabel.setPadding(new Insets(10, 0, 0, 0));
         progressLabel.setLabelFor(progressBar);
-        progressLabel.setText("Progress");
+        progressLabel.textProperty().bind(Bindings.format("%.0f MB/sec", model.getWorkingSpeedProperty()));
+        progressBar.progressProperty().bind(model.getProgressStateProperty());
 
+
+
+
+        //Click Listener
         contentBox.setOnMouseClicked(event -> openDetailWindow(uid));
 
         // Struktur aufbauen
-        newCardBox.getChildren().addAll(newTitleContainer, contentBox, sourceHashBox, targetHashBox, progressLabel, progressBar);
+        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabel, progressBar);
+
+        newCardBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
         newCardPane.getChildren().add(newCardBox);
+
 
         // Neue Karte in das FlowPane einfügen
         flowPane.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
@@ -171,6 +203,33 @@ public abstract class BaseOverviewController {
         System.out.println("...............Card Added ........................");
 
     }
+
+    // Funktion für konsistente Labels - mit String
+    private HBox createLabeledRow(String labelText, String valueText) {
+        Label label = new Label(labelText);
+        label.setMinWidth(80); // Feste Breite für alle Labels
+        label.setAlignment(Pos.CENTER_LEFT);
+
+        Label valueLabel = new Label(valueText);
+
+        HBox row = new HBox(label, valueLabel);
+        row.setSpacing(5);
+        return row;
+    }
+
+    // Funktion für konsistente Labels - mit Label
+    private HBox createLabeledRow(String labelText, Label valueLabel) {
+        Label label = new Label(labelText);
+        label.setMinWidth(80); // Feste Breite für alle Labels
+        label.setAlignment(Pos.CENTER_LEFT);
+
+        HBox row = new HBox(label, valueLabel);
+        row.setSpacing(5);
+        return row;
+    }
+
+
+
 
     private void addAllCardsSorted(List<BaseModel> list) {
         System.out.println("-----Im in Method addAllCardsSorted-----");
