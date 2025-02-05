@@ -312,11 +312,19 @@ public abstract class BaseDetailController {
             model.setValidationType(ValidationTYPE.CRC32);
             model.setValidationJob(true);
         }
+        else{
+            model.setValidationType(ValidationTYPE.NONE);
+            model.setValidationJob(false);
+        }
 
         if (checkBoxEncryption.isSelected() && encryptionJobDropdown.getSelectionModel().getSelectedItem()
                 .equals(EncryptionTYPE.AES_CBC.toString())) {
             model.setEncryptionTYPE(EncryptionTYPE.AES_CBC);
             model.setEncryptionJob(true);
+        }
+        else{
+            model.setEncryptionTYPE(EncryptionTYPE.NONE);
+            model.setEncryptionJob(false);
         }
     }
 

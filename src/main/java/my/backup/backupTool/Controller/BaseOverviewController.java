@@ -121,7 +121,7 @@ public abstract class BaseOverviewController {
 
                 HBox row;
                 HBox rowEncType;
-                if(model.hasEncryptionJob()){
+                if(model.getCheckBoxEncryptionJob()){
                     row = createLabeledRow("Target Path:", model.getTarget() + " 🔒");
                     rowEncType = createLabeledRow("Encryprion:", model.getEncryptionType().toString());
                     contentBox.getChildren().addAll(row,rowEncType);
@@ -131,12 +131,10 @@ public abstract class BaseOverviewController {
                     contentBox.getChildren().addAll(row);
                 }
 
-
-
         HBox sourceValidation;
         HBox targetValidation;
         HBox validationType;
-        if(model.hasValidationJob()){
+        if(model.getCheckBoxValidationJob()){
             // Labels direkt erstellen
             Label sourceHashLabel = new Label();
             Label targetHashLabel = new Label();
@@ -157,7 +155,6 @@ public abstract class BaseOverviewController {
                 String style = newValue ? "-fx-text-fill: green" : "-fx-text-fill: red";
                 sourceHashLabel.setStyle(style);
                 targetHashLabel.setStyle(style);
-
             });
 
             // Add Content to Card
@@ -174,37 +171,27 @@ public abstract class BaseOverviewController {
         //Progress Bar
         ProgressBar progressBar = new ProgressBar(0);
         progressBar.progressProperty().bind(model.getProgressStateProperty());
-
         progressBar.prefWidthProperty().bind(contentBox.widthProperty());
-
         Label progressLabel = new Label();
         progressLabel.setPadding(new Insets(10, 0, 0, 0));
         progressLabel.setLabelFor(progressBar);
-        progressLabel.textProperty().bind(Bindings.format("%.0f MB/sec", model.getWorkingSpeedProperty()));
+        progressLabel.textProperty().bind(Bindings.format("Working speed: %.0f MB/sec", model.getWorkingSpeedProperty()));
         progressBar.progressProperty().bind(model.getProgressStateProperty());
-
-
-
 
         //Click Listener
         contentBox.setOnMouseClicked(event -> openDetailWindow(uid));
 
         // Struktur aufbauen
         newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabel, progressBar);
-
         newCardBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
         newCardPane.getChildren().add(newCardBox);
-
 
         // Neue Karte in das FlowPane einfügen
         flowPane.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
 
-
         System.out.println("...............Card Added ........................");
-
     }
 
-    // Funktion für konsistente Labels - mit String
     private HBox createLabeledRow(String labelText, String valueText) {
         Label label = new Label(labelText);
         label.setMinWidth(80); // Feste Breite für alle Labels
@@ -217,7 +204,6 @@ public abstract class BaseOverviewController {
         return row;
     }
 
-    // Funktion für konsistente Labels - mit Label
     private HBox createLabeledRow(String labelText, Label valueLabel) {
         Label label = new Label(labelText);
         label.setMinWidth(80); // Feste Breite für alle Labels
@@ -228,9 +214,6 @@ public abstract class BaseOverviewController {
         return row;
     }
 
-
-
-
     private void addAllCardsSorted(List<BaseModel> list) {
         System.out.println("-----Im in Method addAllCardsSorted-----");
         list.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
@@ -240,20 +223,9 @@ public abstract class BaseOverviewController {
         }
     }
 
-    private List<BaseModel> getModelsAsList() {
-        List<BaseModel> dataList = new ArrayList<>();
-            dataList = App.DataStore.getModelList();
-            dataList.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
-
-
-        return dataList;
-    }
-
-
     public void openDetailWindow(String uid) {};
+
     public void openDetailWindow() {};
-
-
 
     @FXML
     public void backToMain(){

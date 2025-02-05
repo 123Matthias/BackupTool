@@ -3,22 +3,24 @@ package my.backup.backupTool.Service;
 
 import javafx.application.Platform;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Factory.CopyServiceFactory;
 import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.BaseModel;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 
-public class MergeService extends BaseCopyService implements IMergeService,Runnable {
+public class MergeService implements IMergeService,Runnable {
 
-
+    private ICopyService copyService;
     private IMessageList messageList;
+    private BaseModel model;
 
     public MergeService(BaseModel model) {
-        super(model);
+        this.copyService = CopyServiceFactory.createCopyService(model);
+        this.model = model;
         this.messageList = new MessageList();
     }
 
@@ -34,38 +36,39 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
 
         System.out.println("Thread STARTED: " + Thread.currentThread().getName());
 
-        File sourceDir = new File(super.getModel().getSource());
-        File targetDir = new File(super.getModel().getTarget());
 
-        if (!super.getModel().validate()) {
-            Platform.runLater(() -> MessageService.createMessage(super.getModel().getMessageList(), MessageTYPE.VALIDATION));
+        if (!this.model.validate()) {
+            Platform.runLater(() -> MessageService.createMessage(this.model.getMessageList(), MessageTYPE.VALIDATION));
             return;
         }
 
         long totalSize;
 
         try {
-            totalSize = super.calculateTotalSize(Paths.get(super.getModel().getSource()));
-            copyFileTree(totalSize);
+            totalSize = this.copyService.calculateTotalSize(Paths.get(this.model.getSource()));
+            copyFileTree(this.copyService, totalSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        super.finishCalculations(super.getModel());
+        this.copyService.finishCalculations(this.model);
         LocalDateTime lastBackupTime = TimeService.calculateLastBackupTime(LocalDateTime.now());
-        LocalDateTime nextBackupTime = TimeService.calculateNextBackupTime(super.getModel().getLastBackupLocalDateTime(),super.getModel().getIntervalDays(), super.getModel().getIntervalHours());
-        super.getModel().setNextBackupLocalDateTime(nextBackupTime);
-        super.getModel().setLastBackupLocalDateTime(lastBackupTime);
+        LocalDateTime nextBackupTime = TimeService.calculateNextBackupTime(this.model.getLastBackupLocalDateTime(),this.model.getIntervalDays(), this.model.getIntervalHours());
+        this.model.setNextBackupLocalDateTime(nextBackupTime);
+        this.model.setLastBackupLocalDateTime(lastBackupTime);
 
+        if(this.model.hasValidationJob()){
+            App.ValidationScheduler.fireValidationEvent(this.model);
+        }
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
     }
 
-    private void copyFileTree(long totalFileSize) throws IOException {
+    private void copyFileTree(ICopyService copyService, long totalFileSize) throws IOException {
 
-        Files.walkFileTree(Paths.get(super.getModel().getSource()), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(Paths.get(this.model.getSource()), new SimpleFileVisitor<Path>() {
 
-            private final String targetString = MergeService.super.getModel().getTarget();
-            private final int subDirectoryStartpoint = MergeService.super.getModel().getSource().length();
+            private final String targetString = MergeService.this.model.getTarget();
+            private final int subDirectoryStartpoint = MergeService.this.model.getSource().length();
 
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -85,15 +88,17 @@ public class MergeService extends BaseCopyService implements IMergeService,Runna
                 if (Files.exists(targetFilePath)) {
                     long targetLastModifiedTime = Files.getLastModifiedTime(targetFilePath).toMillis();
                     long sourceLastModifiedTime = Files.getLastModifiedTime(file).toMillis();
+                    double targetFileSize = Files.size(targetFilePath);
+                    double sourceFileSize = Files.size(file);
 
-                    if (sourceLastModifiedTime > targetLastModifiedTime) {
-                        MergeService.super.copyFileWithStream(file, targetFilePath, totalFileSize);
+                    if (sourceLastModifiedTime > targetLastModifiedTime || sourceFileSize != targetFileSize) {
+                        copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
                         //           System.out.println("Datei ersetzt (neuer): " + file);
                     }
                 }
 
                 else {
-                    MergeService.super.copyFileWithStream(file, targetFilePath, totalFileSize);
+                    copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
                     //System.out.println("Datei kopiert: " + file);
                 }
 

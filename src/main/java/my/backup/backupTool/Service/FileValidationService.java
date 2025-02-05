@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
@@ -111,13 +113,13 @@ public class FileValidationService extends BaseCalculationService implements IFi
         return byteArray;
     }
 
-
-    public CRC32 calculateCRC32(File file) {
+//slow dont use this Method
+    public CRC32 calculateCRC32WithStream(File file) {
         CRC32 crc32 = new CRC32();
 
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
 
-            byte[] buffer = new byte[1024];  // Puffer für Datei
+            byte[] buffer = new byte[8192];  // Puffer für Datei 8k standard Block ....
             int bytesRead;
             long fileProcessedSize = 0;
 
@@ -126,11 +128,43 @@ public class FileValidationService extends BaseCalculationService implements IFi
                 fileProcessedSize += bytesRead;
                 this.progress = (double) fileProcessedSize / this.totalFileSize;
                 super.updateProgress(progress,this.model);
+                super.calculateWorkingSpeed(fileProcessedSize,this.model);
             }
 
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+
+        return crc32;
+    }
+
+    protected CRC32 calculateCRC32WithFileChannel(Path sourceFile) {
+        CRC32 crc32 = new CRC32();
+
+        try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ)) {
+            long fileProcessedSize = 0;
+            long chunkSize = 1024 * 64; // 8K Blöcke
+
+            ByteBuffer buffer = ByteBuffer.allocateDirect((int) chunkSize);
+
+            while (fileProcessedSize < this.totalFileSize) {
+                buffer.clear();  // Puffer für neuen Lesevorgang zurücksetzen
+                int bytesRead = sourceChannel.read(buffer);
+
+                if (bytesRead == -1) break; // Dateiende erreicht
+
+                buffer.flip(); // In den Lesemodus wechseln
+                crc32.update(buffer); // Direkte Übergabe an CRC32 ohne Byte-Array
+
+                fileProcessedSize += bytesRead;
+                double progress = (double) fileProcessedSize / this.totalFileSize;
+
+                super.updateProgress(progress, this.model);
+                super.calculateWorkingSpeed(fileProcessedSize, this.model);
+            }
+        } catch (IOException e) {
+            super.messageList.addMessage(e.getMessage());
         }
 
         return crc32;
@@ -149,7 +183,6 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
     public long getCRC32FromDirectory(String path) {
         super.updateProgress(0.0,this.model);
-        super.setLastProgressState(0.0);
         Path sourcePath = Paths.get(path);
         long valueCRC32 = 0;
         try {
@@ -158,7 +191,6 @@ public class FileValidationService extends BaseCalculationService implements IFi
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return valueCRC32;
 
     }
@@ -170,15 +202,11 @@ public class FileValidationService extends BaseCalculationService implements IFi
             Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
 
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    // Berechne den Hash der Datei
-                    CRC32 newCRC32 = calculateCRC32(file.toFile());
-                    System.out.println("next CRC32: " + newCRC32.getValue());
-
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    CRC32 newCRC32 = calculateCRC32WithFileChannel(file);
+                    //System.out.println("next CRC32: " + newCRC32.getValue());
                     crc32Root.update(newCRC32);
-
-                    System.out.println(crc32Root.getCRC32().getValue());
-
+                    //System.out.println(crc32Root.getCRC32().getValue());
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -199,15 +227,32 @@ public class FileValidationService extends BaseCalculationService implements IFi
         return crc32Root.getCRC32().getValue();
     }
 
+    public boolean validate(){
+        if(this.model.getSourceValidationValue().equals(this.model.getTargetValidationValue())){
+            this.model.setBackupSuccessfully(true);
+            return true;
+        }
+        else {
+            this.model.setBackupSuccessfully(false);
+            return false;
+        }
+    }
 
-    public boolean calculateAndSaveHashes() {
-        System.out.println("Making hashes");
-        long hash = getCRC32FromDirectory(this.model.getSource());
-        Platform.runLater(()->this.model.setSourceValidationValue(String.valueOf(hash)));
-        long hashBackup = getCRC32FromDirectory(this.model.getTarget());
-        Platform.runLater(()->this.model.setTargetValidationValue(String.valueOf(hashBackup)));
+
+    public boolean calculateAndSaveCRC32Validation() {
+        System.out.println("Making CRC32");
+        super.finishCalculations(this.model);
+        long crc32Source = getCRC32FromDirectory(this.model.getSource());
+        super.finishCalculations(this.model);
+        Platform.runLater(()->this.model.setSourceValidationValue(String.valueOf(crc32Source)));
+
+        long crc32Target = getCRC32FromDirectory(this.model.getTarget());
+        Platform.runLater(()->this.model.setTargetValidationValue(String.valueOf(crc32Target)));
         this.model.setValidationJob(false);
-        super.updateProgress(0.0,this.model);
+        super.finishCalculations(this.model);
+
+        boolean validate = validate();
+
         App.DataStore.saveModelAsJSON(this.model);
 
         System.out.println("SOURCE HASH IS " + this.model.getSourceValidationValue());

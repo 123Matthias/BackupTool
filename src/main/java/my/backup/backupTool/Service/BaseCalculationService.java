@@ -24,10 +24,11 @@ public abstract class BaseCalculationService {
 
 
 
-    protected void finishCalculations(BaseModel model) {
+    public void finishCalculations(BaseModel model) {
         Platform.runLater(()->{ model.setProgressState(0.0);
                                 model.setWorkingSpeed(0);
                                 });
+        this.lastProcessedSize = 0;
 
     }
 
@@ -43,7 +44,7 @@ public abstract class BaseCalculationService {
     }
 
 
-    protected void calculateWorkingSpeed(double fileProcessedSize, long totalSize, BaseModel model) {
+    protected void calculateWorkingSpeed(double fileProcessedSize, BaseModel model) {
         long nextTime = System.nanoTime();
         double elapsedTime = (nextTime - this.lastTime) / 1_000_000_000.0;
 
@@ -63,24 +64,28 @@ public abstract class BaseCalculationService {
 
 
 
-    protected long calculateTotalSize(Path sourcePath) throws IOException {
+    public long calculateTotalSize(Path sourcePath) {
         AtomicLong totalSize = new AtomicLong(0);
 
-        Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                // Add the file size to the total size
-                totalSize.addAndGet(attrs.size());
+        try {
+            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    // Add the file size to the total size
+                    totalSize.addAndGet(attrs.size());
 
-                return FileVisitResult.CONTINUE;
-            }
+                    return FileVisitResult.CONTINUE;
+                }
 
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) {
-                messageList.addMessage(exc.getMessage());
-                return FileVisitResult.CONTINUE;
-            }
-        });
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                    messageList.addMessage(exc.getMessage());
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Total Size: " + totalSize.get());
         return totalSize.get();
     }

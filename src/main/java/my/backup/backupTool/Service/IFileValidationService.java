@@ -13,11 +13,11 @@ public interface IFileValidationService {
 
     CRC32 concatCRC32(CRC32 oldCRC32, CRC32 newCRC32);
 
-    CRC32 calculateCRC32(File file);
+    CRC32 calculateCRC32WithStream(File file);
 
     String bytesToHex(byte[] bytes);
 
     long getCRC32FromDirectory(String path);
-    boolean calculateAndSaveHashes();
+    boolean calculateAndSaveCRC32Validation();
 
 }

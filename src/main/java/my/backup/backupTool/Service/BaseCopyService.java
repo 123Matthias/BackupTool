@@ -3,23 +3,24 @@ package my.backup.backupTool.Service;
 import my.backup.backupTool.Encryption.AesService;
 import my.backup.backupTool.Model.BaseModel;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
 
-public abstract class BaseCopyService extends BaseCalculationService {
+public class BaseCopyService extends BaseCalculationService implements ICopyService {
 
     private final BaseModel model;
 
 
     public BaseCopyService(BaseModel model) {
         this.model = model;
-        System.out.println("Model BaseCopyService: " + this.model);
     }
 
-
+    //do not USE this Method. very slow by copying to external Disks.
     protected void copyFileWithStream(Path sourceFile, Path targetFile, long totalSize) {
 
         try (InputStream in = Files.newInputStream(sourceFile);
@@ -32,7 +33,6 @@ public abstract class BaseCopyService extends BaseCalculationService {
 
             //END OF Encryption Service usage
             while ((bytesRead = in.read(buffer)) != -1) {
-                long iterationStartTime = System.nanoTime();
 
                 out.write(buffer, 0, bytesRead);
                 fileProcessedSize += bytesRead;
@@ -41,8 +41,7 @@ public abstract class BaseCopyService extends BaseCalculationService {
                 double progress = fileProcessedSize / totalSize;
                 super.updateProgress(progress, this.model);
 
-                long iterationEndTime = System.nanoTime();
-                super.calculateWorkingSpeed(fileProcessedSize,totalSize,this.model);
+                super.calculateWorkingSpeed(fileProcessedSize,this.model);
             }
 
         } catch(IOException e) {
@@ -50,17 +49,16 @@ public abstract class BaseCopyService extends BaseCalculationService {
         }
     }
 
-    protected void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize) {
+    public void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize) {
         try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
 
             long fileProcessedSize = 0;
-            long transferChunkSize = 16 * 1024 * 1024; // 16 MB Blockgröße
+            long transferChunkSize = 64*1024; // 8k Block (small and Many Data) TODO Buffer Size calculator
             long fileSize = sourceChannel.size();
 
             while (fileProcessedSize < fileSize) {
 
-                // Kopiere einen Chunk der Datei von source to target
                 long bytesTransferred = sourceChannel.transferTo(fileProcessedSize, transferChunkSize, targetChannel);
 
                 fileProcessedSize += bytesTransferred;
@@ -68,6 +66,7 @@ public abstract class BaseCopyService extends BaseCalculationService {
                 double progress = (double) fileProcessedSize / totalSize;
 
                 super.updateProgress(progress, this.model);
+                super.calculateWorkingSpeed(fileProcessedSize,this.model);
             }
 
         } catch (IOException e) {

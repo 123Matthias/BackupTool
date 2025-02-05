@@ -5,6 +5,8 @@ import javafx.beans.property.*;
 import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.MessageList;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.time.LocalDateTime;
 
@@ -86,10 +88,10 @@ public class BaseModel {
     private IMessageList messages;
 
     @JsonIgnore
-    private String secretKey;
+    private SecretKey secretKey;
 
     @JsonIgnore
-    private String initVector;
+    private IvParameterSpec initVector;
 
     @JsonProperty("checkBox-encryptionJob")
     private boolean checkBoxEncryptionJob;
@@ -405,22 +407,32 @@ public class BaseModel {
     }
 
     @JsonProperty("init-vector")
-    public String getInitVector() {
-        return initVector;
+    public byte[] getInitVectorBytes() {
+        return initVector != null ? initVector.getIV() : null;
     }
 
     @JsonProperty("init-vector")
-    public void setInitVector(String initVector) {
+    public void setInitVectorBytes(byte[] ivBytes) {
+        if (ivBytes != null) {
+            this.initVector = new IvParameterSpec(ivBytes);
+        }
+    }
+
+    public IvParameterSpec getInitVector() {
+        return initVector;
+    }
+
+    public void setInitVector(IvParameterSpec initVector) {
         this.initVector = initVector;
     }
 
     @JsonProperty("secret-key")
-    public String getSecretKey() {
+    public SecretKey getSecretKey() {
         return secretKey;
     }
 
     @JsonProperty("secret-key")
-    public void setSecretKey(String secretKey) {
+    public void setSecretKey(SecretKey secretKey) {
         this.secretKey = secretKey;
     }
 

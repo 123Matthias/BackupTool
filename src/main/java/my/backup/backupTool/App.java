@@ -10,13 +10,13 @@ public class App {
 
     public static Router Router;
     public static BackupJobScheduler JobScheduler;
-    public static BackupValidationScheduler CheckScheduler;
+    public static BackupValidationScheduler ValidationScheduler;
     public static IDataStore DataStore;
 
     public App() {
         DataStore = new BaseDataStoreRepository();
         JobScheduler = new BackupJobScheduler();
-        CheckScheduler = new BackupValidationScheduler();
+        ValidationScheduler = new BackupValidationScheduler();
         Router = new Router();
     }
 }

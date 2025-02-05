@@ -1,7 +1,8 @@
 package my.backup.backupTool.Model;
 
 public enum EncryptionTYPE {
-    AES_CBC("AES-CBC");
+    AES_CBC("AES-CBC"),
+    NONE("");
 
     private final String name;
 

@@ -22,7 +22,7 @@ public class BackupValidationScheduler {
         model = App.DataStore.getModelById(model.getUid());
         if(model.hasValidationJob()){
                     IFileValidationService hashService = new FileValidationService(model);
-                    hashService.calculateAndSaveHashes();
+                    hashService.calculateAndSaveCRC32Validation();
             }
     }
 
@@ -31,7 +31,7 @@ public class BackupValidationScheduler {
             if(modelInList.hasValidationJob()){
                 if(modelInList.getValidationType() == ValidationTYPE.CRC32){
                     IFileValidationService hashService = new FileValidationService(modelInList);
-                    hashService.calculateAndSaveHashes();
+                    hashService.calculateAndSaveCRC32Validation();
                 }
             }
         }

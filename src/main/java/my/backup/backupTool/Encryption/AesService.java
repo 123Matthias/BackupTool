@@ -1,6 +1,15 @@
 package my.backup.backupTool.Encryption;
 
+import my.backup.backupTool.Model.BaseModel;
+import my.backup.backupTool.Service.BaseCalculationService;
+import my.backup.backupTool.Service.ICopyService;
+
 import javax.crypto.*;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -9,29 +18,55 @@ import javax.crypto.spec.IvParameterSpec;
 import java.io.OutputStream;
 import java.util.Base64;
 
-public class AesService extends CipherOutputStream {
+public class AesService extends BaseCalculationService implements ICopyService {
 
-    public AesService(OutputStream out, SecretKey secretKey, IvParameterSpec iv) {
-        super(out, initCipher(secretKey, iv));
+    private final BaseModel model;
+    private final Cipher cipher;
+
+    public AesService(BaseModel model) {
+        this.model = model;
+        if(model.getInitVector() == null || model.getSecretKey() == null) {
+            model.setInitVector(AesService.generateIV());
+            model.setInitVectorBytes(model.getInitVectorBytes());
+            model.setSecretKey(AesService.generateAESKey());
+        }
+
+        this.cipher = initCipher(model.getSecretKey(), model.getInitVector());
     }
 
     private static Cipher initCipher(SecretKey secretKey, IvParameterSpec iv) {
-        Cipher cipher = null;
         try {
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println(e);
-        } catch (NoSuchPaddingException e) {
-
-        }
-        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidAlgorithmParameterException e) {
+            return cipher;
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
+            throw new RuntimeException("Fehler bei der Initialisierung des Ciphers", e);
+        }
+    }
+
+    public void copyFileWithFileChannel(Path inputPath, Path outputPath, long totalSize) {
+        try (FileChannel inputChannel = FileChannel.open(inputPath, StandardOpenOption.READ);
+             FileChannel outputChannel = FileChannel.open(outputPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
+
+            // buffering blocks and encrypting these blocks
+            long fileProcessedSize = 0;
+            ByteBuffer buffer = ByteBuffer.allocate(64*1024);
+            while (inputChannel.read(buffer) != -1) {
+                buffer.flip();
+                byte[] encryptedData = cipher.update(buffer.array(), 0, buffer.remaining());
+                outputChannel.write(ByteBuffer.wrap(encryptedData));
+                buffer.clear();
+
+                double progress = (double) fileProcessedSize / totalSize;
+                super.updateProgress(progress, this.model);
+                super.calculateWorkingSpeed(fileProcessedSize,this.model);
+            }
+
+            byte[] finalBlock = cipher.doFinal();
+            outputChannel.write(ByteBuffer.wrap(finalBlock));
+        } catch (IOException | IllegalBlockSizeException | BadPaddingException e) {
             throw new RuntimeException(e);
         }
-        return cipher;
     }
 
     public static SecretKey generateAESKey() {
