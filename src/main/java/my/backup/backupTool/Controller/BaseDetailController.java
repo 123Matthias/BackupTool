@@ -162,6 +162,14 @@ public abstract class BaseDetailController {
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                             this.enableBackupMode();
                         });
+                    else if (node.getId().equals("deleteButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.deleteBackup();
+                        });
+                    else if (node.getId().equals("deleteSettingsButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.deleteSettingsJSON();
+                        });
                 });
     }
 
@@ -252,6 +260,18 @@ public abstract class BaseDetailController {
     private void pause(){
         model.setBackupJob(false);
         App.DataStore.saveModelAsJSON(model);
+    }
+
+    @FXML
+    private void deleteSettingsJSON(){
+        String uid = this.model.getUid();
+        App.DataStore.deleteModelByIdKeepBackup(uid);
+    }
+
+    @FXML
+    private void deleteBackup(){
+        String uid = this.model.getUid();
+        App.DataStore.deleteModelAndBackupById(uid);
     }
 
     @FXML

@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class Router {
 
+    private static volatile Router Instance;
     private Stage mainStage;
     private Scene sceneMain;
     private SceneBuilder sceneBuilderMergeOverview;
@@ -19,7 +20,7 @@ public class Router {
     private Theme theme;
     private Stage toastStage;
 
-    public Router() {
+    private Router() {
         this.theme = Theme.DARK;
         setToastStage();
 
@@ -39,6 +40,15 @@ public class Router {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Router Singleton(){
+        synchronized (Router.class){
+            if(Instance == null){
+                Instance = new Router();
+            }
+        }
+        return Instance;
     }
 
     public void setMainStage(Stage stage){

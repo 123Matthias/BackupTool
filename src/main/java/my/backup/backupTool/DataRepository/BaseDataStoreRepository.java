@@ -12,24 +12,26 @@ import java.util.UUID;
 
 public class BaseDataStoreRepository implements IDataStore {
 
+    private static volatile BaseDataStoreRepository Instance = null;
     private String storagePath;
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
     private List<BaseModel> modelList;
 
-    public BaseDataStoreRepository() {
+    private BaseDataStoreRepository() {
         modelList = getJSONasList();
     }
 
-    public BaseDataStoreRepository(String storagePath) {
-        this();
-        this.storagePath = storagePath;
+    public static BaseDataStoreRepository Singleton() {
+        if(Instance == null) {
+            synchronized (BaseDataStoreRepository.class) {
+                Instance = new BaseDataStoreRepository();
+            }
+        }
+        return Instance;
     }
 
 
 
-    public List<BaseModel> getModelList() {
-        return this.modelList;
-    }
 
     public void setStoragePath(String storagePath) {
         this.storagePath = storagePath;
@@ -40,6 +42,16 @@ public class BaseDataStoreRepository implements IDataStore {
         return storagePath == null ? DEFAULT_STORAGE_PATH : storagePath;
     }
 
+
+    /**
+     * Saves the given model as a JSON entry in a predefined storage path.
+     * If no path is defined, the default path will be used.
+     * Creates a new UUID for the model.
+     * If the model already has a UUID, it will be retained and not changed.
+     *
+     * @param model The BaseModel instance to be saved as an entry in the JSON file.
+     * @return true if the model was saved successfully, false in case of an IO-Exception.
+     */
     public boolean saveModelAsJSON(BaseModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -82,7 +94,59 @@ public class BaseDataStoreRepository implements IDataStore {
         }
     }
 
-    public boolean createDefaultStorageFile() {
+    /**
+     * Gets one model from the JSON File with the UUID.
+     *
+     * @param id of Type String. The auto Created UUID.
+     * @return the model with the given id in the Param.
+     */
+    public BaseModel getModelById(String id) {
+        for (BaseModel entry : this.modelList) {
+            if (entry.getUid() != null && entry.getUid().equals(id)) {
+                System.out.println("GetModel.ByID:" + entry.getUid());
+                return entry;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Retrieves the current list of models.
+     * @return A list of models of type BaseModel.
+     */
+    public List<BaseModel> getModelList() {
+        return this.modelList;
+    }
+
+    public boolean deleteModelByIdKeepBackup(String uid) {
+        for(BaseModel entry : this.modelList) {
+            if (entry.getUid() != null && entry.getUid().equals(uid)) {
+                this.modelList.remove(entry);
+                this.saveModelAsJSON(entry);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteModelAndBackupById(String uid) {
+        for(BaseModel entry : this.modelList) {
+            if (entry.getUid() != null && entry.getUid().equals(uid)) {
+                this.deleteFolderAndContents(new File(entry.getTarget()));
+                this.modelList.remove(entry);
+                this.saveModelAsJSON(entry);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Creates the Default Storage Path of the Model Data.
+     *
+     * @return true if a new Default Storage File was created. else false;
+     */
+    private boolean createDefaultStorageFile() {
         try {
             File file = new File(getStoragePath());
             File parentDir = file.getParentFile();
@@ -102,6 +166,11 @@ public class BaseDataStoreRepository implements IDataStore {
         }
     }
 
+    /**
+     * Reads and returns a list of models from the JSON file.
+     *
+     * @return A List of BaseModel instances.
+     */
     private List<BaseModel> getJSONasList() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -134,14 +203,25 @@ public class BaseDataStoreRepository implements IDataStore {
         return dataList;
     }
 
-    public BaseModel getModelById(String id) {
-        for (BaseModel entry : this.modelList) {
-            if (entry.getUid() != null && entry.getUid().equals(id)) {
-                System.out.println("GetModel.ByID:" + entry.getUid());
-                return entry;
+
+    /**
+     * Deleting all Files and then all Subfolders and then the selected Folder (param)
+     * @param directory The Directory to delete recurse
+     */
+    private void deleteFolderAndContents(File directory) {
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles(); //Array of all Files in a Directory
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteFolderAndContents(file); //Recursion for Folders
+                    }
+                    file.delete();
+                }
             }
+          //  directory.delete();
         }
-        return null;
+
     }
 }
 

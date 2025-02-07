@@ -1,17 +1,7 @@
 package my.backup.backupTool.Model;
 
 public enum EncryptionTYPE {
-    AES_CBC("AES-CBC"),
-    NONE("");
+    AES_CBC,
+    NONE;
 
-    private final String name;
-
-    EncryptionTYPE(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }

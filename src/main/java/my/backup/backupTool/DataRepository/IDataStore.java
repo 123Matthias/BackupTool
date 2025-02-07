@@ -8,4 +8,6 @@ public interface IDataStore extends ILoadData {
 
     boolean saveModelAsJSON(BaseModel modelList);
     List<BaseModel> getModelList();
+    boolean deleteModelAndBackupById(String uid);
+    boolean deleteModelByIdKeepBackup(String uid);
 }

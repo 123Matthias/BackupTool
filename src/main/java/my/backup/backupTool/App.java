@@ -14,9 +14,10 @@ public class App {
     public static IDataStore DataStore;
 
     public App() {
-        DataStore = new BaseDataStoreRepository();
-        JobScheduler = new BackupJobScheduler();
-        ValidationScheduler = new BackupValidationScheduler();
-        Router = new Router();
+        DataStore = BaseDataStoreRepository.Singleton();
+        JobScheduler = BackupJobScheduler.Singleton();
+        ValidationScheduler = BackupValidationScheduler.Singleton();
+        Router = my.backup.backupTool.Router.Singleton();
     }
+
 }

@@ -11,10 +11,20 @@ import java.util.List;
 public class BackupValidationScheduler {
 
     List<BaseModel> models;
+    private static volatile BackupValidationScheduler Instance = null;
 
-    public BackupValidationScheduler() {
 
+    private BackupValidationScheduler() {
         this.models = App.DataStore.getModelList();
+    }
+
+    public static BackupValidationScheduler Singleton() {
+        synchronized (BackupValidationScheduler.class) {
+            if (Instance == null) {
+                Instance = new BackupValidationScheduler();
+            }
+        }
+        return Instance;
     }
 
 

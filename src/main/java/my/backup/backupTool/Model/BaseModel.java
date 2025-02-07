@@ -1,6 +1,8 @@
 package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.beans.property.*;
 import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.MessageList;
@@ -27,6 +29,7 @@ public class BaseModel {
 
     @JsonProperty("title")
     private String title;
+
     @JsonProperty("source-path") // JSON Name wird geändert
     private String source;
 
@@ -87,10 +90,14 @@ public class BaseModel {
     @JsonIgnore
     private IMessageList messages;
 
-    @JsonIgnore
+    @JsonProperty("secret-key")
+    @JsonSerialize(using = MyJackson.SecretKeySerializer.class)
+    @JsonDeserialize(using = MyJackson.SecretKeyDeserializer.class)
     private SecretKey secretKey;
 
-    @JsonIgnore
+    @JsonProperty("init-vector")
+    @JsonSerialize(using = MyJackson.IvParameterSpecSerializer.class)
+    @JsonDeserialize(using = MyJackson.IvParameterSpecDeserializer.class)
     private IvParameterSpec initVector;
 
     @JsonProperty("checkBox-encryptionJob")
@@ -217,7 +224,6 @@ public class BaseModel {
         return validatePath() & validateIntervalDays() & validateIntervalHours();
     }
 
-
     private boolean validatePath() {
 
         boolean valid = true;
@@ -253,7 +259,6 @@ public class BaseModel {
 
         return valid;
     }
-
 
     private boolean validateIntervalHours(){
         if(intervalHours < 0){
@@ -404,18 +409,6 @@ public class BaseModel {
     @JsonProperty("encryption-type")
     public void setEncryptionTYPE(EncryptionTYPE encryptionType) {
         this.encryptionType = encryptionType;
-    }
-
-    @JsonProperty("init-vector")
-    public byte[] getInitVectorBytes() {
-        return initVector != null ? initVector.getIV() : null;
-    }
-
-    @JsonProperty("init-vector")
-    public void setInitVectorBytes(byte[] ivBytes) {
-        if (ivBytes != null) {
-            this.initVector = new IvParameterSpec(ivBytes);
-        }
     }
 
     public IvParameterSpec getInitVector() {

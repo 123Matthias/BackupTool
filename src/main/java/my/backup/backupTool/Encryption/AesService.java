@@ -27,7 +27,6 @@ public class AesService extends BaseCalculationService implements ICopyService {
         this.model = model;
         if(model.getInitVector() == null || model.getSecretKey() == null) {
             model.setInitVector(AesService.generateIV());
-            model.setInitVectorBytes(model.getInitVectorBytes());
             model.setSecretKey(AesService.generateAESKey());
         }
 
@@ -55,6 +54,7 @@ public class AesService extends BaseCalculationService implements ICopyService {
                 buffer.flip();
                 byte[] encryptedData = cipher.update(buffer.array(), 0, buffer.remaining());
                 outputChannel.write(ByteBuffer.wrap(encryptedData));
+                fileProcessedSize += buffer.remaining();
                 buffer.clear();
 
                 double progress = (double) fileProcessedSize / totalSize;
