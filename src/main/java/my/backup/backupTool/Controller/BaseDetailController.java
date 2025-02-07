@@ -2,6 +2,10 @@ package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
@@ -12,7 +16,6 @@ import my.backup.backupTool.Model.*;
 import my.backup.backupTool.Service.IUpdateScene;
 import my.backup.backupTool.Service.MessageService;
 import my.backup.backupTool.Service.SceneUpdateFXMLService;
-import my.backup.backupTool.Service.TimeService;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -117,6 +120,44 @@ public abstract class BaseDetailController {
         hoursInterval.setTextFormatter(new TextFormatter<>(filter));
     }
 
+    private void initToolbar(){
+        toolbar.getItems().stream()
+                .filter(node -> node.getId() != null).forEach(node -> {
+                    if (node.getId().equals("playButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.playButtonClicked();
+                        });
+                    else if (node.getId().equals("saveButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.saveButtonClicked();
+                        });
+                    else if (node.getId().equals("pauseButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.stopAndInterruptButtonClicked();
+                            this.closeDetailAndReloadOverview();
+                        });
+                    else if (node.getId().equals("restoreButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.enableRestoreMode();
+                        });
+                    else if (node.getId().equals("backupButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.enableBackupMode();
+                        });
+                    else if (node.getId().equals("deleteButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.deleteBackup();
+                            this.closeDetailAndReloadOverview();
+
+                        });
+                    else if (node.getId().equals("deleteSettingsButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.deleteSettingsJSON();
+                            this.closeDetailAndReloadOverview();
+                        });
+                });
+    }
+
     public StackPane getStackPane() {
         return stackPane;
     }
@@ -143,35 +184,6 @@ public abstract class BaseDetailController {
         hoursInterval.setDisable(!enable);
     }
 
-    private void initToolbar(){
-        toolbar.getItems().stream()
-                .filter(node -> node.getId() != null).forEach(node -> {
-                    if (node.getId().equals("playButton"))
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.playButtonClicked();
-                        });
-                    else if (node.getId().equals("saveButton"))
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.saveButtonClicked();
-                        });
-                    else if (node.getId().equals("restoreButton"))
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.enableRestoreMode();
-                        });
-                    else if (node.getId().equals("backupButton"))
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.enableBackupMode();
-                        });
-                    else if (node.getId().equals("deleteButton"))
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.deleteBackup();
-                        });
-                    else if (node.getId().equals("deleteSettingsButton"))
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.deleteSettingsJSON();
-                        });
-                });
-    }
 
     private void enableRestoreMode() {
         header.setText("Restore Target to Source");
@@ -248,6 +260,7 @@ public abstract class BaseDetailController {
         if(model.validate()){
             App.DataStore.saveModelAsJSON(model);
             App.JobScheduler.fireBackupEvent(model);
+            MessageService.createToast("Scheduling Backup");
             closeDetailAndReloadOverview();
             System.out.println("----------playButtonClickedDoneSuccessfully-----------");
         }
@@ -257,29 +270,44 @@ public abstract class BaseDetailController {
     }
 
     @FXML
-    private void pause(){
-        model.setBackupJob(false);
-        App.DataStore.saveModelAsJSON(model);
+    private void stopAndInterruptButtonClicked(){
+        App.JobScheduler.stopAndInterruptBackupEvent(model);
+        MessageService.createToast("stopped");
+        closeDetailAndReloadOverview();
     }
 
     @FXML
     private void deleteSettingsJSON(){
         String uid = this.model.getUid();
-        App.DataStore.deleteModelByIdKeepBackup(uid);
+        System.out.println("Settings to Delete: " + this.model.getUid());
+        if(App.DataStore.deleteModelById_KeepBackup(uid)){
+            MessageService.createToast("Entry Deleted");
+        }
+        else {
+            MessageService.createToast("Something went wrong");
+        }
     }
 
     @FXML
     private void deleteBackup(){
         String uid = this.model.getUid();
-        App.DataStore.deleteModelAndBackupById(uid);
+        if(App.DataStore.deleteModelAndBackupById(uid)){
+            MessageService.createToast("Backup Deleted");
+        }
+        else {
+            MessageService.createToast("Something went wrong");
+        }
     }
 
     @FXML
     private void saveButtonClicked(){
         this.setModelValues(false);
         if(model.validate()){
-            App.DataStore.saveModelAsJSON(model);
+            if(App.DataStore.saveModelAsJSON(model)){
+                MessageService.createToast("Saved Successfully");
+            }
             closeDetailAndReloadOverview();
+
         }
         else {
             MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
@@ -302,7 +330,7 @@ public abstract class BaseDetailController {
             catch (NumberFormatException e){
                 System.out.println("Not type of integer: " + e);
             }
-            model.setNextBackupLocalDateTime(TimeService.calculateNextBackupTime(startDate, days, hours));
+            model.setNextBackupLocalDateTime(App.JobScheduler.calculateNextBackupTime(startDate, days, hours));
         }
         else{
             model.setNextBackupLocalDateTime(null);
@@ -350,7 +378,6 @@ public abstract class BaseDetailController {
 
     private void closeDetailAndReloadOverview(){
         sceneUpdate.reloadView("baseOverview.fxml");
-        MessageService.createToast("Saved Successfully");
         Stage stage = (Stage) stackPane.getScene().getWindow();
         stage.close();
     }

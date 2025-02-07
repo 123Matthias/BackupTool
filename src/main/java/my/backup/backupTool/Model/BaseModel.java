@@ -306,7 +306,7 @@ public class BaseModel {
     public void setBackupJob(boolean backupJob) {
         this.backupJob = backupJob;
     }
-
+    
     public boolean getCheckBoxValidationJob() {
         return checkBoxValidationJob;
     }

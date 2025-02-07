@@ -94,6 +94,21 @@ public class BaseDataStoreRepository implements IDataStore {
         }
     }
 
+
+    private boolean saveListAsJSON() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        File file = new File(getStoragePath());
+
+        try {
+            objectMapper.writeValue(file, this.modelList);
+            this.modelList = getJSONasList();
+            return true;
+        } catch (IOException e) {
+            System.err.println("Fehler beim Speichern der geänderten Modell-Liste: " + e.getMessage());
+        }
+        return false;
+    }
     /**
      * Gets one model from the JSON File with the UUID.
      *
@@ -118,28 +133,29 @@ public class BaseDataStoreRepository implements IDataStore {
         return this.modelList;
     }
 
-    public boolean deleteModelByIdKeepBackup(String uid) {
-        for(BaseModel entry : this.modelList) {
+    public boolean deleteModelById_KeepBackup(String uid) {
+        for (int i = 0; i < this.modelList.size(); i++) {
+            BaseModel entry = this.modelList.get(i);
             if (entry.getUid() != null && entry.getUid().equals(uid)) {
-                this.modelList.remove(entry);
-                this.saveModelAsJSON(entry);
-                return true;
+                this.modelList.remove(i);
+                return saveListAsJSON();
             }
         }
         return false;
     }
 
     public boolean deleteModelAndBackupById(String uid) {
-        for(BaseModel entry : this.modelList) {
+        for (int i = 0; i < this.modelList.size(); i++) {
+            BaseModel entry = this.modelList.get(i);
             if (entry.getUid() != null && entry.getUid().equals(uid)) {
                 this.deleteFolderAndContents(new File(entry.getTarget()));
-                this.modelList.remove(entry);
-                this.saveModelAsJSON(entry);
-                return true;
+                this.modelList.remove(i);
+                return saveListAsJSON();
             }
         }
         return false;
     }
+
 
     /**
      * Creates the Default Storage Path of the Model Data.

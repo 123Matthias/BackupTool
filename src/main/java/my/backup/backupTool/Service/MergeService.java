@@ -17,7 +17,7 @@ public class MergeService implements IMergeService,Runnable {
     private ICopyService copyService;
     private IMessageList messageList;
     private BaseModel model;
-
+    Thread thread;
     public MergeService(BaseModel model) {
         this.copyService = CopyServiceFactory.createCopyService(model);
         this.model = model;
@@ -26,8 +26,8 @@ public class MergeService implements IMergeService,Runnable {
 
     @Override
     public void startMergeThread() {
-        Thread thread = new Thread(this);
-        thread.start();
+        this.thread = new Thread(this);
+        this.thread.start();
     }
 
 
@@ -52,8 +52,8 @@ public class MergeService implements IMergeService,Runnable {
         }
 
         this.copyService.finishCalculations(this.model);
-        LocalDateTime lastBackupTime = TimeService.calculateLastBackupTime(LocalDateTime.now());
-        LocalDateTime nextBackupTime = TimeService.calculateNextBackupTime(this.model.getLastBackupLocalDateTime(),this.model.getIntervalDays(), this.model.getIntervalHours());
+        LocalDateTime lastBackupTime = App.JobScheduler.calculateLastBackupTime(LocalDateTime.now());
+        LocalDateTime nextBackupTime = App.JobScheduler.calculateNextBackupTime(this.model.getLastBackupLocalDateTime(),this.model.getIntervalDays(), this.model.getIntervalHours());
         this.model.setNextBackupLocalDateTime(nextBackupTime);
         this.model.setLastBackupLocalDateTime(lastBackupTime);
 
@@ -82,6 +82,10 @@ public class MergeService implements IMergeService,Runnable {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                //StopAndInterruptButtonClick
+                if (Thread.interrupted()) {
+                    return FileVisitResult.TERMINATE;
+                }
 
                 Path targetFilePath = Paths.get(targetString, file.toString().substring(subDirectoryStartpoint));
 
@@ -124,4 +128,11 @@ public class MergeService implements IMergeService,Runnable {
 
     }
 
+    public Thread getThread() {
+        return thread;
+    }
+
+    public void setThread(Thread thread) {
+        this.thread = thread;
+    }
 }

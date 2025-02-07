@@ -67,6 +67,11 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
 
                 super.updateProgress(progress, this.model);
                 super.calculateWorkingSpeed(fileProcessedSize,this.model);
+
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("Thread interrupted: " + Thread.currentThread().getName());
+                    return;
+                }
             }
 
         } catch (IOException e) {
