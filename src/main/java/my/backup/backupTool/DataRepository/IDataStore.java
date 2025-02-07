@@ -10,4 +10,5 @@ public interface IDataStore extends ILoadData {
     List<BaseModel> getModelList();
     boolean deleteModelAndBackupById(String uid);
     boolean deleteModelById_KeepBackup(String uid);
+    BaseModel getLastSelectedModel();
 }

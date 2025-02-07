@@ -57,8 +57,8 @@ public class MergeService implements IMergeService,Runnable {
         this.model.setNextBackupLocalDateTime(nextBackupTime);
         this.model.setLastBackupLocalDateTime(lastBackupTime);
 
-        if(this.model.hasValidationJob()){
-            App.ValidationScheduler.fireValidationEvent(this.model);
+        if(model.isRestoreMode()){
+            model.setRestoreMode(false);
         }
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
     }

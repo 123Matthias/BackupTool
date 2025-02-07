@@ -5,6 +5,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.SceneBuilder;
 
 import java.io.IOException;
@@ -26,6 +27,8 @@ public class MergeOverviewController extends BaseOverviewController {
     @Override
     @FXML
     public void openDetailWindow(String uid) {
+        //First get the Model!! then do the rest. NullPointer
+        BaseModel model = App.DataStore.getModelById(uid);
         System.out.println("UID Nummer: " + uid);
         Stage stage = new Stage();
         SceneBuilder newScene = App.Router.createMergeDetail(App.Router.getTheme().toString());
@@ -37,7 +40,7 @@ public class MergeOverviewController extends BaseOverviewController {
         }
 
         MergeDetailController controller = newScene.getController();
-        controller.openUpdateSceneByUID(uid);
+        controller.openUpdateScene(model);
         setStageDimensions(stage, controller);
         stage.show();
     }

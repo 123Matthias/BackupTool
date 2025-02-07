@@ -85,10 +85,13 @@ public abstract class BaseDetailController {
     private BaseModel model;
     private IUpdateScene sceneUpdate;
 
+
     @FXML
     void initialize(){
+
+        model = new MergeModel();
         initToolbar();
-        enableBackupMode();
+
         // Button-Event-Handler für den Source-Button
         sourceButton.setOnAction(event -> {
             isSourceButtonClicked = true;
@@ -99,8 +102,7 @@ public abstract class BaseDetailController {
             isTargetButtonClicked = true;
             openDirectoryChooser();
         });
-        // MVC Model Initialisierung für MergeController;
-        model = new MergeModel();
+
         sceneUpdate = new SceneUpdateFXMLService();
 
         encryptionJobDropdown.getSelectionModel().select(EncryptionTYPE.AES_CBC.toString());
@@ -138,11 +140,19 @@ public abstract class BaseDetailController {
                         });
                     else if (node.getId().equals("restoreButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.enableRestoreMode();
+                            if(!this.model.isRestoreMode()){
+                                this.toggleSourceTargetPath();
+                                this.enableRestoreMode();
+                            }
+
                         });
                     else if (node.getId().equals("backupButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.enableBackupMode();
+                            if(this.model.isRestoreMode()){
+                                this.toggleSourceTargetPath();
+                                this.enableBackupMode();
+                            }
+
                         });
                     else if (node.getId().equals("deleteButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -154,6 +164,10 @@ public abstract class BaseDetailController {
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                             this.deleteSettingsJSON();
                             this.closeDetailAndReloadOverview();
+                        });
+                    else if (node.getId().equals("playReverseButton"))
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            this.playReverseButtonClicked();
                         });
                 });
     }
@@ -185,7 +199,8 @@ public abstract class BaseDetailController {
     }
 
 
-    private void enableRestoreMode() {
+    @FXML
+    protected void enableRestoreMode() {
         header.setText("Restore Target to Source");
         sourcePath.editableProperty().set(false);
         targetPath.editableProperty().set(false);
@@ -195,9 +210,11 @@ public abstract class BaseDetailController {
         checkBoxIntervalHours.setDisable(true);
         checkBoxStartDate.setDisable(true);
         changeRestoreModeColor(true);
+        model.setRestoreMode(true);
     }
 
-    private void enableBackupMode() {
+    @FXML
+    protected void enableBackupMode() {
         header.setText("Backup");
         sourcePath.editableProperty().set(true);
         targetPath.editableProperty().set(true);
@@ -207,6 +224,17 @@ public abstract class BaseDetailController {
         checkBoxIntervalHours.setDisable(false);
         checkBoxStartDate.setDisable(false);
         changeRestoreModeColor(false);
+        model.setRestoreMode(false);
+
+    }
+
+    private void toggleSourceTargetPath(){
+        String source = model.getSource();
+        String target = model.getTarget();
+        model.setSource(target);
+        model.setTarget(source);
+        sourcePath.setText(model.getSource());
+        targetPath.setText(model.getTarget());
     }
 
     private void changeRestoreModeColor(boolean restoreMode) {
@@ -256,13 +284,36 @@ public abstract class BaseDetailController {
 
     @FXML
     private void playButtonClicked(){
-        this.setModelValues(true);
+        model.setRestoreMode(false);
+        model.setBackupJob(true);
+        this.setModelValues();
         if(model.validate()){
             App.DataStore.saveModelAsJSON(model);
             App.JobScheduler.fireBackupEvent(model);
             MessageService.createToast("Scheduling Backup");
             closeDetailAndReloadOverview();
             System.out.println("----------playButtonClickedDoneSuccessfully-----------");
+        }
+        else {
+            MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
+        }
+    }
+
+    @FXML
+    private void playReverseButtonClicked(){
+        model.setRestoreMode(true);
+        model.setBackupJob(true);
+        this.setModelValues();
+        if(model.validate()){
+            if(App.DataStore.saveModelAsJSON(model)){
+                model.setSource(model.getTarget());
+                model.setTarget(model.getSource());
+                App.JobScheduler.fireBackupEvent(model);
+                MessageService.createToast("Scheduling Backup");
+                closeDetailAndReloadOverview();
+                System.out.println("----------playButtonClickedDoneSuccessfully-----------");
+            }
+
         }
         else {
             MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
@@ -301,7 +352,8 @@ public abstract class BaseDetailController {
 
     @FXML
     private void saveButtonClicked(){
-        this.setModelValues(false);
+        this.setModelValues();
+        model.setBackupJob(false);
         if(model.validate()){
             if(App.DataStore.saveModelAsJSON(model)){
                 MessageService.createToast("Saved Successfully");
@@ -314,7 +366,7 @@ public abstract class BaseDetailController {
         }
     }
 
-    private void setModelValues(boolean hasBackupJob){
+    private void setModelValues(){
         if(checkBoxStartDate.isSelected() || checkBoxIntervalDays.isSelected() || checkBoxIntervalHours.isSelected()){
             LocalDateTime startDate;
             startDate = checkBoxStartDate.isSelected() && startDateDatePicker.getValue() != null ? startDateDatePicker.getValue().atTime(LocalTime.now())  : LocalDateTime.now();
@@ -339,8 +391,6 @@ public abstract class BaseDetailController {
         model.setTitle(title.getText());
 
         model.setBackupType(BackupType.MERGE);
-        model.setBackupJob(hasBackupJob);
-
         model.setSource(sourcePath.getText());
         model.setTarget(targetPath.getText());
 
@@ -374,6 +424,7 @@ public abstract class BaseDetailController {
             model.setEncryptionTYPE(EncryptionTYPE.NONE);
             model.setEncryptionJob(false);
         }
+
     }
 
     private void closeDetailAndReloadOverview(){
@@ -382,9 +433,17 @@ public abstract class BaseDetailController {
         stage.close();
     }
 
-    public void openUpdateSceneByUID(String uid){
+    public void openUpdateScene(BaseModel model){
 
-        model = App.DataStore.getModelById(uid);
+        this.model = model;
+        if(!model.isRestoreMode()){
+            enableBackupMode();
+        }
+        else{
+            enableRestoreMode();
+        }
+
+
         title.setText(model.getTitle() != null ? model.getTitle() : "");
         sourcePath.setText(model.getSource() != null ? model.getSource() : "");
         targetPath.setText(model.getTarget() != null ? model.getTarget() : "");
@@ -409,6 +468,7 @@ public abstract class BaseDetailController {
         this.toggleDate();
         this.toggleDays();
         this.toggleHours();
+
 
     }
 

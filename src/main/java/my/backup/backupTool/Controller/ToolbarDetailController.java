@@ -2,6 +2,8 @@ package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import my.backup.backupTool.App;
+import my.backup.backupTool.Model.BaseModel;
 
 public class ToolbarDetailController {
 
@@ -23,15 +25,24 @@ public class ToolbarDetailController {
     @FXML
     private Button deleteSettingsButton;
 
+    private BaseModel model;
+
     @FXML
-    public void initialize() {
-
-        enableBackupMode();
-
+    void initialize() {
+        this.model = App.DataStore.getLastSelectedModel();
+        if(model == null) {
+            return;
+        }
+        if(model.isRestoreMode()){
+            enableRestoreMode();
+        }
+        else{
+            enableBackupMode();
+        }
     }
 
     @FXML
-    private void enableBackupMode() {
+    protected void enableBackupMode() {
         playButton.setVisible(true);
         playButton.setManaged(true);
         pauseButton.setVisible(true);
@@ -53,7 +64,7 @@ public class ToolbarDetailController {
     }
 
     @FXML
-    private void enableRestoreMode() {
+    protected void enableRestoreMode() {
         playButton.setVisible(false);
         playButton.setManaged(false);
         pauseButton.setVisible(false);

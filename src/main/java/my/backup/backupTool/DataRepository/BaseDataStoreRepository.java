@@ -16,6 +16,7 @@ public class BaseDataStoreRepository implements IDataStore {
     private String storagePath;
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
     private List<BaseModel> modelList;
+    private BaseModel lastSelectedModel;
 
     private BaseDataStoreRepository() {
         modelList = getJSONasList();
@@ -119,6 +120,7 @@ public class BaseDataStoreRepository implements IDataStore {
         for (BaseModel entry : this.modelList) {
             if (entry.getUid() != null && entry.getUid().equals(id)) {
                 System.out.println("GetModel.ByID:" + entry.getUid());
+                lastSelectedModel = entry;
                 return entry;
             }
         }
@@ -238,6 +240,10 @@ public class BaseDataStoreRepository implements IDataStore {
           //  directory.delete();
         }
 
+    }
+
+    public BaseModel getLastSelectedModel() {
+        return lastSelectedModel;
     }
 }
 

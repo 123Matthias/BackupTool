@@ -66,6 +66,9 @@ public class BaseModel {
     @JsonProperty("backup-job")
     private boolean backupJob;
 
+    @JsonProperty("restore-mode")
+    private boolean restoreMode;
+
     @JsonIgnore
     private StringProperty sourceValidationProperty = new SimpleStringProperty("no value");
 
@@ -306,7 +309,7 @@ public class BaseModel {
     public void setBackupJob(boolean backupJob) {
         this.backupJob = backupJob;
     }
-    
+
     public boolean getCheckBoxValidationJob() {
         return checkBoxValidationJob;
     }
@@ -454,7 +457,15 @@ public class BaseModel {
         this.isBackupSuccessfullyProperty.set(value);
     }
 
+    @JsonProperty("restore-mode")
+    public boolean isRestoreMode() {
+        return restoreMode;
+    }
 
+    @JsonProperty("restore-mode")
+    public void setRestoreMode(boolean restoreMode) {
+        this.restoreMode = restoreMode;
+    }
 }
 
 

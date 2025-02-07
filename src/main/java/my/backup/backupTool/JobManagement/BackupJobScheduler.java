@@ -59,7 +59,6 @@ public class BackupJobScheduler {
      * @param model Contains all meta values required for the copy operation.
      */
     public boolean fireBackupEvent(BaseModel model) {
-        model = App.DataStore.getModelById(model.getUid());
         System.out.println("Model JobScheduler: " + model);
         if(model.getBackupType() == BackupType.MERGE && model.hasBackupJob()){
             IMergeService mergeService = new MergeService(model);
@@ -92,7 +91,6 @@ public class BackupJobScheduler {
         }
     }
 
-
     public LocalDateTime calculateNextBackupTime(LocalDateTime startDate, int intervalDays, int intervalHours) {
 
         LocalDateTime nextBackupTime = startDate == null ? LocalDateTime.now() : startDate;
@@ -118,7 +116,6 @@ public class BackupJobScheduler {
             LocalDateTime lastBackupTime = nextBackupTime;
             return lastBackupTime;
         }
-
 
 }
 

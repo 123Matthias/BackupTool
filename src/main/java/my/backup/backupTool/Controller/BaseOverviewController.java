@@ -29,9 +29,6 @@ public abstract class BaseOverviewController {
     private Pane cardId;
     @FXML
     private VBox cardContainer;
-
-
-
     @FXML
     public void initialize() {
 
@@ -233,7 +230,6 @@ public abstract class BaseOverviewController {
         App.Router.getMainStage().setScene(App.Router.getSceneMain());
         App.Router.getMainStage().show();
     }
-
 
     private void enableDragAndDrop(Pane card, FlowPane container) {
         // Drag startet
