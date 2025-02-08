@@ -135,24 +135,25 @@ public abstract class BaseOverviewController {
             // Labels direkt erstellen
             Label sourceHashLabel = new Label();
             Label targetHashLabel = new Label();
-            sourceHashLabel.textProperty().bind(model.getSourceValidationProperty());
-            targetHashLabel.textProperty().bind(model.getTargetValidationProperty());
+            sourceHashLabel.textProperty().bind(model.getTransientProperties().getSourceValidationProperty());
+            targetHashLabel.textProperty().bind(model.getTransientProperties().getTargetValidationProperty());
 
             // HBox mit Labels erstellen (Label direkt übergeben!)
             sourceValidation = createLabeledRow("Source: ", sourceHashLabel);
             targetValidation = createLabeledRow("Target: ", targetHashLabel);
             validationType = createLabeledRow("Validation: ", model.getValidationType().toString());
 
-            boolean initialStatus = model.getIsBackupSuccessfullyProperty().get();
-            String initialStyle = initialStatus == true ? "-fx-text-fill: green" : "-fx-text-fill: red";
+            boolean initialStatus;
+            if(model.getSourceValidationValue().equals(model.getTargetValidationValue())){
+                initialStatus = true;
+            }
+            else {
+                initialStatus = false;
+            }
+            String initialStyle = initialStatus ? "-fx-text-fill: green" : "-fx-text-fill: red";
             sourceHashLabel.setStyle(initialStyle);
             targetHashLabel.setStyle(initialStyle);
-
-            model.getIsBackupSuccessfullyProperty().addListener((observable, oldValue, newValue) -> {
-                String style = newValue ? "-fx-text-fill: green" : "-fx-text-fill: red";
-                sourceHashLabel.setStyle(style);
-                targetHashLabel.setStyle(style);
-            });
+            
 
             // Add Content to Card
             contentBox.getChildren().addAll(sourceValidation,targetValidation, validationType);
@@ -167,13 +168,12 @@ public abstract class BaseOverviewController {
 
         //Progress Bar
         ProgressBar progressBar = new ProgressBar(0);
-        progressBar.progressProperty().bind(model.getProgressStateProperty());
+        progressBar.progressProperty().bind(model.getTransientProperties().getProgressStateProperty());
         progressBar.prefWidthProperty().bind(contentBox.widthProperty());
         Label progressLabel = new Label();
         progressLabel.setPadding(new Insets(10, 0, 0, 0));
         progressLabel.setLabelFor(progressBar);
-        progressLabel.textProperty().bind(Bindings.format("Working speed: %.0f MB/sec", model.getWorkingSpeedProperty()));
-        progressBar.progressProperty().bind(model.getProgressStateProperty());
+        progressLabel.textProperty().bind(Bindings.format("Working speed: %.0f MB/sec", model.getTransientProperties().getWorkingSpeedProperty()));
 
         //Click Listener
         contentBox.setOnMouseClicked(event -> openDetailWindow(uid));

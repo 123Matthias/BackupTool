@@ -25,8 +25,8 @@ public abstract class BaseCalculationService {
 
 
     public void finishCalculations(BaseModel model) {
-        Platform.runLater(()->{ model.setProgressState(0.0);
-                                model.setWorkingSpeed(0);
+        Platform.runLater(()->{ model.getTransientProperties().setProgressState(0.0);
+                                model.getTransientProperties().setWorkingSpeed(0);
                                 });
         this.lastProcessedSize = 0;
 
@@ -35,10 +35,10 @@ public abstract class BaseCalculationService {
     protected void updateProgress(double progress, BaseModel model) {
         if(progress == 0.0 || progress > lastProgressState + 0.05 || progress == 1.0) {
             lastProgressState = progress;
-            Platform.runLater(()-> model.setProgressState(progress));
+            Platform.runLater(()-> model.getTransientProperties().setProgressState(progress));
 
            // System.out.println("Model BaseCalculationService: " + model);
-           // System.out.println("Progress_Property: " + model.getProgressStateProperty());
+            System.out.println("Progress_Property: " + model.getTransientProperties().getProgressStateProperty());
            // System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressState() * 100) + "%");
         }
     }
@@ -55,7 +55,8 @@ public abstract class BaseCalculationService {
             this.lastTime = nextTime;
             double workingSpeed = ((fileProcessedSize - lastProcessedSize) / (1024.0 * 1024.0)) / elapsedTime;
             this.lastProcessedSize = fileProcessedSize;
-            Platform.runLater(()-> model.setWorkingSpeed(workingSpeed));
+            Platform.runLater(()-> model.getTransientProperties().setWorkingSpeed(workingSpeed));
+            System.out.println("Speed: " + model.getTransientProperties().getWorkingSpeed());
 
         }
 

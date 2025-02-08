@@ -75,18 +75,20 @@ public class BaseDataStoreRepository implements IDataStore {
                     }
                     if (modelList.get(i).getUid().equals(model.getUid())) {
                         modelList.set(i, model);
+                        //The global List has to be updated. Saved will be the local var. reloading Json after program start produces reference problems
+                        this.modelList.set(i,model);
                         break;
                     }
                 }
             } else {
                 model.setUid(UUID.randomUUID().toString());
                 modelList.add(model);
+                //The global List has to be updated. Saved will be the local var. reloading Json after Program start produces reference problems
+                this.modelList.add(model);
             }
 
             objectMapper.writeValue(file, modelList);
-
             //   System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
-            this.modelList = getJSONasList();
             return true;
 
         } catch (IOException e) {
@@ -103,7 +105,6 @@ public class BaseDataStoreRepository implements IDataStore {
 
         try {
             objectMapper.writeValue(file, this.modelList);
-            this.modelList = getJSONasList();
             return true;
         } catch (IOException e) {
             System.err.println("Fehler beim Speichern der geänderten Modell-Liste: " + e.getMessage());

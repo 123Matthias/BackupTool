@@ -3,12 +3,10 @@ package my.backup.backupTool.Controller;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import my.backup.backupTool.Main;
-import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Service.IMessageList;
 
 public class MessageController{
@@ -40,16 +38,26 @@ public class MessageController{
        stage.close();
     }
 
-    public void showToast(String toastMessage) {
+    public void showToast(String toastMessage, MessageTYPE Type) {
         HBox toastLayout = new HBox();
 
         ImageView logo = new ImageView(String.valueOf(Main.class.getResource("img/Fee.PNG")));
+
         logo.getStyleClass().add("toastLogo");
         logo.setFitHeight(100);
         logo.preserveRatioProperty().set(true);
         Label toastLabel = new Label(toastMessage);
         toastLabel.getStyleClass().add("toastLabel");
         toastLayout.getChildren().addAll(logo, toastLabel);
+
+        if(Type == MessageTYPE.DANGER)
+            toastContainer.getStyleClass().add("danger");
+        if(Type == MessageTYPE.SAVE)
+            toastContainer.getStyleClass().add("save");
+        if(Type == MessageTYPE.PLAY)
+            toastContainer.getStyleClass().add("play");
+        if(Type == MessageTYPE.STOP)
+            toastContainer.getStyleClass().add("stop");
 
         AnchorPane.setTopAnchor(toastLayout, 0.0);
         AnchorPane.setBottomAnchor(toastLayout, 0.0);

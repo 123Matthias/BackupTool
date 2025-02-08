@@ -11,7 +11,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
-import my.backup.backupTool.MessageTYPE;
 import my.backup.backupTool.Model.*;
 import my.backup.backupTool.Service.IUpdateScene;
 import my.backup.backupTool.Service.MessageService;
@@ -290,12 +289,12 @@ public abstract class BaseDetailController {
         if(model.validate()){
             App.DataStore.saveModelAsJSON(model);
             App.JobScheduler.fireBackupEvent(model);
-            MessageService.createToast("Scheduling Backup");
+            MessageService.createToast("PLAY", MessageTYPE.PLAY);
             closeDetailAndReloadOverview();
             System.out.println("----------playButtonClickedDoneSuccessfully-----------");
         }
         else {
-            MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
+            MessageService.createMessage(model.getTransientProperties().getMessageList(), MessageTYPE.VALIDATION);
         }
     }
 
@@ -309,21 +308,21 @@ public abstract class BaseDetailController {
                 model.setSource(model.getTarget());
                 model.setTarget(model.getSource());
                 App.JobScheduler.fireBackupEvent(model);
-                MessageService.createToast("Scheduling Backup");
+                MessageService.createToast("PLAY", MessageTYPE.PLAY);
                 closeDetailAndReloadOverview();
                 System.out.println("----------playButtonClickedDoneSuccessfully-----------");
             }
 
         }
         else {
-            MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
+            MessageService.createMessage(model.getTransientProperties().getMessageList(), MessageTYPE.VALIDATION);
         }
     }
 
     @FXML
     private void stopAndInterruptButtonClicked(){
         App.JobScheduler.stopAndInterruptBackupEvent(model);
-        MessageService.createToast("stopped");
+        MessageService.createToast("stopped", MessageTYPE.STOP);
         closeDetailAndReloadOverview();
     }
 
@@ -332,10 +331,11 @@ public abstract class BaseDetailController {
         String uid = this.model.getUid();
         System.out.println("Settings to Delete: " + this.model.getUid());
         if(App.DataStore.deleteModelById_KeepBackup(uid)){
-            MessageService.createToast("Entry Deleted");
+            MessageService.createToast("Entry Deleted", MessageTYPE.DANGER);
         }
         else {
-            MessageService.createToast("Something went wrong");
+            //TODO Result exception etc
+            System.err.println("Something went wrong");
         }
     }
 
@@ -343,10 +343,11 @@ public abstract class BaseDetailController {
     private void deleteBackup(){
         String uid = this.model.getUid();
         if(App.DataStore.deleteModelAndBackupById(uid)){
-            MessageService.createToast("Backup Deleted");
+            MessageService.createToast("Backup Deleted", MessageTYPE.DANGER);
         }
         else {
-            MessageService.createToast("Something went wrong");
+            //TODO Result exception etc
+            System.err.println("Something went wrong");
         }
     }
 
@@ -356,13 +357,13 @@ public abstract class BaseDetailController {
         model.setBackupJob(false);
         if(model.validate()){
             if(App.DataStore.saveModelAsJSON(model)){
-                MessageService.createToast("Saved Successfully");
+                MessageService.createToast("Saved", MessageTYPE.SAVE);
             }
             closeDetailAndReloadOverview();
 
         }
         else {
-            MessageService.createMessage(model.getMessageList(), MessageTYPE.VALIDATION);
+            MessageService.createMessage(model.getTransientProperties().getMessageList(), MessageTYPE.VALIDATION);
         }
     }
 

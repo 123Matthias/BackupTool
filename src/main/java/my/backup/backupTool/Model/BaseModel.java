@@ -15,9 +15,6 @@ import java.time.LocalDateTime;
 public class BaseModel {
 
 
-    @JsonIgnore
-    private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0.0);
-
     @JsonProperty("uid")
     private String uid;
 
@@ -35,6 +32,12 @@ public class BaseModel {
 
     @JsonProperty("target-path") // JSON Name wird geändert
     private String target;
+
+    @JsonProperty("source-validation")
+    private String sourceValidationValue;
+
+    @JsonProperty("target-validation")
+    private String targetValidationValue;
 
     @JsonProperty("checkBox-startDate")
     private boolean checkBoxStartDate;
@@ -66,17 +69,11 @@ public class BaseModel {
     @JsonProperty("backup-job")
     private boolean backupJob;
 
+    @JsonProperty("encryption-job")
+    private boolean encryptionJob;
+
     @JsonProperty("restore-mode")
     private boolean restoreMode;
-
-    @JsonIgnore
-    private StringProperty sourceValidationProperty = new SimpleStringProperty("no value");
-
-    @JsonIgnore
-    private StringProperty targetValidationProperty = new SimpleStringProperty("no value");
-
-    @JsonIgnore
-    private DoubleProperty workingSpeedProperty = new SimpleDoubleProperty(0);
 
     @JsonProperty("checkBox-validationJob")
     private boolean checkBoxValidationJob;
@@ -89,9 +86,6 @@ public class BaseModel {
 
     @JsonProperty("encryption-type")
     private EncryptionTYPE encryptionType;
-
-    @JsonIgnore
-    private IMessageList messages;
 
     @JsonProperty("secret-key")
     @JsonSerialize(using = MyJackson.SecretKeySerializer.class)
@@ -107,14 +101,12 @@ public class BaseModel {
     private boolean checkBoxEncryptionJob;
 
     @JsonIgnore
-    private boolean encryptionJob;
+    private TransientProperties transientProperties;
 
-    @JsonIgnore
-    private BooleanProperty isBackupSuccessfullyProperty = new SimpleBooleanProperty(false);
 
     @JsonCreator
     public BaseModel() {
-        messages = new MessageList();
+        this.transientProperties = new TransientProperties();
     }
 
     public String getUid() {
@@ -222,63 +214,6 @@ public class BaseModel {
         this.title = title;
     }
 
-    public boolean validate(){
-        messages = new MessageList();
-        return validatePath() & validateIntervalDays() & validateIntervalHours();
-    }
-
-    private boolean validatePath() {
-
-        boolean valid = true;
-
-        if (source == null || source.length() <  3){
-            messages.addMessage("Quellpfadeingabe ist zu kurz");
-            valid = false;
-        }
-
-        if (target == null || target.length() <  3){
-            messages.addMessage("Zielpfadeingabe ist zu kurz");
-            valid = false;
-        }
-
-        if(!valid){
-            return valid;
-        }
-
-        File sourceDir = new File(source);
-        File targetDir = new File(target);
-
-        if (!sourceDir.exists()) {
-            System.out.println("Source: " + sourceDir);
-            messages.addMessage("SOURCE DIRECTORY not EXISTS.");
-            valid = false;
-        }
-
-        if (!targetDir.exists()) {
-            System.out.println("Target" + targetDir);
-            messages.addMessage("TARGET DIRECTORY not EXISTS.");
-            valid = false;
-        }
-
-        return valid;
-    }
-
-    private boolean validateIntervalHours(){
-        if(intervalHours < 0){
-            messages.addMessage("interval HOURS has to be  non NEGATIVE.");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean validateIntervalDays(){
-        if(intervalHours < 0) {
-            messages.addMessage("interval DAYS has to be non NEGATIVE.");
-            return false;
-        }
-        return true;
-    }
-
     public int getFlowPanePosition() {
         return flowPanePosition;
     }
@@ -294,12 +229,6 @@ public class BaseModel {
     public void setCardWidth(int cardWidth) {
         this.cardWidth = cardWidth;
     }
-
-    @JsonIgnore
-    public IMessageList getMessageList() {
-        return messages;
-    }
-
 
     @JsonProperty("backup-job")
     public boolean hasBackupJob() {
@@ -326,62 +255,23 @@ public class BaseModel {
         this.checkBoxEncryptionJob = checkBoxEncryptionJob;
     }
 
-    @JsonIgnore
-    public double getProgressState() {
-        return progressStateProp.get();
-    }
 
-    @JsonIgnore
-    public void setProgressState(double progress) {
-        this.progressStateProp.set(progress);
-    }
-
-    @JsonIgnore
-    public DoubleProperty getProgressStateProperty() {
-        return this.progressStateProp;
-    }
-
-    // Getter für die Serialisierung
-    @JsonProperty("source-validation-property")
     public String getSourceValidationValue() {
-        return sourceValidationProperty.get();
+        return sourceValidationValue;
     }
 
-    @JsonProperty("target-validation-property")
-    public String getTargetValidationValue() {
-        return targetValidationProperty.get();
-    }
-
-    public double getWorkingSpeed() {
-        return workingSpeedProperty.get();
-    }
-    public void setWorkingSpeed(double workingSpeed) {
-        this.workingSpeedProperty.set(workingSpeed);
-    }
-
-    public DoubleProperty getWorkingSpeedProperty() {
-        return this.workingSpeedProperty;
-    }
-
-    // Setter für die Deserialisierung
-    @JsonProperty("source-validation-property")
     public void setSourceValidationValue(String value) {
-        this.sourceValidationProperty.set(value);
+        this.getTransientProperties().setSourceValidationProperty(value);
+        this.sourceValidationValue = value;
     }
 
-    @JsonProperty("target-validation-property")
+    public String getTargetValidationValue() {
+        return targetValidationValue;
+    }
+
     public void setTargetValidationValue(String value) {
-        this.targetValidationProperty.set(value);
-    }
-
-    @JsonIgnore
-    public StringProperty getTargetValidationProperty(){
-        return this.targetValidationProperty;
-    }
-
-    @JsonIgnore
-    public StringProperty getSourceValidationProperty(){
-        return this.sourceValidationProperty;
+        this.getTransientProperties().setTargetValidationProperty(value);
+        this.targetValidationValue = value;
     }
 
     @JsonProperty("validation-job")
@@ -432,29 +322,14 @@ public class BaseModel {
         this.secretKey = secretKey;
     }
 
-    @JsonProperty("encryption-Order")
+    @JsonProperty("encryption-job")
     public boolean hasEncryptionJob() {
         return encryptionJob;
     }
 
-    @JsonProperty("encryption-Order")
+    @JsonProperty("encryption-job")
     public void setEncryptionJob(boolean encryptionJob) {
         this.encryptionJob = encryptionJob;
-    }
-
-    @JsonIgnore
-    public BooleanProperty getIsBackupSuccessfullyProperty() {
-        return isBackupSuccessfullyProperty;
-    }
-
-    @JsonProperty("backup-successfully")
-    public boolean isBackupSuccessfully(){
-        return this.isBackupSuccessfullyProperty.get();
-    }
-
-    @JsonProperty("backup-successfully")
-    public void setBackupSuccessfully(boolean value){
-        this.isBackupSuccessfullyProperty.set(value);
     }
 
     @JsonProperty("restore-mode")
@@ -466,6 +341,68 @@ public class BaseModel {
     public void setRestoreMode(boolean restoreMode) {
         this.restoreMode = restoreMode;
     }
+
+    public TransientProperties getTransientProperties() {
+        return transientProperties;
+    }
+
+    public boolean validate(){
+        this.transientProperties.setMessageList(new MessageList());
+        return validatePath() & validateIntervalDays() & validateIntervalHours();
+    }
+
+    private boolean validatePath() {
+
+        boolean valid = true;
+
+        if (source == null || source.length() <  3){
+            this.transientProperties.getMessageList().addMessage("Quellpfadeingabe ist zu kurz");
+            valid = false;
+        }
+
+        if (target == null || target.length() <  3){
+            this.transientProperties.getMessageList().addMessage("Zielpfadeingabe ist zu kurz");
+            valid = false;
+        }
+
+        if(!valid){
+            return valid;
+        }
+
+        File sourceDir = new File(source);
+        File targetDir = new File(target);
+
+        if (!sourceDir.exists()) {
+            System.out.println("Source: " + sourceDir);
+            this.transientProperties.getMessageList().addMessage("SOURCE DIRECTORY not EXISTS.");
+            valid = false;
+        }
+
+        if (!targetDir.exists()) {
+            System.out.println("Target" + targetDir);
+            this.transientProperties.getMessageList().addMessage("TARGET DIRECTORY not EXISTS.");
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    private boolean validateIntervalHours(){
+        if(intervalHours < 0){
+            this.transientProperties.getMessageList().addMessage("interval HOURS has to be  non NEGATIVE.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateIntervalDays(){
+        if(intervalHours < 0) {
+            this.transientProperties.getMessageList().addMessage("interval DAYS has to be non NEGATIVE.");
+            return false;
+        }
+        return true;
+    }
+
 }
 
 

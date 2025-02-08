@@ -320,11 +320,22 @@ TextArea .content{
 
 .danger{
     -fx-background-color: -fx-danger;
-    -fx-border-color: -fx-dangerBorder1;
+    -fx-border-color: -fx-dangerBorder;
 }
 
-.toast{
-    -fx-border-color: -fx-color23;
+.save{
+    -fx-border-color: -fx-saveBorder;
+    -fx-background-color: -fx-save;
+}
+
+.play{
+    -fx-border-color: -fx-playBorder;
+    -fx-background-color: -fx-play;
+}
+
+.stop{
+    -fx-border-color: -fx-stopBorder;
+    -fx-background-color: -fx-stop;
 }
 
 .toastLogo{

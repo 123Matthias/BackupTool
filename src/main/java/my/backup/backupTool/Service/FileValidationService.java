@@ -229,11 +229,9 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
     public boolean validate(){
         if(this.model.getSourceValidationValue().equals(this.model.getTargetValidationValue())){
-            this.model.setBackupSuccessfully(true);
             return true;
         }
         else {
-            this.model.setBackupSuccessfully(false);
             return false;
         }
     }

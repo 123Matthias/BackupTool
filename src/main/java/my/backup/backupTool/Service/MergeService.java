@@ -4,7 +4,7 @@ package my.backup.backupTool.Service;
 import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Factory.CopyServiceFactory;
-import my.backup.backupTool.MessageTYPE;
+import my.backup.backupTool.Controller.MessageTYPE;
 import my.backup.backupTool.Model.BaseModel;
 
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class MergeService implements IMergeService,Runnable {
 
 
         if (!this.model.validate()) {
-            Platform.runLater(() -> MessageService.createMessage(this.model.getMessageList(), MessageTYPE.VALIDATION));
+            Platform.runLater(() -> MessageService.createMessage(this.model.getTransientProperties().getMessageList(), MessageTYPE.VALIDATION));
             return;
         }
 

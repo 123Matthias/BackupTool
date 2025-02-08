@@ -85,7 +85,15 @@
     /*----- END ACTION BUTTONS ------*/
 
 
-    -fx-danger: #ffe0cc; 
+    -fx-danger: #ffe0cc;
+    -fx-dangerBorder: rgb(255, 0, 0);
 
-    -fx-dangerBorder1: rgb(255, 0, 0);
+    -fx-save: rgba(178, 226, 255, 0.8);
+    -fx-saveBorder: rgb(171, 197, 255);
+
+    -fx-play: rgba(184, 255, 196, 0.8);
+    -fx-playBorder: rgb(0, 255, 13);
+
+    -fx-stop: rgba(246, 208, 165, 0.8);
+    -fx-stopBorder: rgb(255, 144, 56);
 }

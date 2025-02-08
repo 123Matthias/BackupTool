@@ -85,7 +85,16 @@
 
 
     -fx-danger: rgba(95, 5, 5, 0.8);
-    -fx-dangerBorder1: rgb(255, 0, 0);
+    -fx-dangerBorder: rgb(255, 0, 0);
+
+    -fx-save: rgba(29, 102, 145, 0.8);
+    -fx-saveBorder: rgb(171, 197, 255);
+
+    -fx-play: rgba(7, 62, 16, 0.8);
+    -fx-playBorder: rgb(0, 255, 13);
+
+    -fx-stop: rgba(140, 80, 1, 0.8);
+    -fx-stopBorder: rgb(255, 144, 56);
 }
 
 
