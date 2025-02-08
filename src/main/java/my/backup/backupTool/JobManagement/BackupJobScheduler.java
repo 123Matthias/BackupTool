@@ -103,20 +103,14 @@ public class BackupJobScheduler {
                 !model.getCheckBoxHoursInterval()){
                     return model.getStartDate();
         }
-        if(     model.getCheckBoxStartDate() &
-                model.getStartDate().isBefore(LocalDateTime.now()) &
-                !model.getCheckBoxDaysInterval() &
-                !model.getCheckBoxHoursInterval()){
-            return null;
-        }
 
         LocalDateTime nextBackupTime = model.getStartDate() == null ? LocalDateTime.now() : model.getStartDate();
 
         if (model.getIntervalDays() <= 0) {
-            return nextBackupTime;
+            model.setIntervalDays(0);
         }
         if (model.getIntervalHours() <= 0) {
-            return nextBackupTime;
+            model.setIntervalHours(0);
         }
 
         do {
