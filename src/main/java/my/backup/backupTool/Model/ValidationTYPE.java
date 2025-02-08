@@ -1,18 +1,8 @@
 package my.backup.backupTool.Model;
 
 public enum ValidationTYPE {
-    NONE(""),
-    CRC32("CRC32"),
-    SHA256("SHA-256");
+    NONE,
+    CRC32,
+    SHA256;
 
-    private final String name;
-
-    ValidationTYPE(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }

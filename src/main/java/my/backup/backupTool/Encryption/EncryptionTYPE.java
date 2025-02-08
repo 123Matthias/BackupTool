@@ -1,4 +1,4 @@
-package my.backup.backupTool.Model;
+package my.backup.backupTool.Encryption;
 
 public enum EncryptionTYPE {
     AES_CBC,

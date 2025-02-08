@@ -38,7 +38,7 @@ public class MergeService implements IMergeService,Runnable {
 
 
         if (!this.model.validate()) {
-            Platform.runLater(() -> MessageService.createMessage(this.model.getTransientProperties().getMessageList(), MessageTYPE.VALIDATION));
+            Platform.runLater(() -> MessageService.createMessage(this.model.TransientProperties.getMessageList(), MessageTYPE.VALIDATION));
             return;
         }
 
@@ -52,13 +52,17 @@ public class MergeService implements IMergeService,Runnable {
         }
 
         this.copyService.finishCalculations(this.model);
-        LocalDateTime lastBackupTime = App.JobScheduler.calculateLastBackupTime(LocalDateTime.now());
-        LocalDateTime nextBackupTime = App.JobScheduler.calculateNextBackupTime(this.model.getLastBackupLocalDateTime(),this.model.getIntervalDays(), this.model.getIntervalHours());
-        this.model.setNextBackupLocalDateTime(nextBackupTime);
+        LocalDateTime lastBackupTime = LocalDateTime.now();
         this.model.setLastBackupLocalDateTime(lastBackupTime);
+        this.model.TransientProperties.setLastBackupTimeProperty(lastBackupTime);
+
+        LocalDateTime nextBackupTime = App.JobScheduler.calculateNextBackupTime(this.model);
+        this.model.setNextBackupLocalDateTime(nextBackupTime);
 
         if(model.isRestoreMode()){
             model.setRestoreMode(false);
+        }
+        if(App.DataStore.saveModelAsJSON(this.model)){
         }
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
     }

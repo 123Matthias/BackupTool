@@ -6,6 +6,9 @@ import my.backup.backupTool.JobManagement.BackupJobScheduler;
 import my.backup.backupTool.Service.IMessageList;
 import my.backup.backupTool.Service.MessageList;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class TransientProperties {
 
     private final DoubleProperty progressStateProp = new SimpleDoubleProperty(0.0);
@@ -17,6 +20,10 @@ public class TransientProperties {
     private StringProperty sourceValidationProperty = new SimpleStringProperty("no value");
 
     private StringProperty targetValidationProperty = new SimpleStringProperty("no value");
+
+    private StringProperty lastBackupTimeProperty = new SimpleStringProperty("no Date");
+
+    private StringProperty nextBackupTimeProperty = new SimpleStringProperty("no Date");
 
     private IMessageList messageList;
 
@@ -30,7 +37,6 @@ public class TransientProperties {
         messageList = new MessageList();
     }
 
-    @JsonIgnore
     public BooleanProperty getIsBackupSuccessfullyProperty() {
         return isBackupSuccessfullyProperty;
     }
@@ -86,4 +92,31 @@ public class TransientProperties {
     public void setSourceValidationProperty(String value){
         this.sourceValidationProperty.set(value);
     }
+
+    public StringProperty getLastBackupTimeProperty() {
+        return lastBackupTimeProperty;
+    }
+
+    public void setLastBackupTimeProperty(LocalDateTime lastBackupTime) {
+        String dateString = "no Date";
+        if (lastBackupTime != null) {
+            DateTimeFormatter DateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            dateString = lastBackupTime.format(DateFormatter);
+        }
+        this.lastBackupTimeProperty.set(dateString);
+    }
+
+    public StringProperty getNextBackupTimeProperty() {
+        return nextBackupTimeProperty;
+    }
+
+    public void setNextBackupTimeProperty(LocalDateTime nextBackupTime) {
+        String dateString = "no Date";
+        if (nextBackupTime != null) {
+            DateTimeFormatter DateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            dateString = nextBackupTime.format(DateFormatter);
+        }
+        this.nextBackupTimeProperty.set(dateString);
+    }
+
 }

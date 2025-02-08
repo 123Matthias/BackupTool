@@ -3,14 +3,14 @@ package my.backup.backupTool.Model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import javafx.beans.property.*;
-import my.backup.backupTool.Service.IMessageList;
+import my.backup.backupTool.Encryption.EncryptionTYPE;
 import my.backup.backupTool.Service.MessageList;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class BaseModel {
 
@@ -101,12 +101,11 @@ public class BaseModel {
     private boolean checkBoxEncryptionJob;
 
     @JsonIgnore
-    private TransientProperties transientProperties;
-
+    public final TransientProperties TransientProperties;
 
     @JsonCreator
     public BaseModel() {
-        this.transientProperties = new TransientProperties();
+        this.TransientProperties = new TransientProperties();
     }
 
     public String getUid() {
@@ -171,6 +170,7 @@ public class BaseModel {
     }
 
     public void setNextBackupLocalDateTime(LocalDateTime nextBackupLocalDateTime) {
+        this.TransientProperties.setNextBackupTimeProperty(nextBackupLocalDateTime);
         this.nextBackupLocalDateTime = nextBackupLocalDateTime;
     }
 
@@ -179,6 +179,7 @@ public class BaseModel {
     }
 
     public void setLastBackupLocalDateTime(LocalDateTime lastBackupLocalDateTime) {
+        this.TransientProperties.setLastBackupTimeProperty(lastBackupLocalDateTime);
         this.lastBackupLocalDateTime = lastBackupLocalDateTime;
     }
 
@@ -261,7 +262,7 @@ public class BaseModel {
     }
 
     public void setSourceValidationValue(String value) {
-        this.getTransientProperties().setSourceValidationProperty(value);
+        this.TransientProperties.setSourceValidationProperty(value);
         this.sourceValidationValue = value;
     }
 
@@ -270,7 +271,7 @@ public class BaseModel {
     }
 
     public void setTargetValidationValue(String value) {
-        this.getTransientProperties().setTargetValidationProperty(value);
+        this.TransientProperties.setTargetValidationProperty(value);
         this.targetValidationValue = value;
     }
 
@@ -300,7 +301,7 @@ public class BaseModel {
     }
 
     @JsonProperty("encryption-type")
-    public void setEncryptionTYPE(EncryptionTYPE encryptionType) {
+    public void setEncryptionType(EncryptionTYPE encryptionType) {
         this.encryptionType = encryptionType;
     }
 
@@ -342,12 +343,8 @@ public class BaseModel {
         this.restoreMode = restoreMode;
     }
 
-    public TransientProperties getTransientProperties() {
-        return transientProperties;
-    }
-
     public boolean validate(){
-        this.transientProperties.setMessageList(new MessageList());
+        this.TransientProperties.setMessageList(new MessageList());
         return validatePath() & validateIntervalDays() & validateIntervalHours();
     }
 
@@ -356,12 +353,12 @@ public class BaseModel {
         boolean valid = true;
 
         if (source == null || source.length() <  3){
-            this.transientProperties.getMessageList().addMessage("Quellpfadeingabe ist zu kurz");
+            this.TransientProperties.getMessageList().addMessage("Quellpfadeingabe ist zu kurz");
             valid = false;
         }
 
         if (target == null || target.length() <  3){
-            this.transientProperties.getMessageList().addMessage("Zielpfadeingabe ist zu kurz");
+            this.TransientProperties.getMessageList().addMessage("Zielpfadeingabe ist zu kurz");
             valid = false;
         }
 
@@ -374,13 +371,13 @@ public class BaseModel {
 
         if (!sourceDir.exists()) {
             System.out.println("Source: " + sourceDir);
-            this.transientProperties.getMessageList().addMessage("SOURCE DIRECTORY not EXISTS.");
+            this.TransientProperties.getMessageList().addMessage("SOURCE DIRECTORY not EXISTS.");
             valid = false;
         }
 
         if (!targetDir.exists()) {
             System.out.println("Target" + targetDir);
-            this.transientProperties.getMessageList().addMessage("TARGET DIRECTORY not EXISTS.");
+            this.TransientProperties.getMessageList().addMessage("TARGET DIRECTORY not EXISTS.");
             valid = false;
         }
 
@@ -389,7 +386,7 @@ public class BaseModel {
 
     private boolean validateIntervalHours(){
         if(intervalHours < 0){
-            this.transientProperties.getMessageList().addMessage("interval HOURS has to be  non NEGATIVE.");
+            this.TransientProperties.getMessageList().addMessage("interval HOURS has to be  non NEGATIVE.");
             return false;
         }
         return true;
@@ -397,7 +394,7 @@ public class BaseModel {
 
     private boolean validateIntervalDays(){
         if(intervalHours < 0) {
-            this.transientProperties.getMessageList().addMessage("interval DAYS has to be non NEGATIVE.");
+            this.TransientProperties.getMessageList().addMessage("interval DAYS has to be non NEGATIVE.");
             return false;
         }
         return true;

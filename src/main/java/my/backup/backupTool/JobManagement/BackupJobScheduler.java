@@ -91,31 +91,43 @@ public class BackupJobScheduler {
         }
     }
 
-    public LocalDateTime calculateNextBackupTime(LocalDateTime startDate, int intervalDays, int intervalHours) {
+    public LocalDateTime calculateNextBackupTime(BaseModel model) {
 
-        LocalDateTime nextBackupTime = startDate == null ? LocalDateTime.now() : startDate;
+        if(!model.getCheckBoxStartDate() & !model.getCheckBoxDaysInterval() & !model.getCheckBoxHoursInterval()){
+            return null;
+        }
 
-        if (intervalDays <= 0) {
+        if(     model.getCheckBoxStartDate() &
+                model.getStartDate().isAfter(LocalDateTime.now()) &
+                !model.getCheckBoxDaysInterval() &
+                !model.getCheckBoxHoursInterval()){
+                    return model.getStartDate();
+        }
+        if(     model.getCheckBoxStartDate() &
+                model.getStartDate().isBefore(LocalDateTime.now()) &
+                !model.getCheckBoxDaysInterval() &
+                !model.getCheckBoxHoursInterval()){
+            return null;
+        }
+
+        LocalDateTime nextBackupTime = model.getStartDate() == null ? LocalDateTime.now() : model.getStartDate();
+
+        if (model.getIntervalDays() <= 0) {
             return nextBackupTime;
         }
-        if (intervalHours <= 0) {
+        if (model.getIntervalHours() <= 0) {
             return nextBackupTime;
         }
 
         do {
-            nextBackupTime = nextBackupTime.plusDays(intervalDays);
-            nextBackupTime = nextBackupTime.plusHours(intervalHours);
+            nextBackupTime = nextBackupTime.plusDays(model.getIntervalDays());
+            nextBackupTime = nextBackupTime.plusHours(model.getIntervalHours());
 
         } while (nextBackupTime.isBefore(LocalDateTime.now()));
 
         return nextBackupTime;
     }
 
-    public LocalDateTime calculateLastBackupTime(LocalDateTime nextBackupTime) {
-
-            LocalDateTime lastBackupTime = nextBackupTime;
-            return lastBackupTime;
-        }
 
 }
 

@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Encryption.EncryptionTYPE;
 import my.backup.backupTool.Model.*;
 import my.backup.backupTool.Service.IUpdateScene;
 import my.backup.backupTool.Service.MessageService;
@@ -45,7 +46,7 @@ public abstract class BaseDetailController {
     @FXML
     private TextArea targetPath;
     @FXML
-    private CheckBox checkBoxEncryption;
+    private CheckBox checkBoxEncryptionJob;
 
     @FXML
     private ComboBox<String> encryptionJobDropdown;
@@ -143,7 +144,6 @@ public abstract class BaseDetailController {
                                 this.toggleSourceTargetPath();
                                 this.enableRestoreMode();
                             }
-
                         });
                     else if (node.getId().equals("backupButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -151,7 +151,6 @@ public abstract class BaseDetailController {
                                 this.toggleSourceTargetPath();
                                 this.enableBackupMode();
                             }
-
                         });
                     else if (node.getId().equals("deleteButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -169,6 +168,10 @@ public abstract class BaseDetailController {
                             this.playReverseButtonClicked();
                         });
                 });
+    }
+
+    public BaseModel getModel() {
+        return model;
     }
 
     public StackPane getStackPane() {
@@ -197,7 +200,6 @@ public abstract class BaseDetailController {
         hoursInterval.setDisable(!enable);
     }
 
-
     @FXML
     protected void enableRestoreMode() {
         header.setText("Restore Target to Source");
@@ -206,8 +208,21 @@ public abstract class BaseDetailController {
         sourceButton.setDisable(true);
         targetButton.setDisable(true);
         checkBoxIntervalDays.setDisable(true);
+        checkBoxIntervalDays.setSelected(false);
+        daysInterval.setDisable(true);
         checkBoxIntervalHours.setDisable(true);
+        checkBoxIntervalHours.setSelected(false);
+        hoursInterval.setDisable(true);
         checkBoxStartDate.setDisable(true);
+        checkBoxStartDate.setSelected(false);
+        startDateDatePicker.setDisable(true);
+        checkBoxEncryptionJob.setDisable(true);
+        checkBoxValidationJob.setDisable(true);
+        checkBoxValidationJob.setSelected(model.getCheckBoxValidationJob());
+        checkBoxEncryptionJob.setSelected(model.getCheckBoxEncryptionJob());
+        validationJobDropdown.getSelectionModel().select(model.getValidationType().toString());
+        encryptionJobDropdown.getSelectionModel().select(model.getEncryptionType().toString());
+        checkBoxStartDate.setSelected(false);
         changeRestoreModeColor(true);
         model.setRestoreMode(true);
     }
@@ -222,6 +237,8 @@ public abstract class BaseDetailController {
         checkBoxIntervalDays.setDisable(false);
         checkBoxIntervalHours.setDisable(false);
         checkBoxStartDate.setDisable(false);
+        checkBoxEncryptionJob.setDisable(false);
+        checkBoxValidationJob.setDisable(false);
         changeRestoreModeColor(false);
         model.setRestoreMode(false);
 
@@ -250,7 +267,7 @@ public abstract class BaseDetailController {
 
     @FXML
     public void toggleEncryption(){
-        boolean enable = checkBoxEncryption.isSelected();
+        boolean enable = checkBoxEncryptionJob.isSelected();
         encryptionJobDropdown.setDisable(!enable);
     }
 
@@ -294,7 +311,7 @@ public abstract class BaseDetailController {
             System.out.println("----------playButtonClickedDoneSuccessfully-----------");
         }
         else {
-            MessageService.createMessage(model.getTransientProperties().getMessageList(), MessageTYPE.VALIDATION);
+            MessageService.createMessage(model.TransientProperties.getMessageList(), MessageTYPE.VALIDATION);
         }
     }
 
@@ -305,17 +322,15 @@ public abstract class BaseDetailController {
         this.setModelValues();
         if(model.validate()){
             if(App.DataStore.saveModelAsJSON(model)){
-                model.setSource(model.getTarget());
-                model.setTarget(model.getSource());
                 App.JobScheduler.fireBackupEvent(model);
-                MessageService.createToast("PLAY", MessageTYPE.PLAY);
+                MessageService.createToast("RESTORE BACKUP", MessageTYPE.PLAY);
                 closeDetailAndReloadOverview();
                 System.out.println("----------playButtonClickedDoneSuccessfully-----------");
             }
 
         }
         else {
-            MessageService.createMessage(model.getTransientProperties().getMessageList(), MessageTYPE.VALIDATION);
+            MessageService.createMessage(model.TransientProperties.getMessageList(), MessageTYPE.VALIDATION);
         }
     }
 
@@ -363,14 +378,24 @@ public abstract class BaseDetailController {
 
         }
         else {
-            MessageService.createMessage(model.getTransientProperties().getMessageList(), MessageTYPE.VALIDATION);
+            MessageService.createMessage(model.TransientProperties.getMessageList(), MessageTYPE.VALIDATION);
         }
     }
 
-    private void setModelValues(){
-        if(checkBoxStartDate.isSelected() || checkBoxIntervalDays.isSelected() || checkBoxIntervalHours.isSelected()){
+    protected void setModelValues(){
+
+        if(model.isRestoreMode()){
+            model.setStartDate(null);
+            model.setIntervalDays(0);
+            model.setIntervalHours(0);
+            model.setNextBackupLocalDateTime(null);
+        }
+
+        else if(checkBoxStartDate.isSelected() || checkBoxIntervalDays.isSelected() || checkBoxIntervalHours.isSelected()){
             LocalDateTime startDate;
-            startDate = checkBoxStartDate.isSelected() && startDateDatePicker.getValue() != null ? startDateDatePicker.getValue().atTime(LocalTime.now())  : LocalDateTime.now();
+            startDate = checkBoxStartDate.isSelected() && startDateDatePicker.getValue() != null ?
+                                                                                startDateDatePicker.getValue().atTime(LocalTime.now()) :
+                                                                                LocalDateTime.now();
             model.setStartDate(startDate);
             int days = 0;
             int hours = 0;
@@ -383,15 +408,15 @@ public abstract class BaseDetailController {
             catch (NumberFormatException e){
                 System.out.println("Not type of integer: " + e);
             }
-            model.setNextBackupLocalDateTime(App.JobScheduler.calculateNextBackupTime(startDate, days, hours));
+            model.setNextBackupLocalDateTime(App.JobScheduler.calculateNextBackupTime(model));
         }
-        else{
+        else {
             model.setNextBackupLocalDateTime(null);
         }
 
         model.setTitle(title.getText());
 
-        model.setBackupType(BackupType.MERGE);
+
         model.setSource(sourcePath.getText());
         model.setTarget(targetPath.getText());
 
@@ -403,12 +428,12 @@ public abstract class BaseDetailController {
 
         /*Validation and Encryption*/
         model.setCheckBoxValidationJob(checkBoxValidationJob.isSelected());
-        model.setCheckBoxEncryptionJob(checkBoxEncryption.isSelected());
+        model.setCheckBoxEncryptionJob(checkBoxEncryptionJob.isSelected());
         /*END Validation and Encryption*/
 
-        if (checkBoxValidationJob.isSelected() && validationJobDropdown.getSelectionModel().getSelectedItem()
-                .equals(ValidationTYPE.CRC32.toString())) {
-            model.setValidationType(ValidationTYPE.CRC32);
+        if (checkBoxValidationJob.isSelected()) {
+            String selectedValueString = validationJobDropdown.getSelectionModel().getSelectedItem();
+            model.setValidationType(selectedValueString.equals(ValidationTYPE.CRC32.toString()) ? ValidationTYPE.CRC32 : ValidationTYPE.NONE);
             model.setValidationJob(true);
         }
         else{
@@ -416,13 +441,13 @@ public abstract class BaseDetailController {
             model.setValidationJob(false);
         }
 
-        if (checkBoxEncryption.isSelected() && encryptionJobDropdown.getSelectionModel().getSelectedItem()
-                .equals(EncryptionTYPE.AES_CBC.toString())) {
-            model.setEncryptionTYPE(EncryptionTYPE.AES_CBC);
+        if (checkBoxEncryptionJob.isSelected()) {
+             String selectedValueString = encryptionJobDropdown.getSelectionModel().getSelectedItem();
+            model.setEncryptionType(selectedValueString.equals(EncryptionTYPE.AES_CBC.toString()) ? EncryptionTYPE.AES_CBC : EncryptionTYPE.NONE);
             model.setEncryptionJob(true);
         }
         else{
-            model.setEncryptionTYPE(EncryptionTYPE.NONE);
+            model.setEncryptionType(EncryptionTYPE.NONE);
             model.setEncryptionJob(false);
         }
 
@@ -461,7 +486,7 @@ public abstract class BaseDetailController {
                                                             model.getValidationType().toString() :
                                                             ValidationTYPE.CRC32.toString());
 
-        checkBoxEncryption.setSelected(model.getCheckBoxEncryptionJob());
+        checkBoxEncryptionJob.setSelected(model.getCheckBoxEncryptionJob());
         encryptionJobDropdown.getSelectionModel().select(   model.getEncryptionType() != null ?
                                                             model.getEncryptionType().toString() :
                                                             EncryptionTYPE.AES_CBC.toString());

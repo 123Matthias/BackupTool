@@ -9,6 +9,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
 
@@ -104,16 +105,17 @@ public abstract class BaseOverviewController {
         contentBox.getStyleClass().add("cardContent");
         contentBox.setSpacing(5);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String lastDate = model.getLastBackupLocalDateTime() == null ? "no Date" : model.getLastBackupLocalDateTime().format(formatter);
-        String nextDate = model.getNextBackupLocalDateTime() == null ? "no Date" : model.getNextBackupLocalDateTime().format(formatter);
+        Label lastDateLabel = new Label();
+        lastDateLabel.textProperty().bind(model.TransientProperties.getLastBackupTimeProperty());
 
+        Label nextDateLabel = new Label();
+        nextDateLabel.textProperty().bind(model.TransientProperties.getNextBackupTimeProperty());
 
 // Inhalte hinzufügen
         contentBox.getChildren().addAll(
                 createLabeledRow("UUID:", uid),
-                createLabeledRow("Last Backup:", lastDate),
-                createLabeledRow("Next Backup:", nextDate),
+                createLabeledRow("Last Backup:", lastDateLabel),
+                createLabeledRow("Next Backup:", nextDateLabel),
                 createLabeledRow("Source Path:", model.getSource()));
 
                 HBox row;
@@ -135,8 +137,8 @@ public abstract class BaseOverviewController {
             // Labels direkt erstellen
             Label sourceHashLabel = new Label();
             Label targetHashLabel = new Label();
-            sourceHashLabel.textProperty().bind(model.getTransientProperties().getSourceValidationProperty());
-            targetHashLabel.textProperty().bind(model.getTransientProperties().getTargetValidationProperty());
+            sourceHashLabel.textProperty().bind(model.TransientProperties.getSourceValidationProperty());
+            targetHashLabel.textProperty().bind(model.TransientProperties.getTargetValidationProperty());
 
             // HBox mit Labels erstellen (Label direkt übergeben!)
             sourceValidation = createLabeledRow("Source: ", sourceHashLabel);
@@ -144,7 +146,8 @@ public abstract class BaseOverviewController {
             validationType = createLabeledRow("Validation: ", model.getValidationType().toString());
 
             boolean initialStatus;
-            if(model.getSourceValidationValue().equals(model.getTargetValidationValue())){
+            String value = model.getSourceValidationValue();
+            if(value != null && value.equals(model.getTargetValidationValue())){
                 initialStatus = true;
             }
             else {
@@ -168,12 +171,12 @@ public abstract class BaseOverviewController {
 
         //Progress Bar
         ProgressBar progressBar = new ProgressBar(0);
-        progressBar.progressProperty().bind(model.getTransientProperties().getProgressStateProperty());
+        progressBar.progressProperty().bind(model.TransientProperties.getProgressStateProperty());
         progressBar.prefWidthProperty().bind(contentBox.widthProperty());
         Label progressLabel = new Label();
         progressLabel.setPadding(new Insets(10, 0, 0, 0));
         progressLabel.setLabelFor(progressBar);
-        progressLabel.textProperty().bind(Bindings.format("Working speed: %.0f MB/sec", model.getTransientProperties().getWorkingSpeedProperty()));
+        progressLabel.textProperty().bind(Bindings.format("Working speed: %.0f MB/sec", model.TransientProperties.getWorkingSpeedProperty()));
 
         //Click Listener
         contentBox.setOnMouseClicked(event -> openDetailWindow(uid));

@@ -96,13 +96,13 @@
       </VBox>
 
 
-      <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxEncryption" onAction="#toggleEncryption" />
+      <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxEncryptionJob" onAction="#toggleEncryption" />
       <VBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
          <Label >Encryption Algorithm</Label>
          <ComboBox fx:id="encryptionJobDropdown" disable="true" prefWidth="Infinity">
             <items>
                <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="AES-CBC"/>
+                  <String fx:value="AES_CBC"/>
                </FXCollections>
             </items>
          </ComboBox>

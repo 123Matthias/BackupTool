@@ -31,6 +31,7 @@ public class ToolbarDetailController {
     void initialize() {
         this.model = App.DataStore.getLastSelectedModel();
         if(model == null) {
+            enableBackupMode();
             return;
         }
         if(model.isRestoreMode()){
