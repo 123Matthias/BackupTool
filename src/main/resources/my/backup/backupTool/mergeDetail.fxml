@@ -96,7 +96,7 @@
       </VBox>
 
 
-      <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxEncryptionJob" onAction="#toggleEncryption" />
+      <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxEncryptionJob" onAction="#toggleEncryptionJob" />
       <VBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
          <Label >Encryption Algorithm</Label>
          <ComboBox fx:id="encryptionJobDropdown" disable="true" prefWidth="Infinity">
@@ -108,7 +108,7 @@
          </ComboBox>
       </VBox>
 
-      <CheckBox GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxValidationJob" onAction="#toggleValidationType" />
+      <CheckBox GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxValidationJob" onAction="#toggleValidationJob" />
       <VBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
          <Label >Validation Algorithm</Label>
          <ComboBox fx:id="validationJobDropdown" disable="true" prefWidth="Infinity">

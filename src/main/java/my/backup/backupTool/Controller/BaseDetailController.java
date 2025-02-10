@@ -23,8 +23,7 @@ import java.time.LocalTime;
 import java.util.function.UnaryOperator;
 
 public abstract class BaseDetailController {
-
-
+    
     @FXML
     private StackPane stackPane;
 
@@ -266,13 +265,13 @@ public abstract class BaseDetailController {
     }
 
     @FXML
-    public void toggleEncryption(){
+    public void toggleEncryptionJob(){
         boolean enable = checkBoxEncryptionJob.isSelected();
         encryptionJobDropdown.setDisable(!enable);
     }
 
     @FXML
-    public void toggleValidationType(){
+    public void toggleValidationJob(){
         boolean enable = checkBoxValidationJob.isSelected();
         validationJobDropdown.setDisable(!enable);
     }
@@ -494,6 +493,8 @@ public abstract class BaseDetailController {
         this.toggleDate();
         this.toggleDays();
         this.toggleHours();
+        this.toggleEncryptionJob();
+        this.toggleValidationJob();
 
 
     }
