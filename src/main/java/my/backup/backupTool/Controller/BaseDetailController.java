@@ -73,15 +73,22 @@ public abstract class BaseDetailController {
     private CheckBox checkBoxIntervalHours;
 
     @FXML
+    private CheckBox checkBoxIntervalMinutes;
+
+    @FXML
     private TextField daysInterval;
 
     @FXML
     private TextField hoursInterval;
 
     @FXML
+    private TextField minutesInterval;
+
+    @FXML
     private DatePicker startDateDatePicker;
 
     private BaseModel model;
+
     private IUpdateScene sceneUpdate;
 
 
@@ -197,6 +204,12 @@ public abstract class BaseDetailController {
     public void toggleHours() {
         boolean enable = checkBoxIntervalHours.isSelected();
         hoursInterval.setDisable(!enable);
+    }
+
+    @FXML
+    public void toggleMinutes() {
+        boolean enable = checkBoxIntervalMinutes.isSelected();
+        minutesInterval.setDisable(!enable);
     }
 
     @FXML
@@ -387,6 +400,7 @@ public abstract class BaseDetailController {
             model.setStartDate(null);
             model.setIntervalDays(0);
             model.setIntervalHours(0);
+            model.setIntervalMinutes(0);
             model.setNextBackupLocalDateTime(null);
         }
 
@@ -398,11 +412,14 @@ public abstract class BaseDetailController {
             model.setStartDate(startDate);
             int days = 0;
             int hours = 0;
+            int minutes = 0;
             try{
                 days = checkBoxIntervalDays.isSelected() ? Integer.parseInt(daysInterval.getText()):0;
                 hours = checkBoxIntervalHours.isSelected() ? Integer.parseInt(hoursInterval.getText()):0;
+                minutes = checkBoxIntervalMinutes.isSelected() ? Integer.parseInt(minutesInterval.getText()):0;
                 model.setIntervalDays(days);
                 model.setIntervalHours(hours);
+                model.setIntervalMinutes(minutes);
             }
             catch (NumberFormatException e){
                 System.out.println("Not type of integer: " + e);
@@ -423,6 +440,8 @@ public abstract class BaseDetailController {
         model.setCheckBoxStartDate(checkBoxStartDate.isSelected());
         model.setCheckBoxDaysInterval(checkBoxIntervalDays.isSelected());
         model.setCheckBoxHoursInterval(checkBoxIntervalHours.isSelected());
+        model.setCheckBoxMinutesInterval(checkBoxIntervalMinutes.isSelected());
+
         /*END TIMING*/
 
         /*Validation and Encryption*/
@@ -479,6 +498,8 @@ public abstract class BaseDetailController {
         daysInterval.setText(String.valueOf(model.getIntervalDays()));
         checkBoxIntervalHours.setSelected(model.getCheckBoxHoursInterval());
         hoursInterval.setText(String.valueOf(model.getIntervalHours()));
+        checkBoxIntervalMinutes.setSelected(model.getCheckBoxMinutesInterval());
+        minutesInterval.setText(String.valueOf(model.getIntervalMinutes()));
 
         checkBoxValidationJob.setSelected(model.getCheckBoxValidationJob());
         validationJobDropdown.getSelectionModel().select(   model.getValidationType() != null ?

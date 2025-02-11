@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Factory.CopyServiceFactory;
 import my.backup.backupTool.Controller.MessageTYPE;
+import my.backup.backupTool.JobManagement.JobTimeline;
 import my.backup.backupTool.Model.BaseModel;
 
 import java.io.IOException;
@@ -54,16 +55,16 @@ public class MergeService implements IMergeService,Runnable {
         this.copyService.finishCalculations(this.model);
         LocalDateTime lastBackupTime = LocalDateTime.now();
         this.model.setLastBackupLocalDateTime(lastBackupTime);
-        this.model.TransientProperties.setLastBackupTimeProperty(lastBackupTime);
 
         LocalDateTime nextBackupTime = App.JobScheduler.calculateNextBackupTime(this.model);
         this.model.setNextBackupLocalDateTime(nextBackupTime);
 
+
         if(model.isRestoreMode()){
             model.setRestoreMode(false);
         }
-        if(App.DataStore.saveModelAsJSON(this.model)){
-        }
+        App.DataStore.saveModelAsJSON(this.model);
+        App.JobScheduler.updateTimeline();
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
     }
 

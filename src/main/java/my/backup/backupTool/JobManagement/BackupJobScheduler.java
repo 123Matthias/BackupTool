@@ -8,15 +8,20 @@ import my.backup.backupTool.Service.MergeService;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BackupJobScheduler {
 
     private static volatile BackupJobScheduler Instance = null;
-    private HashMap<BaseModel,Thread> threadMap;
+    private final HashMap<BaseModel,Thread> threadMap;
+    private Thread timelineThread;
 
     private BackupJobScheduler() {
         this.threadMap = new HashMap<>();
+        startTimelineThread();
     }
+
+    private ReentrantLock threadLock = new ReentrantLock();
 
     public static BackupJobScheduler Singleton() {
         if(Instance == null) {
@@ -27,27 +32,18 @@ public class BackupJobScheduler {
         return Instance;
     }
 
-    /**
-     * Starts a new copying thread for all Backup Jobs in the List of Models. It distinguishes between two copy methods: Merge or Full.
-     * The operation also depends on the boolean condition hasBackupJob() in the model.
-     * If hasBackupJob() is false, no backup event will be executed.
-     */
-    public void fireAllBackupEvents() {
-        for(BaseModel model : App.DataStore.getModelList()) {
-                if(model.getBackupType() == BackupType.MERGE && model.hasBackupJob()){
-                    IMergeService mergeService = new MergeService(model);
-                    mergeService.startMergeThread();
-                    System.out.println("Model JobScheduler: " + model);
-
-                    System.out.println("----------Merge Service in Job Scheduler started--------------");
+    // Methode, um auf alle Backup-Threads zu warten
+    public void waitForAllThreadsToFinish() {
+        synchronized (threadMap) {
+            for (Thread thread : threadMap.values()) {
+                try {
+                    thread.join();  // Wartet, bis der Thread beendet ist
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    System.out.println("Warten auf Thread unterbrochen");
                 }
-                if(model.getBackupType() == BackupType.FULL){
-                    //TODO
-                }
-                if(model.getBackupType() == BackupType.SYNCHRONIZED){
-                    //TODO
-                }
-
+            }
+            threadMap.clear(); // Alle Threads aus der Map entfernen, nachdem sie abgeschlossen sind
         }
     }
 
@@ -63,7 +59,9 @@ public class BackupJobScheduler {
         if(model.getBackupType() == BackupType.MERGE && model.hasBackupJob()){
             IMergeService mergeService = new MergeService(model);
             mergeService.startMergeThread();
+            threadLock.lock();
             this.threadMap.put(model, mergeService.getThread());
+            threadLock.unlock();
             System.out.println("Thread in list: " + mergeService.getThread().getName());
             return true;
         }
@@ -91,6 +89,14 @@ public class BackupJobScheduler {
         }
     }
 
+
+    /**
+     * This Method calculates the next Backup Time using the Parameters in the Model.
+     * Origin is LocalDateTime.now()
+     *
+     * @param model
+     * @return LocalDateTime nextBackupTime
+     */
     public LocalDateTime calculateNextBackupTime(BaseModel model) {
 
         if(!model.getCheckBoxStartDate() & !model.getCheckBoxDaysInterval() & !model.getCheckBoxHoursInterval()){
@@ -100,7 +106,8 @@ public class BackupJobScheduler {
         if(     model.getCheckBoxStartDate() &
                 model.getStartDate().isAfter(LocalDateTime.now()) &
                 !model.getCheckBoxDaysInterval() &
-                !model.getCheckBoxHoursInterval()){
+                !model.getCheckBoxHoursInterval() &
+                !model.getCheckBoxMinutesInterval()){
                     return model.getStartDate();
         }
 
@@ -113,13 +120,39 @@ public class BackupJobScheduler {
             model.setIntervalHours(0);
         }
 
+        if (model.getIntervalMinutes() <= 0) {
+            model.setIntervalMinutes(0);
+        }
+
         do {
             nextBackupTime = nextBackupTime.plusDays(model.getIntervalDays());
             nextBackupTime = nextBackupTime.plusHours(model.getIntervalHours());
+            nextBackupTime = nextBackupTime.plusMinutes(model.getIntervalMinutes());
 
         } while (nextBackupTime.isBefore(LocalDateTime.now()));
 
         return nextBackupTime;
+    }
+
+
+    public void startTimelineThread() {
+        this.timelineThread = new Thread(JobTimeline.Singleton());
+        JobTimeline.Singleton().setRunning(true);
+        timelineThread.start();
+        System.out.println("Timeline thread started");
+    }
+
+    public void stopTimelineThread() {
+        JobTimeline.Singleton().setRunning(false); // Setzt die Bedingung in der Schleife auf false
+        if (timelineThread != null) {
+            timelineThread.interrupt(); // Falls er schläft, aufwecken
+        }
+    }
+
+
+    public void updateTimeline() {
+        this.stopTimelineThread();
+        startTimelineThread();      // Starte einen neuen Thread
     }
 
 

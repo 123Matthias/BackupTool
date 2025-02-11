@@ -3,6 +3,7 @@ package my.backup.backupTool.Model;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import javafx.application.Platform;
 import my.backup.backupTool.Encryption.EncryptionTYPE;
 import my.backup.backupTool.Service.MessageList;
 
@@ -56,6 +57,12 @@ public class BaseModel {
 
     @JsonProperty("interval-hours") // JSON Name wird geändert
     private int intervalHours;
+
+    @JsonProperty("checkBox-minutesInterval")
+    private boolean checkBoxMinutesInterval;
+
+    @JsonProperty("interval-minutes") // JSON Name wird geändert
+    private int intervalMinutes;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // Format für das Datum
     private LocalDateTime lastBackupLocalDateTime;
@@ -165,6 +172,14 @@ public class BaseModel {
         this.intervalHours = intervalHours;
     }
 
+    public int getIntervalMinutes() {
+        return intervalMinutes;
+    }
+
+    public void setIntervalMinutes(int intervalMinutes) {
+        this.intervalMinutes = intervalMinutes;
+    }
+
     public LocalDateTime getNextBackupLocalDateTime() {
         return nextBackupLocalDateTime;
     }
@@ -179,7 +194,7 @@ public class BaseModel {
     }
 
     public void setLastBackupLocalDateTime(LocalDateTime lastBackupLocalDateTime) {
-        this.TransientProperties.setLastBackupTimeProperty(lastBackupLocalDateTime);
+        Platform.runLater(()->this.TransientProperties.setLastBackupTimeProperty(lastBackupLocalDateTime));
         this.lastBackupLocalDateTime = lastBackupLocalDateTime;
     }
 
@@ -197,6 +212,14 @@ public class BaseModel {
 
     public void setCheckBoxDaysInterval(boolean checkBoxDaysInterval) {
         this.checkBoxDaysInterval = checkBoxDaysInterval;
+    }
+
+    public boolean getCheckBoxMinutesInterval() {
+        return checkBoxMinutesInterval;
+    }
+
+    public void setCheckBoxMinutesInterval(boolean checkBoxMinutesInterval) {
+        this.checkBoxMinutesInterval = checkBoxMinutesInterval;
     }
 
     public boolean getCheckBoxStartDate() {
