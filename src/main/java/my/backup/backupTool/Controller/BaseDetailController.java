@@ -224,7 +224,10 @@ public abstract class BaseDetailController {
         daysInterval.setDisable(true);
         checkBoxIntervalHours.setDisable(true);
         checkBoxIntervalHours.setSelected(false);
+        checkBoxIntervalMinutes.setDisable(true);
+        checkBoxIntervalMinutes.setSelected(false);
         hoursInterval.setDisable(true);
+        minutesInterval.setDisable(true);
         checkBoxStartDate.setDisable(true);
         checkBoxStartDate.setSelected(false);
         startDateDatePicker.setDisable(true);
@@ -248,6 +251,7 @@ public abstract class BaseDetailController {
         targetButton.setDisable(false);
         checkBoxIntervalDays.setDisable(false);
         checkBoxIntervalHours.setDisable(false);
+        checkBoxIntervalMinutes.setDisable(false);
         checkBoxStartDate.setDisable(false);
         checkBoxEncryptionJob.setDisable(false);
         checkBoxValidationJob.setDisable(false);
@@ -404,7 +408,10 @@ public abstract class BaseDetailController {
             model.setNextBackupLocalDateTime(null);
         }
 
-        else if(checkBoxStartDate.isSelected() || checkBoxIntervalDays.isSelected() || checkBoxIntervalHours.isSelected()){
+        else if(checkBoxStartDate.isSelected() ||
+                checkBoxIntervalDays.isSelected() ||
+                checkBoxIntervalHours.isSelected() ||
+                checkBoxIntervalMinutes.isSelected()){
             LocalDateTime startDate;
             startDate = checkBoxStartDate.isSelected() && startDateDatePicker.getValue() != null ?
                                                                                 startDateDatePicker.getValue().atTime(LocalTime.now()) :
@@ -514,6 +521,7 @@ public abstract class BaseDetailController {
         this.toggleDate();
         this.toggleDays();
         this.toggleHours();
+        this.toggleMinutes();
         this.toggleEncryptionJob();
         this.toggleValidationJob();
 

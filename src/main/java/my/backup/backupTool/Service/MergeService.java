@@ -53,18 +53,19 @@ public class MergeService implements IMergeService,Runnable {
         }
 
         this.copyService.finishCalculations(this.model);
-        LocalDateTime lastBackupTime = LocalDateTime.now();
-        this.model.setLastBackupLocalDateTime(lastBackupTime);
 
         LocalDateTime nextBackupTime = App.JobScheduler.calculateNextBackupTime(this.model);
         this.model.setNextBackupLocalDateTime(nextBackupTime);
+        //Last Backup Time muss unbedingt nach next Backup time stehn im Zeitlichen Verlauf
+        LocalDateTime lastBackupTime = LocalDateTime.now();
+        this.model.setLastBackupLocalDateTime(lastBackupTime);
 
 
         if(model.isRestoreMode()){
             model.setRestoreMode(false);
         }
         App.DataStore.saveModelAsJSON(this.model);
-        App.JobScheduler.updateTimeline();
+        App.JobScheduler.threadFinished(Thread.currentThread());
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
     }
 

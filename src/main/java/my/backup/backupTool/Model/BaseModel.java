@@ -185,7 +185,7 @@ public class BaseModel {
     }
 
     public void setNextBackupLocalDateTime(LocalDateTime nextBackupLocalDateTime) {
-        this.TransientProperties.setNextBackupTimeProperty(nextBackupLocalDateTime);
+        Platform.runLater(()->this.TransientProperties.setNextBackupTimeProperty(nextBackupLocalDateTime));
         this.nextBackupLocalDateTime = nextBackupLocalDateTime;
     }
 

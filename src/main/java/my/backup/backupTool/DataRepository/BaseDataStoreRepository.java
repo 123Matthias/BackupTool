@@ -19,6 +19,7 @@ public class BaseDataStoreRepository implements IDataStore {
     private BaseModel lastSelectedModel;
 
     private BaseDataStoreRepository() {
+
         modelList = getJSONasList();
     }
 
@@ -30,8 +31,6 @@ public class BaseDataStoreRepository implements IDataStore {
         }
         return Instance;
     }
-
-
 
 
     public void setStoragePath(String storagePath) {
@@ -98,7 +97,7 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    private boolean saveListAsJSON() {
+    private synchronized boolean saveListAsJSON() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());

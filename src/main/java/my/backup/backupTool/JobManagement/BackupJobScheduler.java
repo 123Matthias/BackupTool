@@ -13,15 +13,17 @@ import java.util.concurrent.locks.ReentrantLock;
 public class BackupJobScheduler {
 
     private static volatile BackupJobScheduler Instance = null;
-    private final HashMap<BaseModel,Thread> threadMap;
+    private final HashMap<Thread,BaseModel> threadMap;
     private Thread timelineThread;
+    public static JobTimeline Timeline;
+    private final Object lockObjJobScheduler = new Object();
 
     private BackupJobScheduler() {
+        Timeline = JobTimeline.Singleton();
         this.threadMap = new HashMap<>();
         startTimelineThread();
     }
 
-    private ReentrantLock threadLock = new ReentrantLock();
 
     public static BackupJobScheduler Singleton() {
         if(Instance == null) {
@@ -33,18 +35,17 @@ public class BackupJobScheduler {
     }
 
     // Methode, um auf alle Backup-Threads zu warten
-    public void waitForAllThreadsToFinish() {
-        synchronized (threadMap) {
-            for (Thread thread : threadMap.values()) {
-                try {
-                    thread.join();  // Wartet, bis der Thread beendet ist
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    System.out.println("Warten auf Thread unterbrochen");
-                }
-            }
-            threadMap.clear(); // Alle Threads aus der Map entfernen, nachdem sie abgeschlossen sind
+    public synchronized void threadFinished(Thread thread) {
+        this.threadMap.remove(thread);
+        if(threadMap.isEmpty()) {
+            Timeline.notifyLock();
+            System.out.print("threadFinished DONE.");
         }
+
+
+        System.out.println("Thread " + thread.getName() + " finished and removed from Threadmap");
+        System.out.println("ThreadMAP SIZE:" + threadMap.size());
+
     }
 
     /**
@@ -54,14 +55,16 @@ public class BackupJobScheduler {
      *
      * @param model Contains all meta values required for the copy operation.
      */
-    public boolean fireBackupEvent(BaseModel model) {
+    public synchronized boolean fireBackupEvent(BaseModel model) {
         System.out.println("Model JobScheduler: " + model);
+        if(threadMap.containsValue(model)) {
+            System.out.println("Model " + model + " ist bereits in Map ????!");
+            return false;
+        }
         if(model.getBackupType() == BackupType.MERGE && model.hasBackupJob()){
             IMergeService mergeService = new MergeService(model);
             mergeService.startMergeThread();
-            threadLock.lock();
-            this.threadMap.put(model, mergeService.getThread());
-            threadLock.unlock();
+            this.threadMap.put(mergeService.getThread(), model);
             System.out.println("Thread in list: " + mergeService.getThread().getName());
             return true;
         }
@@ -76,13 +79,13 @@ public class BackupJobScheduler {
 
     public void stopAndInterruptBackupEvent(BaseModel model) {
         model.setBackupJob(false);
-        Iterator<Map.Entry<BaseModel, Thread>> iterator = threadMap.entrySet().iterator();
+        Iterator<Map.Entry<Thread, BaseModel>> iterator = threadMap.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<BaseModel, Thread> entry = iterator.next();
+            Map.Entry<Thread, BaseModel> entry = iterator.next();
             System.out.println("MapValues: " + entry.getKey() + ": " + entry.getValue());
 
-            if (entry.getKey().getUid().equals(model.getUid())) {
-                entry.getValue().interrupt();
+            if (entry.getValue().getUid().equals(model.getUid())) {
+                entry.getKey().interrupt();
                 iterator.remove();  // Sicheres Entfernen während der Iteration
                 System.out.println("Model JobScheduler: " + entry.getValue());
             }
@@ -99,16 +102,22 @@ public class BackupJobScheduler {
      */
     public LocalDateTime calculateNextBackupTime(BaseModel model) {
 
-        if(!model.getCheckBoxStartDate() & !model.getCheckBoxDaysInterval() & !model.getCheckBoxHoursInterval()){
+        if(     !model.getCheckBoxStartDate() &
+                !model.getCheckBoxDaysInterval() &
+                !model.getCheckBoxHoursInterval() &
+                !model.getCheckBoxMinutesInterval()){
+
             return null;
         }
 
         if(     model.getCheckBoxStartDate() &
+                model.getStartDate() != null &
                 model.getStartDate().isAfter(LocalDateTime.now()) &
                 !model.getCheckBoxDaysInterval() &
                 !model.getCheckBoxHoursInterval() &
                 !model.getCheckBoxMinutesInterval()){
-                    return model.getStartDate();
+
+            return model.getStartDate();
         }
 
         LocalDateTime nextBackupTime = model.getStartDate() == null ? LocalDateTime.now() : model.getStartDate();
@@ -135,27 +144,17 @@ public class BackupJobScheduler {
     }
 
 
-    public void startTimelineThread() {
+    private void startTimelineThread() {
         this.timelineThread = new Thread(JobTimeline.Singleton());
         JobTimeline.Singleton().setRunning(true);
         timelineThread.start();
         System.out.println("Timeline thread started");
     }
 
-    public void stopTimelineThread() {
-        JobTimeline.Singleton().setRunning(false); // Setzt die Bedingung in der Schleife auf false
-        if (timelineThread != null) {
-            timelineThread.interrupt(); // Falls er schläft, aufwecken
-        }
+
+    public HashMap<Thread, BaseModel> getThreadMap() {
+        return threadMap;
     }
-
-
-    public void updateTimeline() {
-        this.stopTimelineThread();
-        startTimelineThread();      // Starte einen neuen Thread
-    }
-
-
 }
 
 
