@@ -1,6 +1,9 @@
 package my.backup.backupTool.JobManagement;
 
 import my.backup.backupTool.App;
+import my.backup.backupTool.CopyServices.IMergeService;
+import my.backup.backupTool.CopyServices.MergeService;
+import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
 
 import java.time.Duration;
@@ -19,6 +22,7 @@ public class JobTimeline implements Runnable {
 
     private JobTimeline() {
         this.running.set(true);
+        this.storedList = App.DataStore.getModelList();
     }
 
     public static JobTimeline Singleton() {
@@ -35,9 +39,7 @@ public class JobTimeline implements Runnable {
     @Override
     public void run() {
         while (running.get()) {
-            this.fireAllScheduledBackups();
-
-
+           this.fireAllScheduledBackups();
            try {
                 synchronized (lockObjTimeline) {
                     while(!App.JobScheduler.getThreadMap().isEmpty()) {
@@ -55,8 +57,10 @@ public class JobTimeline implements Runnable {
            }
 
            catch (InterruptedException e) {
-               Thread.currentThread().interrupt();
-               return;
+               System.out.println("  -- >> THREAD: " + Thread.currentThread().isInterrupted() + " ThreadState: " + Thread.currentThread().getState());
+               System.out.println("THREAD INTERRUPTED IAM WAKING UP");
+
+
            }
 
 
@@ -77,7 +81,6 @@ public class JobTimeline implements Runnable {
 
     private long calculateSleepInSeconds() {
         long sleepTimeInSeconds = DURATION_MAX_SECONDS;
-        this.storedList = App.DataStore.getModelList();
         for (BaseModel m : this.storedList) {
             if (m.hasBackupJob() == false || m.getNextBackupLocalDateTime() == null) {
                 continue;

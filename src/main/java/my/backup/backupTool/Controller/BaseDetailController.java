@@ -321,7 +321,7 @@ public abstract class BaseDetailController {
         this.setModelValues();
         if(model.validate()){
             App.DataStore.saveModelAsJSON(model);
-            App.JobScheduler.fireBackupEvent(model);
+            App.JobScheduler.firePlayButton(model);
             MessageService.createToast("PLAY", MessageTYPE.PLAY);
             closeDetailAndReloadOverview();
             System.out.println("----------playButtonClickedDoneSuccessfully-----------");
@@ -338,7 +338,7 @@ public abstract class BaseDetailController {
         this.setModelValues();
         if(model.validate()){
             if(App.DataStore.saveModelAsJSON(model)){
-                App.JobScheduler.fireBackupEvent(model);
+                App.JobScheduler.firePlayButton(model);
                 MessageService.createToast("RESTORE BACKUP", MessageTYPE.PLAY);
                 closeDetailAndReloadOverview();
                 System.out.println("----------playButtonClickedDoneSuccessfully-----------");

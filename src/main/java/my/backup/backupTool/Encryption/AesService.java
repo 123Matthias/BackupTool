@@ -1,8 +1,8 @@
 package my.backup.backupTool.Encryption;
 
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.Service.BaseCalculationService;
-import my.backup.backupTool.Service.ICopyService;
+import my.backup.backupTool.CopyServices.BaseCalculationService;
+import my.backup.backupTool.CopyServices.ICopyService;
 
 import javax.crypto.*;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import javax.crypto.spec.IvParameterSpec;
-import java.io.OutputStream;
 import java.util.Base64;
 
 public class AesService extends BaseCalculationService implements ICopyService {

@@ -2,8 +2,8 @@ package my.backup.backupTool.JobManagement;
 
 import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.Service.IMergeService;
-import my.backup.backupTool.Service.MergeService;
+import my.backup.backupTool.CopyServices.IMergeService;
+import my.backup.backupTool.CopyServices.MergeService;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -83,6 +83,15 @@ public class BackupJobScheduler {
             //TODO
         }
         return false;
+    }
+
+    public synchronized boolean firePlayButton(BaseModel model) {
+        if(this.timelineThread.getState().equals(Thread.State.TIMED_WAITING)){
+            timelineThread.interrupt();
+            System.out.println("TIMED WAITING THREAD wird AUFGEWECKT. PLAY Button was Clicked");
+        }
+        this.fireBackupEvent(model);
+        return true;
     }
 
     public void stopAndInterruptBackupEvent(BaseModel model) {

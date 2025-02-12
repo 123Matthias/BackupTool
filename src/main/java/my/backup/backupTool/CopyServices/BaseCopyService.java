@@ -1,10 +1,7 @@
-package my.backup.backupTool.Service;
+package my.backup.backupTool.CopyServices;
 
-import my.backup.backupTool.Encryption.AesService;
 import my.backup.backupTool.Model.BaseModel;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

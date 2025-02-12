@@ -1,4 +1,4 @@
-package my.backup.backupTool.Service;
+package my.backup.backupTool.CopyServices;
 
 public interface IProgressBar {
     void onProgressUpdate(double progress); // z. B. Wert zwischen 0 und 1
