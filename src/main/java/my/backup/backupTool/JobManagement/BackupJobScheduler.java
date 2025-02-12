@@ -41,6 +41,24 @@ public class BackupJobScheduler {
         }
     }
 
+    public void checkThreadStates(){
+            for (Map.Entry<Thread, BaseModel> e : this.threadMap.entrySet()) {
+                Thread thread = e.getKey();
+
+                // Überprüfen, ob der Thread den Zustand RUNNABLE hat
+                if (thread.getState() == Thread.State.RUNNABLE) {
+                    System.out.println("THREAD IS RUNNABLE");
+                } else if (thread.getState() == Thread.State.BLOCKED) {
+                    System.out.println("Thread " + thread.getName() + " is BLOCKED.");
+                } else if (thread.getState() == Thread.State.WAITING) {
+                    System.out.println("Thread " + thread.getName() + " is WAITING.");
+                }
+            }
+    }
+
+
+
+
     /**
      * Starts a new copying thread. It distinguishes between two copy methods: Merge or Full.
      * The operation also depends on the boolean condition hasBackupJob() in the model.

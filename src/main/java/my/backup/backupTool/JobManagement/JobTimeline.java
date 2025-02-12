@@ -42,6 +42,7 @@ public class JobTimeline implements Runnable {
                 synchronized (lockObjTimeline) {
                     while(!App.JobScheduler.getThreadMap().isEmpty()) {
                         //Every 60 Seconds check Time. This may be not necessary. Finished Threads remove themselves from Map.
+                        App.JobScheduler.checkThreadStates();
                         lockObjTimeline.wait(60000);
                         System.out.println("LOCK OBJECT LIST IS EMPTY RELEASES");
                     }
