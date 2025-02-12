@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Factory.CopyServiceFactory;
 import my.backup.backupTool.Controller.MessageTYPE;
-import my.backup.backupTool.JobManagement.JobTimeline;
 import my.backup.backupTool.Model.BaseModel;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class MergeService implements IMergeService,Runnable {
 
     private ICopyService copyService;
     private IMessageList messageList;
-    private BaseModel model;
+    private volatile BaseModel model;
     Thread thread;
     public MergeService(BaseModel model) {
         this.copyService = CopyServiceFactory.createCopyService(model);
@@ -64,8 +63,11 @@ public class MergeService implements IMergeService,Runnable {
         if(model.isRestoreMode()){
             model.setRestoreMode(false);
         }
+
         App.DataStore.saveModelAsJSON(this.model);
-        App.JobScheduler.threadFinished(Thread.currentThread());
+        App.JobScheduler.backupThreadFinished(Thread.currentThread());
+
+      //  App.JobScheduler.backupThreadFinished(Thread.currentThread());
         System.out.println("Thread BEENDET: " + Thread.currentThread().getName());
     }
 
@@ -138,7 +140,5 @@ public class MergeService implements IMergeService,Runnable {
         return thread;
     }
 
-    public void setThread(Thread thread) {
-        this.thread = thread;
-    }
+
 }

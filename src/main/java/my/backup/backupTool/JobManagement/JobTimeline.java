@@ -5,9 +5,7 @@ import my.backup.backupTool.Model.BaseModel;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JobTimeline implements Runnable {
@@ -15,8 +13,9 @@ public class JobTimeline implements Runnable {
     private static JobTimeline Instance = null;
     private final AtomicBoolean running = new AtomicBoolean();
     private long sleepTimeInSeconds;
+    private static final long DURATION_MAX_SECONDS = 86400;
     private final Object lockObjTimeline = new Object();
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private List<BaseModel> storedList = null;
 
     private JobTimeline() {
         this.running.set(true);
@@ -25,7 +24,9 @@ public class JobTimeline implements Runnable {
     public static JobTimeline Singleton() {
         if (Instance == null) {
             synchronized (JobTimeline.class) {
-                Instance = new JobTimeline();
+                if(Instance == null) {
+                    Instance = new JobTimeline();
+                }
             }
         }
         return Instance;
@@ -35,78 +36,72 @@ public class JobTimeline implements Runnable {
     public void run() {
         while (running.get()) {
             this.fireAllScheduledBackups();
-            this.sleepTimeInSeconds = this.calculateSleepTimeInSeconds();
-//Wenn die Liste null ist brauche ich das lock nicht nur wenn sie einen inhalt hat.
-            try {
+
+           try {
                 synchronized (lockObjTimeline) {
-                    System.out.println("BEGIN SYNCRONIZED WAIT: " + this.sleepTimeInSeconds + " seconds");
-                    System.out.println("BEGIN SYNCRONIZED WAIT: " + App.JobScheduler.getThreadMap().size());
-                    if (App.JobScheduler.getThreadMap().size() == 0) {
-                        this.startTimerWithEvent(sleepTimeInSeconds);
+                    while(!App.JobScheduler.getThreadMap().isEmpty()) {
+                        //Every 60 Seconds check Time. This may be not necessary. Finished Threads remove themselves from Map.
+                        lockObjTimeline.wait(60000);
+                        System.out.println("LOCK OBJECT LIST IS EMPTY RELEASES");
                     }
-
-                    lockObjTimeline.wait();
-                    System.out.println("END SYNCRONIZED WAIT: " + this.sleepTimeInSeconds + " seconds");
                 }
-
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
-            }
-
-            System.out.println("-------------------------------Thread: " + Thread.currentThread().getName() + ": " + this.sleepTimeInSeconds);
-            try {
-                System.out.println("JobTimeline Thread sleeping for: " + this.sleepTimeInSeconds + " seconds");
+               this.sleepTimeInSeconds = this.calculateSleepInSeconds();
+                //Thread sleeps until the next Backup Time is reached.
+               System.out.println("THREAD IS GOING TO SLEEP: " + this.sleepTimeInSeconds);
                 Thread.sleep(this.sleepTimeInSeconds * 1000); //Millisekunden
-                System.out.println("JobTimeline Thread sleeping completed." + "isRunning: " + this.running.get());
-            } catch (InterruptedException e) {
-                // Interrupt-Status wieder setzen
-                Thread.currentThread().interrupt();  // Interrupt-Flag wieder setzen
-                System.out.println("Thread was interrupted during sleep");
-                return;  // Falls der Thread unterbrochen wurde, beende die Methode.
-            }
+               System.out.println("THREAD WAKES UP");
+           }
+
+           catch (InterruptedException e) {
+               Thread.currentThread().interrupt();
+               return;
+           }
 
 
         }
     }
 
     public void fireAllScheduledBackups() {
-        for (BaseModel m : App.DataStore.getModelList()) {
+        this.storedList = App.DataStore.getModelList();
+        for (BaseModel m : this.storedList) {
             if (m.getNextBackupLocalDateTime() == null)
                 continue;
-            System.out.println("NEXT BACKUP TIME: " + m.getNextBackupLocalDateTime() + "\nLOCALDATETIME NOW: " + LocalDateTime.now());
-            ;
             if (m.getNextBackupLocalDateTime().isBefore(LocalDateTime.now()) && m.hasBackupJob()) {
                 App.JobScheduler.fireBackupEvent(m);
-                System.out.println("JobTimeline Fire Backup Event");
             }
-
 
         }
     }
 
 
-    private long calculateSleepTimeInSeconds() {
-        long sleepTimeInSeconds = 86400;
-        for (BaseModel m : App.DataStore.getModelList()) {
-            if (m.getNextBackupLocalDateTime() == null)
-                continue;
-            LocalDateTime now = LocalDateTime.now();
-            System.out.println("CALCULATED SLEEP TIME METHOD NOW VALUE: " + now);
-            LocalDateTime next = m.getNextBackupLocalDateTime();
-            System.out.println("NEXT BACKUP TIME: " + next);
-            Duration duration = Duration.between(now, next);
-            long seconds = duration.getSeconds();
-            if (seconds < 0) {
+    private long calculateSleepInSeconds() {
+        long sleepTimeInSeconds = DURATION_MAX_SECONDS;
+        this.storedList = App.DataStore.getModelList();
+        for (BaseModel m : this.storedList) {
+            if (m.getNextBackupLocalDateTime() == null) {
                 continue;
             }
-            else if (seconds > 86400) {  // 86400 Sekunden = 24 Stunden
-                sleepTimeInSeconds = 86400;
-            } else if (seconds < sleepTimeInSeconds) {
-                sleepTimeInSeconds = seconds;
-            }
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime next = m.getNextBackupLocalDateTime();
+        Duration duration = Duration.between(now, next);
+        long durationInSeconds = duration.getSeconds();
+
+        // Waiting for result is possible but may block the Scheduler Timeline if something happens with a Backup INSTANCE.
+        // if nextBackupTime is not calculated the Schedules goes on with 1 second steps. But this is not posssible only if there is at the end of the Service job.
+        // Maybe a check if last backup time changed but 1 second steps until values are updated works.
+        // The new Backup Time is Calculated at the end of a Backup Job where  i notify the wait lock if all Backup Threads are finished in the HashMap.
+        // If Scheduler is faster than save JSON and update repository list the getter DataStore.getModelList() is not up to date.
+        if (durationInSeconds <= 0) {
+            sleepTimeInSeconds = 1;
+            System.out.println("SLEEP TIME IN SECONDS C1: " + sleepTimeInSeconds);
         }
-        System.out.println("NEXT CALCULATED SLEEP TIME:" + sleepTimeInSeconds);
+        else if (durationInSeconds > 0 && durationInSeconds < sleepTimeInSeconds) {
+            sleepTimeInSeconds = durationInSeconds;
+        }
+        else if (durationInSeconds > DURATION_MAX_SECONDS) {  // 86400 Sekunden = 24 Stunden
+            sleepTimeInSeconds = DURATION_MAX_SECONDS;}
+        }
+        System.out.println("NEXT CALCULATED SLEEP TIME: " + sleepTimeInSeconds + " seconds");
         return sleepTimeInSeconds;
     }
 
@@ -131,23 +126,7 @@ public class JobTimeline implements Runnable {
     // Stoppen des Threads
     public void notifyLock() {
         synchronized (lockObjTimeline) {
-            System.out.println("JobTimeline Thread was locked");
-            lockObjTimeline.notify();  // Falls der Thread im wait() ist, wecken
+            lockObjTimeline.notifyAll();
         }
-    }
-
-
-    private void startTimerWithEvent(long delayInSeconds) {
-        // Task, der das Event auslöst, wenn der Timer abgelaufen ist
-        Runnable eventTask = new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Event ausgelöst nach " + delayInSeconds + " Sekunden!");
-                notifyLock();
-            }
-        };
-
-        // Timer planen, der nach 'delayInSeconds' Sekunden die 'eventTask' ausführt
-        scheduler.schedule(eventTask, delayInSeconds, TimeUnit.SECONDS);
     }
 }

@@ -15,7 +15,6 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
 
     private final BaseModel model;
 
-
     public BaseCopyService(BaseModel model) {
         this.model = model;
     }

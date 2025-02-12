@@ -1,6 +1,5 @@
 package my.backup.backupTool.JobManagement;
 
-import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Service.IMergeService;
@@ -8,7 +7,6 @@ import my.backup.backupTool.Service.MergeService;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class BackupJobScheduler {
 
@@ -16,7 +14,7 @@ public class BackupJobScheduler {
     private final HashMap<Thread,BaseModel> threadMap;
     private Thread timelineThread;
     public static JobTimeline Timeline;
-    private final Object lockObjJobScheduler = new Object();
+
 
     private BackupJobScheduler() {
         Timeline = JobTimeline.Singleton();
@@ -35,17 +33,12 @@ public class BackupJobScheduler {
     }
 
     // Methode, um auf alle Backup-Threads zu warten
-    public synchronized void threadFinished(Thread thread) {
+    public synchronized void backupThreadFinished(Thread thread) {
         this.threadMap.remove(thread);
         if(threadMap.isEmpty()) {
             Timeline.notifyLock();
-            System.out.print("threadFinished DONE.");
+            System.out.println("NOTIFY WAS FIRED THREAD MAP IS EMPTY.");
         }
-
-
-        System.out.println("Thread " + thread.getName() + " finished and removed from Threadmap");
-        System.out.println("ThreadMAP SIZE:" + threadMap.size());
-
     }
 
     /**
@@ -56,16 +49,13 @@ public class BackupJobScheduler {
      * @param model Contains all meta values required for the copy operation.
      */
     public synchronized boolean fireBackupEvent(BaseModel model) {
-        System.out.println("Model JobScheduler: " + model);
         if(threadMap.containsValue(model)) {
-            System.out.println("Model " + model + " ist bereits in Map ????!");
             return false;
         }
         if(model.getBackupType() == BackupType.MERGE && model.hasBackupJob()){
             IMergeService mergeService = new MergeService(model);
             mergeService.startMergeThread();
             this.threadMap.put(mergeService.getThread(), model);
-            System.out.println("Thread in list: " + mergeService.getThread().getName());
             return true;
         }
         if(model.getBackupType() == BackupType.FULL){
@@ -82,12 +72,10 @@ public class BackupJobScheduler {
         Iterator<Map.Entry<Thread, BaseModel>> iterator = threadMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Thread, BaseModel> entry = iterator.next();
-            System.out.println("MapValues: " + entry.getKey() + ": " + entry.getValue());
 
             if (entry.getValue().getUid().equals(model.getUid())) {
                 entry.getKey().interrupt();
-                iterator.remove();  // Sicheres Entfernen während der Iteration
-                System.out.println("Model JobScheduler: " + entry.getValue());
+                iterator.remove();
             }
         }
     }
@@ -148,7 +136,6 @@ public class BackupJobScheduler {
         this.timelineThread = new Thread(JobTimeline.Singleton());
         JobTimeline.Singleton().setRunning(true);
         timelineThread.start();
-        System.out.println("Timeline thread started");
     }
 
 

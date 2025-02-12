@@ -2,6 +2,7 @@ package my.backup.backupTool.DataRepository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -52,7 +53,7 @@ public class BaseDataStoreRepository implements IDataStore {
      * @param model The BaseModel instance to be saved as an entry in the JSON file.
      * @return true if the model was saved successfully, false in case of an IO-Exception.
      */
-    public boolean saveModelAsJSON(BaseModel model) {
+    public synchronized boolean saveModelAsJSON(BaseModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
@@ -97,6 +98,8 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
+
+
     private synchronized boolean saveListAsJSON() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -110,6 +113,7 @@ public class BaseDataStoreRepository implements IDataStore {
         }
         return false;
     }
+
     /**
      * Gets one model from the JSON File with the UUID.
      *
@@ -131,7 +135,7 @@ public class BaseDataStoreRepository implements IDataStore {
      * Retrieves the current list of models.
      * @return A list of models of type BaseModel.
      */
-    public List<BaseModel> getModelList() {
+    public synchronized List<BaseModel> getModelList() {
         return this.modelList;
     }
 

@@ -185,8 +185,8 @@ public class BaseModel {
     }
 
     public void setNextBackupLocalDateTime(LocalDateTime nextBackupLocalDateTime) {
-        Platform.runLater(()->this.TransientProperties.setNextBackupTimeProperty(nextBackupLocalDateTime));
         this.nextBackupLocalDateTime = nextBackupLocalDateTime;
+        Platform.runLater(()->this.TransientProperties.setNextBackupTimeProperty(nextBackupLocalDateTime));
     }
 
     public LocalDateTime getLastBackupLocalDateTime() {
@@ -194,8 +194,8 @@ public class BaseModel {
     }
 
     public void setLastBackupLocalDateTime(LocalDateTime lastBackupLocalDateTime) {
-        Platform.runLater(()->this.TransientProperties.setLastBackupTimeProperty(lastBackupLocalDateTime));
         this.lastBackupLocalDateTime = lastBackupLocalDateTime;
+        Platform.runLater(()->this.TransientProperties.setLastBackupTimeProperty(lastBackupLocalDateTime));
     }
 
     public boolean getCheckBoxHoursInterval() {
