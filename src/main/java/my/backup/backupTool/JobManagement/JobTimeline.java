@@ -1,9 +1,6 @@
 package my.backup.backupTool.JobManagement;
 
 import my.backup.backupTool.App;
-import my.backup.backupTool.CopyServices.IMergeService;
-import my.backup.backupTool.CopyServices.MergeService;
-import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
 
 import java.time.Duration;
@@ -19,8 +16,10 @@ public class JobTimeline implements Runnable {
     private static final long DURATION_MAX_SECONDS = 86400;
     private final Object lockObjTimeline = new Object();
     private List<BaseModel> storedList = null;
+    private final IFireBackupEvent JobSchedulerCallback;
 
     private JobTimeline() {
+        JobSchedulerCallback = App.JobScheduler;
         this.running.set(true);
         this.storedList = App.DataStore.getModelList();
     }
@@ -72,8 +71,8 @@ public class JobTimeline implements Runnable {
         for (BaseModel m : this.storedList) {
             if (m.getNextBackupLocalDateTime() == null)
                 continue;
-            if (m.hasBackupJob() && m.getNextBackupLocalDateTime().isBefore(LocalDateTime.now()) && m.hasBackupJob()) {
-                App.JobScheduler.fireBackupEvent(m);
+            if (m.hasBackupJob() && m.getNextBackupLocalDateTime().isBefore(LocalDateTime.now())) {
+                JobSchedulerCallback.fireBackupEvent(m);
             }
         }
     }

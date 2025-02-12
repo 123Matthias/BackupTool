@@ -8,7 +8,7 @@ import my.backup.backupTool.CopyServices.MergeService;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class BackupJobScheduler {
+public class BackupJobScheduler implements IFireBackupEvent {
 
     private static volatile BackupJobScheduler Instance = null;
     private final HashMap<Thread,BaseModel> threadMap;
@@ -66,11 +66,12 @@ public class BackupJobScheduler {
      *
      * @param model Contains all meta values required for the copy operation.
      */
+    @Override
     public synchronized boolean fireBackupEvent(BaseModel model) {
         if(threadMap.containsValue(model)) {
             return false;
         }
-        if(model.getBackupType() == BackupType.MERGE && model.hasBackupJob()){
+        if(model.getBackupType() == BackupType.MERGE){
             IMergeService mergeService = new MergeService(model);
             mergeService.startMergeThread();
             this.threadMap.put(mergeService.getThread(), model);
@@ -86,7 +87,7 @@ public class BackupJobScheduler {
     }
 
     public synchronized boolean firePlayButton(BaseModel model) {
-        if(this.timelineThread.getState().equals(Thread.State.TIMED_WAITING)){
+        if(model.hasBackupJob() && this.timelineThread.getState().equals(Thread.State.TIMED_WAITING)){
             timelineThread.interrupt();
             System.out.println("TIMED WAITING THREAD wird AUFGEWECKT. PLAY Button was Clicked");
         }
