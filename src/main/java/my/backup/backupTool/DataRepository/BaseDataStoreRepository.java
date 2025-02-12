@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class BaseDataStoreRepository implements IDataStore {
 
@@ -18,6 +20,7 @@ public class BaseDataStoreRepository implements IDataStore {
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
     private List<BaseModel> modelList;
     private BaseModel lastSelectedModel;
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private BaseDataStoreRepository() {
 
@@ -95,16 +98,14 @@ public class BaseDataStoreRepository implements IDataStore {
             System.err.println("Fehler beim Speichern des Modells als JSON: " + e.getMessage());
             return false;
         }
+
     }
 
 
-
-
-    private synchronized boolean saveListAsJSON() {
+    private boolean saveListAsJSON() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
-
         try {
             objectMapper.writeValue(file, this.modelList);
             return true;
@@ -120,7 +121,7 @@ public class BaseDataStoreRepository implements IDataStore {
      * @param id of Type String. The auto Created UUID.
      * @return the model with the given id in the Param.
      */
-    public BaseModel getModelById(String id) {
+    public synchronized BaseModel getModelById(String id) {
         for (BaseModel entry : this.modelList) {
             if (entry.getUid() != null && entry.getUid().equals(id)) {
                 System.out.println("GetModel.ByID:" + entry.getUid());
@@ -135,9 +136,16 @@ public class BaseDataStoreRepository implements IDataStore {
      * Retrieves the current list of models.
      * @return A list of models of type BaseModel.
      */
-    public synchronized List<BaseModel> getModelList() {
-        return this.modelList;
+    public List<BaseModel> getModelList() {
+        readWriteLock.readLock().lock();
+        try {
+            return this.modelList;
+        }
+        finally {
+            readWriteLock.readLock().unlock();
+        }
     }
+
 
     public boolean deleteModelById_KeepBackup(String uid) {
         for (int i = 0; i < this.modelList.size(); i++) {

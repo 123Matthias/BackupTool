@@ -37,6 +37,7 @@ public class JobTimeline implements Runnable {
         while (running.get()) {
             this.fireAllScheduledBackups();
 
+
            try {
                 synchronized (lockObjTimeline) {
                     while(!App.JobScheduler.getThreadMap().isEmpty()) {
@@ -47,7 +48,7 @@ public class JobTimeline implements Runnable {
                 }
                this.sleepTimeInSeconds = this.calculateSleepInSeconds();
                 //Thread sleeps until the next Backup Time is reached.
-               System.out.println("THREAD IS GOING TO SLEEP: " + this.sleepTimeInSeconds);
+               System.out.println("THREAD IS GOING TO SLEEP: " + this.sleepTimeInSeconds + "\n\n\n");
                 Thread.sleep(this.sleepTimeInSeconds * 1000); //Millisekunden
                System.out.println("THREAD WAKES UP");
            }
@@ -66,10 +67,9 @@ public class JobTimeline implements Runnable {
         for (BaseModel m : this.storedList) {
             if (m.getNextBackupLocalDateTime() == null)
                 continue;
-            if (m.getNextBackupLocalDateTime().isBefore(LocalDateTime.now()) && m.hasBackupJob()) {
+            if (m.hasBackupJob() && m.getNextBackupLocalDateTime().isBefore(LocalDateTime.now()) && m.hasBackupJob()) {
                 App.JobScheduler.fireBackupEvent(m);
             }
-
         }
     }
 
@@ -78,7 +78,7 @@ public class JobTimeline implements Runnable {
         long sleepTimeInSeconds = DURATION_MAX_SECONDS;
         this.storedList = App.DataStore.getModelList();
         for (BaseModel m : this.storedList) {
-            if (m.getNextBackupLocalDateTime() == null) {
+            if (m.hasBackupJob() == false || m.getNextBackupLocalDateTime() == null) {
                 continue;
             }
         LocalDateTime now = LocalDateTime.now();
@@ -93,16 +93,15 @@ public class JobTimeline implements Runnable {
         // If Scheduler is faster than save JSON and update repository list the getter DataStore.getModelList() is not up to date.
         if (durationInSeconds <= 0) {
             sleepTimeInSeconds = 1;
-            System.out.println("SLEEP TIME IN SECONDS C1: " + sleepTimeInSeconds);
         }
-        else if (durationInSeconds > 0 && durationInSeconds < sleepTimeInSeconds) {
+        if (durationInSeconds > 0 && durationInSeconds < sleepTimeInSeconds) {
             sleepTimeInSeconds = durationInSeconds;
         }
         else if (durationInSeconds > DURATION_MAX_SECONDS) {  // 86400 Sekunden = 24 Stunden
             sleepTimeInSeconds = DURATION_MAX_SECONDS;}
         }
         System.out.println("NEXT CALCULATED SLEEP TIME: " + sleepTimeInSeconds + " seconds");
-        return sleepTimeInSeconds;
+        return sleepTimeInSeconds + 2; //2Sekunden Puffer wegen Sekunden runden
     }
 
     public boolean isRunning() {
