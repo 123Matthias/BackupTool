@@ -51,11 +51,11 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
              FileChannel targetChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
 
             long fileProcessedSize = 0;
-            long transferBufferSize = 64*1024; // 64k Buffer initial
+            long transferBufferSize = super.DEFAULT_BUFFERSIZE; // 64kiB Buffer initial
             long fileSize = sourceChannel.size();
             //If File size greater than 1MB
-            if(5*1024*1024 < fileSize){
-               transferBufferSize = calculateBufferSize(fileSize);
+            if(5*1024*1024 < fileSize){ //5MiB
+               transferBufferSize = super.calculateBufferSize(fileSize);
             //   System.out.println("transferBufferSize: " + transferBufferSize + " fileSize: " + fileSize);
             }
 
@@ -80,18 +80,6 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
         }
     }
 
-
-    private long calculateBufferSize(long fileSize) {
-        if (fileSize < 50 * 1024 * 1024) { // Dateien unter 50 MB
-            return 128 * 1024; // 128 KB
-        } else if (fileSize < 100 * 1024 * 1024) { // 50 MB - 100 MB
-            return 256 * 1024; // 256 KB
-        } else if (fileSize < 1024 * 1024 * 1024) { // Dateien unter 1 GB
-            return 1024 * 1024; // 1 MB
-        } else { // Sehr große Dateien über 1 GB
-            return 2 * 1024 * 1024; // 2 MB
-        }
-    }
 
     public BaseModel getModel() {
         return model;
