@@ -10,29 +10,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JobTimeline implements Runnable {
 
-    private static JobTimeline Instance = null;
     private final AtomicBoolean running = new AtomicBoolean();
     private long sleepTimeInSeconds;
     private static final long DURATION_MAX_SECONDS = 86400;
     private final Object lockObjTimeline = new Object();
     private List<BaseModel> storedList = null;
-    private final IFireBackupEvent JobSchedulerCallback;
+    private IFireBackupEvent jobSchedulerCallback;
 
-    private JobTimeline() {
-        JobSchedulerCallback = App.JobScheduler;
+    public JobTimeline() {
         this.running.set(true);
         this.storedList = App.DataStore.getModelList();
-    }
-
-    public static JobTimeline Singleton() {
-        if (Instance == null) {
-            synchronized (JobTimeline.class) {
-                if(Instance == null) {
-                    Instance = new JobTimeline();
-                }
-            }
-        }
-        return Instance;
     }
 
     @Override
@@ -72,7 +59,7 @@ public class JobTimeline implements Runnable {
             if (m.getNextBackupLocalDateTime() == null)
                 continue;
             if (m.hasBackupJob() && m.getNextBackupLocalDateTime().isBefore(LocalDateTime.now())) {
-                JobSchedulerCallback.fireBackupEvent(m);
+                jobSchedulerCallback.fireBackupEvent(m);
             }
         }
     }
@@ -131,4 +118,9 @@ public class JobTimeline implements Runnable {
             lockObjTimeline.notifyAll();
         }
     }
+
+    public void setJobSchedulerCallback(IFireBackupEvent callback) {
+        this.jobSchedulerCallback = callback;
+    }
+
 }

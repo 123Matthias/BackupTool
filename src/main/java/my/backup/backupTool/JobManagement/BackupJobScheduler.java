@@ -2,8 +2,8 @@ package my.backup.backupTool.JobManagement;
 
 import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.CopyServices.IMergeService;
-import my.backup.backupTool.CopyServices.MergeService;
+import my.backup.backupTool.Services.IMergeService;
+import my.backup.backupTool.Services.MergeService;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -13,24 +13,31 @@ public class BackupJobScheduler implements IFireBackupEvent {
     private static volatile BackupJobScheduler Instance = null;
     private final HashMap<Thread,BaseModel> threadMap;
     private Thread timelineThread;
-    public static JobTimeline Timeline;
+    private final JobTimeline Timeline;
 
 
     private BackupJobScheduler() {
-        Timeline = JobTimeline.Singleton();
+        Timeline = new JobTimeline();
+        this.initTimeline();
         this.threadMap = new HashMap<>();
         startTimelineThread();
     }
 
+    private void initTimeline(){
+        Timeline.setJobSchedulerCallback(this);
+    }
 
     public static BackupJobScheduler Singleton() {
-        if(Instance == null) {
+        if (Instance == null) {  // Erster Check (ungesichert)
             synchronized (BackupJobScheduler.class) {
-                Instance = new BackupJobScheduler();
+                if (Instance == null) {  // Zweiter Check (gesichert)
+                    Instance = new BackupJobScheduler();
+                }
             }
         }
         return Instance;
     }
+
 
     // Methode, um auf alle Backup-Threads zu warten
     public synchronized void backupThreadFinished(Thread thread) {
@@ -161,8 +168,8 @@ public class BackupJobScheduler implements IFireBackupEvent {
 
 
     private void startTimelineThread() {
-        this.timelineThread = new Thread(JobTimeline.Singleton());
-        JobTimeline.Singleton().setRunning(true);
+        this.timelineThread = new Thread(Timeline);
+        this.Timeline.setRunning(true);
         timelineThread.start();
     }
 

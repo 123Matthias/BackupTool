@@ -1,4 +1,4 @@
-package my.backup.backupTool.CopyServices;
+package my.backup.backupTool.Services;
 
 
 public interface IMergeService {

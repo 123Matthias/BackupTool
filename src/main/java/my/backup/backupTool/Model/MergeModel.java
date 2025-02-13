@@ -1,8 +1,8 @@
 package my.backup.backupTool.Model;
 
 
-import my.backup.backupTool.Service.IMessageList;
-import my.backup.backupTool.Service.MessageList;
+import my.backup.backupTool.Notifications.IMessageList;
+import my.backup.backupTool.Notifications.MessageList;
 
 public class MergeModel extends BaseModel {
 

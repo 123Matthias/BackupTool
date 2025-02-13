@@ -13,9 +13,9 @@ import javafx.stage.Stage;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Encryption.EncryptionTYPE;
 import my.backup.backupTool.Model.*;
-import my.backup.backupTool.Service.IUpdateScene;
-import my.backup.backupTool.Service.MessageService;
-import my.backup.backupTool.Service.SceneUpdateFXMLService;
+import my.backup.backupTool.Notifications.IUpdateScene;
+import my.backup.backupTool.Notifications.MessageService;
+import my.backup.backupTool.Services.SceneUpdateFXMLService;
 
 import java.io.File;
 import java.time.LocalDateTime;

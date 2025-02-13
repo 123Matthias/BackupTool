@@ -3,8 +3,8 @@ package my.backup.backupTool.JobManagement;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Model.ValidationTYPE;
-import my.backup.backupTool.CopyServices.FileValidationService;
-import my.backup.backupTool.CopyServices.IFileValidationService;
+import my.backup.backupTool.Services.FileValidationService;
+import my.backup.backupTool.Services.IFileValidationService;
 
 import java.util.List;
 

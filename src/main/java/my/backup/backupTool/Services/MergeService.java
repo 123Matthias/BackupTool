@@ -1,4 +1,4 @@
-package my.backup.backupTool.CopyServices;
+package my.backup.backupTool.Services;
 
 
 import javafx.application.Platform;
@@ -6,9 +6,9 @@ import my.backup.backupTool.App;
 import my.backup.backupTool.Factory.CopyServiceFactory;
 import my.backup.backupTool.Controller.MessageTYPE;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.Service.IMessageList;
-import my.backup.backupTool.Service.MessageList;
-import my.backup.backupTool.Service.MessageService;
+import my.backup.backupTool.Notifications.IMessageList;
+import my.backup.backupTool.Notifications.MessageList;
+import my.backup.backupTool.Notifications.MessageService;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -49,6 +49,7 @@ public class MergeService implements IMergeService,Runnable {
 
         try {
             totalSize = this.copyService.calculateTotalSize(Paths.get(this.model.getSource()));
+            copyService.setTotalFileSize(totalSize);
             copyFileTree(this.copyService, totalSize);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -103,12 +104,16 @@ public class MergeService implements IMergeService,Runnable {
                 if (Files.exists(targetFilePath)) {
                     long targetLastModifiedTime = Files.getLastModifiedTime(targetFilePath).toMillis();
                     long sourceLastModifiedTime = Files.getLastModifiedTime(file).toMillis();
-                    double targetFileSize = Files.size(targetFilePath);
-                    double sourceFileSize = Files.size(file);
+                    long targetFileSize = Files.size(targetFilePath);
+                    long sourceFileSize = Files.size(file);
 
                     if (sourceLastModifiedTime > targetLastModifiedTime || sourceFileSize != targetFileSize) {
                         copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
                         //           System.out.println("Datei ersetzt (neuer): " + file);
+                    }
+                    else {
+                        copyService.addFileProcessedSize(sourceFileSize);
+                        copyService.updateProgressBar(copyService.getModel());
                     }
                 }
 

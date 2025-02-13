@@ -5,13 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.application.Platform;
 import my.backup.backupTool.Encryption.EncryptionTYPE;
-import my.backup.backupTool.Service.MessageList;
+import my.backup.backupTool.Notifications.MessageList;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class BaseModel {
 

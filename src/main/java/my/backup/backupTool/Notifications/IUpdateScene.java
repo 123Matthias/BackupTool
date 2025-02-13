@@ -1,4 +1,4 @@
-package my.backup.backupTool.Service;
+package my.backup.backupTool.Notifications;
 
 public interface IUpdateScene  {
 

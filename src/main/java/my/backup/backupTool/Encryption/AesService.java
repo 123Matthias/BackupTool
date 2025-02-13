@@ -1,8 +1,8 @@
 package my.backup.backupTool.Encryption;
 
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.CopyServices.BaseCalculationService;
-import my.backup.backupTool.CopyServices.ICopyService;
+import my.backup.backupTool.Services.BaseCalculationService;
+import my.backup.backupTool.Services.ICopyService;
 
 import javax.crypto.*;
 import java.io.IOException;
@@ -56,9 +56,9 @@ public class AesService extends BaseCalculationService implements ICopyService {
                 fileProcessedSize += buffer.remaining();
                 buffer.clear();
 
-                double progress = (double) fileProcessedSize / totalSize;
-                super.updateProgress(progress, this.model);
-                super.calculateWorkingSpeed(fileProcessedSize,this.model);
+                long progress = fileProcessedSize / totalSize;
+                super.updateProgressBar(this.model);
+            //    super.calculateWorkingSpeed(fileProcessedSize,this.model);
             }
 
             byte[] finalBlock = cipher.doFinal();
@@ -87,5 +87,9 @@ public class AesService extends BaseCalculationService implements ICopyService {
 
     public static String encodeKey(SecretKey key) {
         return Base64.getEncoder().encodeToString(key.getEncoded());
+    }
+
+    public BaseModel getModel() {
+        return model;
     }
 }

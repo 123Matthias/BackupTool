@@ -1,4 +1,4 @@
-package my.backup.backupTool.Service;
+package my.backup.backupTool.Notifications;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -8,15 +8,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.util.Pair;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.MessageController;
 import my.backup.backupTool.Controller.MessageTYPE;
 import my.backup.backupTool.SceneBuilder;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class MessageService {
 

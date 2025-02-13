@@ -28,8 +28,8 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
     public static BaseDataStoreRepository Singleton() {
-        if(Instance == null) {
             synchronized (BaseDataStoreRepository.class) {
+                if(Instance == null) {
                 Instance = new BaseDataStoreRepository();
             }
         }
@@ -136,14 +136,8 @@ public class BaseDataStoreRepository implements IDataStore {
      * Retrieves the current list of models.
      * @return A list of models of type BaseModel.
      */
-    public List<BaseModel> getModelList() {
-        readWriteLock.readLock().lock();
-        try {
-            return this.modelList;
-        }
-        finally {
-            readWriteLock.readLock().unlock();
-        }
+    public synchronized List<BaseModel> getModelList() {
+        return this.modelList;
     }
 
 

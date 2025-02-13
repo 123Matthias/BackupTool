@@ -1,10 +1,10 @@
-package my.backup.backupTool.CopyServices;
+package my.backup.backupTool.Services;
 
 import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.Service.IMessageList;
-import my.backup.backupTool.Service.MessageList;
+import my.backup.backupTool.Notifications.IMessageList;
+import my.backup.backupTool.Notifications.MessageList;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -19,7 +19,7 @@ import java.util.zip.CRC32;
 public class FileValidationService extends BaseCalculationService implements IFileValidationService {
 
     private long totalFileSize;
-    private double progress;
+    private long progress;
 
     private IMessageList messageList;
     private BaseModel model;
@@ -129,9 +129,9 @@ public class FileValidationService extends BaseCalculationService implements IFi
             while ((bytesRead = bis.read(buffer)) != -1) {
                 crc32.update(buffer, 0, bytesRead);
                 fileProcessedSize += bytesRead;
-                this.progress = (double) fileProcessedSize / this.totalFileSize;
-                super.updateProgress(progress,this.model);
-                super.calculateWorkingSpeed(fileProcessedSize,this.model);
+                this.progress = fileProcessedSize / this.totalFileSize;
+                super.updateProgressBar(this.model);
+             //   super.calculateWorkingSpeed(fileProcessedSize,this.model);
             }
 
         }
@@ -161,10 +161,10 @@ public class FileValidationService extends BaseCalculationService implements IFi
                 crc32.update(buffer); // Direkte Übergabe an CRC32 ohne Byte-Array
 
                 fileProcessedSize += bytesRead;
-                double progress = (double) fileProcessedSize / this.totalFileSize;
+                long progress = fileProcessedSize / this.totalFileSize;
 
-                super.updateProgress(progress, this.model);
-                super.calculateWorkingSpeed(fileProcessedSize, this.model);
+                super.updateProgressBar(this.model);
+           //     super.calculateWorkingSpeed(fileProcessedSize, this.model);
             }
         } catch (IOException e) {
             super.messageList.addMessage(e.getMessage());
@@ -185,7 +185,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
 
     public long getCRC32FromDirectory(String path) {
-        super.updateProgress(0.0,this.model);
+        super.updateProgressBar(this.model);
         Path sourcePath = Paths.get(path);
         long valueCRC32 = 0;
         try {

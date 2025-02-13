@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import my.backup.backupTool.Main;
-import my.backup.backupTool.Service.IMessageList;
+import my.backup.backupTool.Notifications.IMessageList;
 
 public class MessageController{
 

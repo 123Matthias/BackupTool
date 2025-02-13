@@ -1,10 +1,11 @@
-package my.backup.backupTool.Service;
+package my.backup.backupTool.Services;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Main;
+import my.backup.backupTool.Notifications.IUpdateScene;
 
 import java.io.IOException;
 

@@ -1,10 +1,8 @@
 package my.backup.backupTool.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javafx.beans.property.*;
-import my.backup.backupTool.JobManagement.BackupJobScheduler;
-import my.backup.backupTool.Service.IMessageList;
-import my.backup.backupTool.Service.MessageList;
+import my.backup.backupTool.Notifications.IMessageList;
+import my.backup.backupTool.Notifications.MessageList;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -1,4 +1,4 @@
-package my.backup.backupTool.CopyServices;
+package my.backup.backupTool.Services;
 
 import my.backup.backupTool.Model.BaseModel;
 
@@ -25,7 +25,7 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
 
             byte[] buffer = new byte[8192];
             int bytesRead;
-            double fileProcessedSize = 0;
+            long fileProcessedSize = 0;
 
             //END OF Encryption Service usage
             while ((bytesRead = in.read(buffer)) != -1) {
@@ -34,10 +34,10 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
                 fileProcessedSize += bytesRead;
 
                 // Fortschritt berechnen
-                double progress = fileProcessedSize / totalSize;
-                super.updateProgress(progress, this.model);
+                long progress = fileProcessedSize / totalSize;
+                super.updateProgressBar(this.model);
 
-                super.calculateWorkingSpeed(fileProcessedSize,this.model);
+             //   super.calculateWorkingSpeed(fileProcessedSize,this.model);
             }
 
         } catch(IOException e) {
@@ -46,37 +46,54 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
     }
 
     public void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize) {
+        super.setLastProcessedSize(0);
         try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
 
             long fileProcessedSize = 0;
-            long transferChunkSize = 64*1024; // 8k Block (small and Many Data) TODO Buffer Size calculator
+            long transferBufferSize = 64*1024; // 64k Buffer initial
             long fileSize = sourceChannel.size();
+            //If File size greater than 1MB
+            if(5*1024*1024 < fileSize){
+               transferBufferSize = calculateBufferSize(fileSize);
+            //   System.out.println("transferBufferSize: " + transferBufferSize + " fileSize: " + fileSize);
+            }
 
             while (fileProcessedSize < fileSize) {
 
-                long bytesTransferred = sourceChannel.transferTo(fileProcessedSize, transferChunkSize, targetChannel);
-
+                long bytesTransferred = sourceChannel.transferTo(fileProcessedSize, transferBufferSize, targetChannel);
                 fileProcessedSize += bytesTransferred;
-
-                double progress = (double) fileProcessedSize / totalSize;
-
-                super.updateProgress(progress, this.model);
-                super.calculateWorkingSpeed(fileProcessedSize,this.model);
-
+                super.addFileProcessedSize(bytesTransferred);
+                super.updateProgressBar(this.model);
+                super.calculateWorkingSpeed(this.model);
                 if (Thread.currentThread().isInterrupted()) {
                     System.out.println("Thread interrupted: " + Thread.currentThread().getName());
                     return;
                 }
             }
 
+
+
+
         } catch (IOException e) {
             super.messageList.addMessage(e.getMessage());
         }
     }
 
-    protected BaseModel getModel() {
-        return this.model;
+
+    private long calculateBufferSize(long fileSize) {
+        if (fileSize < 50 * 1024 * 1024) { // Dateien unter 50 MB
+            return 128 * 1024; // 128 KB
+        } else if (fileSize < 100 * 1024 * 1024) { // 50 MB - 100 MB
+            return 256 * 1024; // 256 KB
+        } else if (fileSize < 1024 * 1024 * 1024) { // Dateien unter 1 GB
+            return 1024 * 1024; // 1 MB
+        } else { // Sehr große Dateien über 1 GB
+            return 2 * 1024 * 1024; // 2 MB
+        }
     }
 
+    public BaseModel getModel() {
+        return model;
+    }
 }

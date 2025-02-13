@@ -1,9 +1,9 @@
-package my.backup.backupTool.CopyServices;
+package my.backup.backupTool.Services;
 
 import javafx.application.Platform;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.Service.IMessageList;
-import my.backup.backupTool.Service.MessageList;
+import my.backup.backupTool.Notifications.IMessageList;
+import my.backup.backupTool.Notifications.MessageList;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -15,16 +15,22 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 public abstract class BaseCalculationService {
-
     private long lastTime = System.nanoTime();
     private double lastProcessedSize = 0;
     IMessageList messageList;
+    private double lastProgressStateUpdate;
+    private long sumFileProcessedSize;
+    private long lastSumFileProcessedSize;
+    private long totalFileSize;
+    private long fileProcessedSize;
+
     public BaseCalculationService() {
+        sumFileProcessedSize = 0;
+        lastProgressStateUpdate = 0;
+        lastSumFileProcessedSize= 0;
+        fileProcessedSize = 0;
         messageList = new MessageList();
     }
-    private double lastProgressState = 0;
-
-
 
     public void finishCalculations(BaseModel model) {
         Platform.runLater(()->{ model.TransientProperties.setProgressState(0.0);
@@ -34,19 +40,23 @@ public abstract class BaseCalculationService {
 
     }
 
-    protected void updateProgress(double progress, BaseModel model) {
-        if(progress == 0.0 || progress > lastProgressState + 0.05 || progress == 1.0) {
-            lastProgressState = progress;
+    public void addFileProcessedSize(long fileProcessedSize){
+        this.sumFileProcessedSize += fileProcessedSize;
+    }
+
+    public void updateProgressBar(BaseModel model) {
+        double progress = (double) this.sumFileProcessedSize / this.totalFileSize;
+        if(progress > lastProgressStateUpdate + 0.025 || progress == 1.0) {
+            lastProgressStateUpdate = progress;
             Platform.runLater(()-> model.TransientProperties.setProgressState(progress));
 
            // System.out.println("Model BaseCalculationService: " + model);
-            System.out.println("Progress_Property: " + model.TransientProperties.getProgressStateProperty());
+           // System.out.println("Progress_Property: " + model.TransientProperties.getProgressStateProperty());
            // System.out.println("Aktueller Fortschritt: " + (int) (model.getProgressState() * 100) + "%");
         }
     }
 
-
-    protected void calculateWorkingSpeed(double fileProcessedSize, BaseModel model) {
+    public void calculateWorkingSpeed(BaseModel model) {
         long nextTime = System.nanoTime();
         double elapsedTime = (nextTime - this.lastTime) / 1_000_000_000.0;
 
@@ -55,17 +65,17 @@ public abstract class BaseCalculationService {
         }
         else{
             this.lastTime = nextTime;
-            double workingSpeed = ((fileProcessedSize - lastProcessedSize) / (1024.0 * 1024.0)) / elapsedTime;
-            this.lastProcessedSize = fileProcessedSize;
+            double workingSpeed = ((sumFileProcessedSize - lastSumFileProcessedSize) / (1024.0 * 1024.0)) / elapsedTime;
+            this.lastSumFileProcessedSize = sumFileProcessedSize;
             Platform.runLater(()-> model.TransientProperties.setWorkingSpeed(workingSpeed));
-            System.out.println("Speed: " + model.TransientProperties.getWorkingSpeed());
+         //   System.out.println("Speed: " + model.TransientProperties.getWorkingSpeed());
 
         }
-
     }
 
-
-
+    public void setLastProcessedSize(double lastProcessedSize) {
+        this.lastProcessedSize = lastProcessedSize;
+    }
 
     public long calculateTotalSize(Path sourcePath) {
         AtomicLong totalSize = new AtomicLong(0);
@@ -93,11 +103,20 @@ public abstract class BaseCalculationService {
         return totalSize.get();
     }
 
-    public double getLastProgressState() {
-        return lastProgressState;
+    public double getLastProgressStateUpdate() {
+        return lastProgressStateUpdate;
     }
 
-    public void setLastProgressState(double lastProgressState) {
-        this.lastProgressState = lastProgressState;
+    public void setLastProgressStateUpdate(double lastProgressStateUpdate) {
+        this.lastProgressStateUpdate = lastProgressStateUpdate;
     }
+
+    public double getTotalFileSize() {
+        return totalFileSize;
+    }
+
+    public void setTotalFileSize(long totalFileSize) {
+        this.totalFileSize = totalFileSize;
+    }
+
 }

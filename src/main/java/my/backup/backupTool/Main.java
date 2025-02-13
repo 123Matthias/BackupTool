@@ -9,11 +9,10 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-public static App App;
+public final App App = new App();
     @Override
     public void start(Stage stage) throws IOException {
 
-        App = new App();
         App.Router.setMainStage(stage);  // Sicherstellen, dass app.Router hier nicht null ist
         App.Router.getMainStage().show();
 
