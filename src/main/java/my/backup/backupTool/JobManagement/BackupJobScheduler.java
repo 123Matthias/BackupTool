@@ -76,21 +76,24 @@ public class BackupJobScheduler implements IFireBackupEvent,IGetThreadMap {
      */
     @Override
     public synchronized boolean fireBackupEvent(BaseModel model) {
+        Thread thread = null;
         if(threadMap.containsValue(model)) {
             return false;
         }
         if(model.getBackupType() == BackupType.MERGE){
             IMergeService mergeService = new MergeService(model);
-            mergeService.startMergeThread();
-            this.threadMap.put(mergeService.getThread(), model);
+            thread = new Thread(mergeService);
+            this.threadMap.put(thread,model);
+            thread.start();
             return true;
         }
-        if(model.getBackupType() == BackupType.FULL){
+        else if(model.getBackupType() == BackupType.FULL){
             //TODO
         }
-        if(model.getBackupType() == BackupType.SYNCHRONIZED){
+        else if(model.getBackupType() == BackupType.SYNCHRONIZED){
             //TODO
         }
+
         return false;
     }
 
@@ -179,6 +182,7 @@ public class BackupJobScheduler implements IFireBackupEvent,IGetThreadMap {
     public HashMap<Thread, BaseModel> getThreadMap() {
         return threadMap;
     }
+
 }
 
 

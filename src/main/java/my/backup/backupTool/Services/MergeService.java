@@ -33,13 +33,6 @@ public class MergeService implements IMergeService,Runnable {
         this.messageList = new MessageList();
     }
 
-    @Override
-    public void startMergeThread() {
-        this.thread = new Thread(this);
-        this.thread.start();
-        System.out.println("Thread MAX THREADS: " + MAX_THREADS + " CORE COUNT: " + CORE_COUNT);
-    }
-
 
     @Override
     public void run() {
