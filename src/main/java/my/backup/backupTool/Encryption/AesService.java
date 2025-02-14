@@ -48,17 +48,23 @@ public class AesService extends BaseCalculationService implements ICopyService {
 
             // buffering blocks and encrypting these blocks
             long fileProcessedSize = 0;
-            ByteBuffer buffer = ByteBuffer.allocate(64*1024);
+            ByteBuffer buffer = ByteBuffer.allocate((int)calculateBufferSize(inputChannel.size()));
             while (inputChannel.read(buffer) != -1) {
                 buffer.flip();
                 byte[] encryptedData = cipher.update(buffer.array(), 0, buffer.remaining());
                 outputChannel.write(ByteBuffer.wrap(encryptedData));
                 fileProcessedSize += buffer.remaining();
+                //add size in buffer to progress bar and for speed calculation
+                super.addFileProcessedSize(buffer.remaining());
                 buffer.clear();
 
-                long progress = fileProcessedSize / totalSize;
                 super.updateProgressBar(this.model);
-            //    super.calculateWorkingSpeed(fileProcessedSize,this.model);
+                super.calculateWorkingSpeed(this.model);
+
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("Thread interrupted: " + Thread.currentThread().getName());
+                    return;
+                }
             }
 
             byte[] finalBlock = cipher.doFinal();

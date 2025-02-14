@@ -5,6 +5,7 @@ import my.backup.backupTool.Model.BaseModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
 
@@ -45,7 +46,7 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
         }
     }
 
-    public void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize) {
+    public void copyFileWithFileChannelTT(Path sourceFile, Path targetFile, long totalSize) {
         super.setLastProcessedSize(0);
         try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
@@ -54,10 +55,8 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
             long transferBufferSize = super.DEFAULT_BUFFERSIZE; // 64kiB Buffer initial
             long fileSize = sourceChannel.size();
             //If File size greater than 1MB
-            if(5*1024*1024 < fileSize){ //5MiB
                transferBufferSize = super.calculateBufferSize(fileSize);
             //   System.out.println("transferBufferSize: " + transferBufferSize + " fileSize: " + fileSize);
-            }
 
             while (fileProcessedSize < fileSize) {
 
@@ -73,6 +72,43 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
             }
 
 
+        } catch (IOException e) {
+            super.messageList.addMessage(e.getMessage());
+        }
+    }
+
+
+    public void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize) {
+        super.setLastProcessedSize(0);
+        try (FileChannel inputChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
+             FileChannel outputChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
+
+
+            ByteBuffer buffer;
+
+            if(inputChannel.size() < 5*1024*1024) {
+                buffer = ByteBuffer.allocateDirect((int)super.DEFAULT_BUFFERSIZE);
+            }
+            else{
+                buffer = ByteBuffer.allocate((int)super.calculateBufferSize(inputChannel.size()));
+            }
+            //System.out.println("transferBufferSize: " + transferBufferSize + " fileSize: " + fileSize);
+
+            while (inputChannel.read(buffer) > -1) {
+                buffer.flip();
+                int bytesTransferred = outputChannel.write(buffer);
+                super.addFileProcessedSize(bytesTransferred);
+                buffer.clear();
+
+                if(inputChannel.size() < 50*1024*1024) {
+                    continue;
+                }
+                else{
+                    super.updateProgressBar(this.model);
+                    super.calculateWorkingSpeed(this.model);
+                }
+
+            }
 
 
         } catch (IOException e) {

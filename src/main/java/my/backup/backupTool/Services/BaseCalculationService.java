@@ -33,7 +33,7 @@ public abstract class BaseCalculationService {
         messageList = new MessageList();
     }
 
-    public void finishCalculations(BaseModel model) {
+    public synchronized void finishCalculations(BaseModel model) {
         Platform.runLater(()->{ model.TransientProperties.setProgressState(0.0);
                                 model.TransientProperties.setWorkingSpeed(0);
                                 });
@@ -41,11 +41,11 @@ public abstract class BaseCalculationService {
 
     }
 
-    public void addFileProcessedSize(long fileProcessedSize){
+    public synchronized void addFileProcessedSize(long fileProcessedSize){
         this.sumFileProcessedSize += fileProcessedSize;
     }
 
-    public void updateProgressBar(BaseModel model) {
+    public synchronized void updateProgressBar(BaseModel model) {
         double progress = (double) this.sumFileProcessedSize / this.totalFileSize;
         if(progress > lastProgressStateUpdate + 0.025 || progress == 1.0) {
             lastProgressStateUpdate = progress;
@@ -57,7 +57,7 @@ public abstract class BaseCalculationService {
         }
     }
 
-    public void calculateWorkingSpeed(BaseModel model) {
+    public synchronized void calculateWorkingSpeed(BaseModel model) {
         long nextTime = System.nanoTime();
         double elapsedTime = (nextTime - this.lastTime) / 1_000_000_000.0;
 
@@ -74,7 +74,7 @@ public abstract class BaseCalculationService {
         }
     }
 
-    public void setLastProcessedSize(double lastProcessedSize) {
+    public synchronized void setLastProcessedSize(double lastProcessedSize) {
         this.lastProcessedSize = lastProcessedSize;
     }
 
@@ -122,9 +122,9 @@ public abstract class BaseCalculationService {
 
 
     public long calculateBufferSize(long fileSize) {
-        if (fileSize < 50 * 1024 * 1024) {
+        if (fileSize < 10 * 1024 * 1024) {
             return 128 * 1024; // 128 KiB
-        } else if (fileSize < 100 * 1024 * 1024) {
+        } else if (fileSize < 50 * 1024 * 1024) {
             return 256 * 1024; // 256 KiB
         } else if (fileSize < 1024 * 1024 * 1024) {
             return 1024 * 1024; // 1 MiB

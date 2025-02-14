@@ -14,12 +14,18 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MergeService implements IMergeService,Runnable {
 
     private ICopyService copyService;
     private IMessageList messageList;
     private volatile BaseModel model;
+    private static final int CORE_COUNT = Runtime.getRuntime().availableProcessors();
+    private static final int MAX_THREADS  = (int)(CORE_COUNT * 0.6);
+    private final ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
     Thread thread;
     public MergeService(BaseModel model) {
         this.copyService = CopyServiceFactory.createCopyService(model);
@@ -31,6 +37,7 @@ public class MergeService implements IMergeService,Runnable {
     public void startMergeThread() {
         this.thread = new Thread(this);
         this.thread.start();
+        System.out.println("Thread MAX THREADS: " + MAX_THREADS + " CORE COUNT: " + CORE_COUNT);
     }
 
 
@@ -51,6 +58,18 @@ public class MergeService implements IMergeService,Runnable {
             totalSize = this.copyService.calculateTotalSize(Paths.get(this.model.getSource()));
             copyService.setTotalFileSize(totalSize);
             copyFileTree(this.copyService, totalSize);
+            executor.shutdown();
+            while (!executor.isTerminated()) {
+                if(Thread.currentThread().isInterrupted()) {
+                    executor.shutdownNow();
+                }
+                try {
+                    executor.awaitTermination(1, TimeUnit.SECONDS); // Wiederholt prüfen, ob alle Threads fertig sind
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Sicherstellen, dass der Interrupt-Status erhalten bleibt
+                }
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -96,6 +115,7 @@ public class MergeService implements IMergeService,Runnable {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 //StopAndInterruptButtonClick
                 if (Thread.interrupted()) {
+                    executor.shutdownNow();
                     return FileVisitResult.TERMINATE;
                 }
 
@@ -108,8 +128,10 @@ public class MergeService implements IMergeService,Runnable {
                     long sourceFileSize = Files.size(file);
 
                     if (sourceLastModifiedTime > targetLastModifiedTime || sourceFileSize != targetFileSize) {
-                        copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
-                        //           System.out.println("Datei ersetzt (neuer): " + file);
+
+                        executor.submit(() -> {
+                            copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
+                        });
                     }
                     else {
                         copyService.addFileProcessedSize(sourceFileSize);
@@ -118,8 +140,9 @@ public class MergeService implements IMergeService,Runnable {
                 }
 
                 else {
-                    copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
-                    //System.out.println("Datei kopiert: " + file);
+                    executor.submit(() -> {
+                        copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
+                    });
                 }
 
                 return FileVisitResult.CONTINUE;
