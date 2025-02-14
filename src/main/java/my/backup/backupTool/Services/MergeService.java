@@ -24,7 +24,7 @@ public class MergeService implements IMergeService,Runnable {
     private IMessageList messageList;
     private volatile BaseModel model;
     private static final int CORE_COUNT = Runtime.getRuntime().availableProcessors();
-    private static final int MAX_THREADS  = (int)(CORE_COUNT * 0.6);
+    private static final int MAX_THREADS  = (int)(CORE_COUNT * 0.8);
     private final ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
     Thread thread;
     public MergeService(BaseModel model) {
