@@ -8,7 +8,7 @@ import my.backup.backupTool.Services.MergeService;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class BackupJobScheduler implements IFireBackupEvent {
+public class BackupJobScheduler implements IFireBackupEvent,IGetThreadMap {
 
     private static volatile BackupJobScheduler Instance = null;
     private final HashMap<Thread,BaseModel> threadMap;
@@ -25,6 +25,7 @@ public class BackupJobScheduler implements IFireBackupEvent {
 
     private void initTimeline(){
         Timeline.setJobSchedulerCallback(this);
+        Timeline.setThreadMapCallback(this);
     }
 
     public static BackupJobScheduler Singleton() {
@@ -174,6 +175,7 @@ public class BackupJobScheduler implements IFireBackupEvent {
     }
 
 
+    @Override
     public HashMap<Thread, BaseModel> getThreadMap() {
         return threadMap;
     }

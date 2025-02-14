@@ -176,7 +176,7 @@ public abstract class BaseOverviewController {
         Label progressLabel = new Label();
         progressLabel.setPadding(new Insets(10, 0, 0, 0));
         progressLabel.setLabelFor(progressBar);
-        progressLabel.textProperty().bind(Bindings.format("Working speed: %.0f MB/sec", model.TransientProperties.getWorkingSpeedProperty()));
+        progressLabel.textProperty().bind(Bindings.format("Working speed: %.2f MB/sec", model.TransientProperties.getWorkingSpeedProperty()));
 
         //Click Listener
         contentBox.setOnMouseClicked(event -> openDetailWindow(uid));

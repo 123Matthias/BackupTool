@@ -66,7 +66,7 @@ public abstract class BaseCalculationService {
         }
         else{
             this.lastTime = nextTime;
-            double workingSpeed = ((sumFileProcessedSize - lastSumFileProcessedSize) / (1024.0 * 1024.0)) / elapsedTime;
+            double workingSpeed = ((sumFileProcessedSize - lastSumFileProcessedSize) / (1000.0 * 1000.0)) / elapsedTime;
             this.lastSumFileProcessedSize = sumFileProcessedSize;
             Platform.runLater(()-> model.TransientProperties.setWorkingSpeed(workingSpeed));
          //   System.out.println("Speed: " + model.TransientProperties.getWorkingSpeed());

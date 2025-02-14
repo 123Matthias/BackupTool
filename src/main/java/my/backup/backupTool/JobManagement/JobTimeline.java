@@ -16,6 +16,7 @@ public class JobTimeline implements Runnable {
     private final Object lockObjTimeline = new Object();
     private List<BaseModel> storedList = null;
     private IFireBackupEvent jobSchedulerCallback;
+    private IGetThreadMap threadMapCallback;
 
     public JobTimeline() {
         this.running.set(true);
@@ -28,7 +29,7 @@ public class JobTimeline implements Runnable {
            this.fireAllScheduledBackups();
            try {
                 synchronized (lockObjTimeline) {
-                    while(!App.JobScheduler.getThreadMap().isEmpty()) {
+                    while(!threadMapCallback.getThreadMap().isEmpty()) {
                         //Every 60 Seconds check Time. This may be not necessary. Finished Threads remove themselves from Map.
                         App.JobScheduler.checkThreadStates();
                         lockObjTimeline.wait(60000);
@@ -123,4 +124,7 @@ public class JobTimeline implements Runnable {
         this.jobSchedulerCallback = callback;
     }
 
+    public void setThreadMapCallback(IGetThreadMap threadMapCallback) {
+        this.threadMapCallback = threadMapCallback;
+    }
 }
