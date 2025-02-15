@@ -1,6 +1,7 @@
 package my.backup.backupTool.Services;
 
 import my.backup.backupTool.Model.BaseModel;
+import my.backup.backupTool.ServiceEncryption.CryptoMode;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +47,7 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
         }
     }
 
-    public void copyFileWithFileChannelTT(Path sourceFile, Path targetFile, long totalSize) {
+    public void copyFileWithFileChannelTT(Path sourceFile, Path targetFile, CryptoMode cryptoMode) {
         super.setLastProcessedSize(0);
         try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
              FileChannel targetChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
@@ -78,7 +79,7 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
     }
 
 
-    public void copyFileWithFileChannel(Path sourceFile, Path targetFile, long totalSize) {
+    public void copyFileWithFileChannel(Path sourceFile, Path targetFile, CryptoMode cryptoMode) {
         super.setLastProcessedSize(0);
         try (FileChannel inputChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
              FileChannel outputChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
@@ -100,10 +101,7 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
                 super.addFileProcessedSize(bytesTransferred);
                 buffer.clear();
 
-                if(inputChannel.size() < 50*1024*1024) {
-                    continue;
-                }
-                else{
+                if (inputChannel.size() >= 50 * 1024 * 1024) {
                     super.updateProgressBar(this.model);
                     super.calculateWorkingSpeed(this.model);
                 }

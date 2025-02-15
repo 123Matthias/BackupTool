@@ -16,8 +16,8 @@ module my.backup.backupTool {
     exports my.backup.backupTool.Notifications;
     exports my.backup.backupTool.Model;
     exports my.backup.backupTool.DataRepository;
-    exports my.backup.backupTool.Encryption;
-    opens my.backup.backupTool.Encryption to javafx.fxml;
+    exports my.backup.backupTool.ServiceEncryption;
+    opens my.backup.backupTool.ServiceEncryption to javafx.fxml;
     exports my.backup.backupTool.Services;
 }
 

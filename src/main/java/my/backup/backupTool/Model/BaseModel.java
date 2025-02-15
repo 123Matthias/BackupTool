@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.application.Platform;
-import my.backup.backupTool.Encryption.EncryptionTYPE;
+import my.backup.backupTool.ServiceEncryption.EncryptionTYPE;
 import my.backup.backupTool.Notifications.MessageList;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 public class BaseModel {
 
@@ -93,18 +95,14 @@ public class BaseModel {
     @JsonProperty("encryption-type")
     private EncryptionTYPE encryptionType;
 
-    @JsonProperty("secret-key")
-    @JsonSerialize(using = MyJackson.SecretKeySerializer.class)
-    @JsonDeserialize(using = MyJackson.SecretKeyDeserializer.class)
-    private SecretKey secretKey;
-
-    @JsonProperty("init-vector")
-    @JsonSerialize(using = MyJackson.IvParameterSpecSerializer.class)
-    @JsonDeserialize(using = MyJackson.IvParameterSpecDeserializer.class)
-    private IvParameterSpec initVector;
-
     @JsonProperty("checkBox-encryptionJob")
     private boolean checkBoxEncryptionJob;
+
+    @JsonProperty("init-vector")
+    private String initVector;
+
+    @JsonProperty("secret-key")
+    private String secretKey;
 
     @JsonIgnore
     public final TransientProperties TransientProperties;
@@ -327,21 +325,24 @@ public class BaseModel {
         this.encryptionType = encryptionType;
     }
 
-    public IvParameterSpec getInitVector() {
-        return initVector;
+    @JsonProperty("init-vector")
+    public String getInitVector() {
+        return this.initVector;
     }
 
-    public void setInitVector(IvParameterSpec initVector) {
-        this.initVector = initVector;
+    @JsonProperty("init-vector")
+    public void setInitVector(String initVector) {
+       this.initVector = initVector;
+    }
+
+
+    @JsonProperty("secret-key")
+    public String getSecretKey() {
+        return this.secretKey;
     }
 
     @JsonProperty("secret-key")
-    public SecretKey getSecretKey() {
-        return secretKey;
-    }
-
-    @JsonProperty("secret-key")
-    public void setSecretKey(SecretKey secretKey) {
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
 

@@ -10,6 +10,8 @@ import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
 import my.backup.backupTool.Notifications.MessageService;
+import my.backup.backupTool.ServiceEncryption.CryptoMode;
+import my.backup.backupTool.ServiceEncryption.EncryptionTYPE;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -25,6 +27,7 @@ public class MergeService implements IMergeService,Runnable {
     private IFileValidationService validationService;
     private IMessageList messageList;
     private volatile BaseModel model;
+    private CryptoMode cryptoMode;
     private Hardware hardware;
     private final ExecutorService executor;
     Thread thread;
@@ -35,6 +38,22 @@ public class MergeService implements IMergeService,Runnable {
         this.hardware = Hardware.getHardwareInfo();
         this.executor = Executors.newFixedThreadPool(hardware.preferredThreadCount());
         this.messageList = new MessageList();
+        getCryptoMode();
+    }
+
+    private void getCryptoMode() {
+        if(model.hasEncryptionJob() == false){
+            cryptoMode = CryptoMode.NONE;
+            System.out.println("Crypto mode is " + cryptoMode);
+        }
+        else if(model.hasEncryptionJob() && model.isRestoreMode() == false){
+            cryptoMode = CryptoMode.ENCRYPTION;
+            System.out.println("Crypto mode is " + cryptoMode);
+        }
+        else if(model.hasEncryptionJob() && model.isRestoreMode()){
+            cryptoMode = CryptoMode.DECRYPTION;
+            System.out.println("Crypto mode is " + cryptoMode);
+        }
     }
 
 
@@ -75,7 +94,9 @@ public class MergeService implements IMergeService,Runnable {
 
 
         /*Validation if Validation is Enabled*/
-        this.validationService.calculateAndSaveCRC32Validation();
+        if(this.model.hasValidationJob()){
+            this.validationService.calculateAndSaveCRC32Validation();
+        }
         /*END Validation if Validation is Enabled END*/
 
         LocalDateTime nextBackupTime = App.JobScheduler.calculateNextBackupTime(this.model);
@@ -132,7 +153,7 @@ public class MergeService implements IMergeService,Runnable {
                     if (sourceLastModifiedTime > targetLastModifiedTime || sourceFileSize != targetFileSize) {
 
                         executor.submit(() -> {
-                            copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
+                            copyService.copyFileWithFileChannel(file, targetFilePath, cryptoMode);
                         });
                     }
                     else {
@@ -143,7 +164,7 @@ public class MergeService implements IMergeService,Runnable {
 
                 else {
                     executor.submit(() -> {
-                        copyService.copyFileWithFileChannel(file, targetFilePath, totalFileSize);
+                        copyService.copyFileWithFileChannel(file, targetFilePath, cryptoMode);
                     });
                 }
 

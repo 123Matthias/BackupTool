@@ -4,6 +4,8 @@ import javafx.beans.property.*;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -24,6 +26,10 @@ public class TransientProperties {
     private StringProperty nextBackupTimeProperty = new SimpleStringProperty("no Date");
 
     private IMessageList messageList;
+
+    private SecretKey secretKey;
+
+    private IvParameterSpec initVector;
 
 
     public TransientProperties() {
@@ -117,4 +123,19 @@ public class TransientProperties {
         this.nextBackupTimeProperty.set(dateString);
     }
 
+    public IvParameterSpec getInitVector() {
+        return this.initVector;
+    }
+
+    public void setInitVector(IvParameterSpec initVector) {
+        this.initVector = initVector;
+    }
+
+    public SecretKey getSecretKey(){
+        return this.secretKey;
+    }
+
+    public void setSecretKey(SecretKey secretKey) {
+        this.secretKey = secretKey;
+    }
 }

@@ -11,7 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
-import my.backup.backupTool.Encryption.EncryptionTYPE;
+import my.backup.backupTool.ServiceEncryption.EncryptionTYPE;
 import my.backup.backupTool.Model.*;
 import my.backup.backupTool.Notifications.IUpdateScene;
 import my.backup.backupTool.Notifications.MessageService;
