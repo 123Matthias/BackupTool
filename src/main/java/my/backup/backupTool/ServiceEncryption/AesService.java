@@ -15,14 +15,17 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class AesService extends BaseCalculationService implements ICopyService {
 
     private final BaseModel model;
-    private final Cipher cipher;
+
+    ReentrantLock lock = new ReentrantLock();
 
     public AesService(BaseModel model) {
         this.model = model;
@@ -37,14 +40,14 @@ public class AesService extends BaseCalculationService implements ICopyService {
         }
         System.out.println("Secret Key: " + secretKeyBase64);
         System.out.println("IV: " + ivBase64);
-        this.cipher = initCipher(model.TransientProperties.getSecretKey(), model.TransientProperties.getInitVector());
+
     }
 
 
 
-    private static Cipher initCipher(SecretKey secretKey, IvParameterSpec iv) {
+    private static Cipher initCipherEncryption(SecretKey secretKey, GCMParameterSpec iv) {
         try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
             return cipher;
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
@@ -52,7 +55,18 @@ public class AesService extends BaseCalculationService implements ICopyService {
         }
     }
 
-    public synchronized void copyFileWithFileChannel(Path inputPath, Path outputPath, CryptoMode cryptoMode) {
+    private static Cipher initCipherDecryption(SecretKey secretKey, GCMParameterSpec iv) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
+            return cipher;
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
+            throw new RuntimeException("Fehler bei der Initialisierung des Ciphers", e);
+        }
+    }
+
+    public void copyFileWithFileChannel(Path inputPath, Path outputPath, CryptoMode cryptoMode) {
+      Cipher cipher = initCipherEncryption(model.TransientProperties.getSecretKey(), model.TransientProperties.getInitVector());
        if(cryptoMode == CryptoMode.DECRYPTION){
            decryptFileWithFileChannel(inputPath, outputPath);
            return;
@@ -87,36 +101,27 @@ public class AesService extends BaseCalculationService implements ICopyService {
                 }
             }
 
-
-            // Nach der Verarbeitung aller Blöcke den finalen Block verarbeiten (wichtig für Padding)
-            byte[] finalBlock = cipher.doFinal();
-            if (finalBlock.length > 0) {
-                outputChannel.write(ByteBuffer.wrap(finalBlock));  // Letzte verschlüsselte Daten schreiben
-            }
-
-
             super.updateProgressBar(this.model);
             super.calculateWorkingSpeed(this.model);
 
+            // Finalen Block entschlüsseln und schreiben
+            byte[] finalBlock = cipher.doFinal();
+            if (finalBlock != null && finalBlock.length > 0) {
+                outputChannel.write(ByteBuffer.wrap(finalBlock));
+            }
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException(e);
-        } catch (BadPaddingException e) {
+
+        } catch (IOException | IllegalBlockSizeException | BadPaddingException e) {
             throw new RuntimeException(e);
         }
+
     }
 
 
-    public synchronized void decryptFileWithFileChannel(Path inputPath, Path outputPath) {
-        try {
-            cipher.init(Cipher.DECRYPT_MODE, model.TransientProperties.getSecretKey(), model.TransientProperties.getInitVector());
-        } catch (InvalidKeyException ex) {
-            throw new RuntimeException(ex);
-        } catch (InvalidAlgorithmParameterException ex) {
-            throw new RuntimeException(ex);
-        }
+
+    public void decryptFileWithFileChannel(Path inputPath, Path outputPath) {
+
+        Cipher cipher = initCipherDecryption(model.TransientProperties.getSecretKey(), model.TransientProperties.getInitVector());
 
         try (FileChannel inputChannel = FileChannel.open(inputPath, StandardOpenOption.READ);
              FileChannel outputChannel = FileChannel.open(outputPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
@@ -138,33 +143,27 @@ public class AesService extends BaseCalculationService implements ICopyService {
                 outputChannel.write(ByteBuffer.wrap(decryptedData));
                 System.out.println("Entschlüsselung: " + new String(decryptedData, StandardCharsets.UTF_8));
 
-                super.addFileProcessedSize(buffer.remaining());
+                super.addFileProcessedSize(inputData.length);
                 buffer.clear();
 
                 if (inputChannel.size() >= 50 * 1024 * 1024) {
                     super.updateProgressBar(this.model);
                     super.calculateWorkingSpeed(this.model);
                 }
-            }
 
-            // Nach der Verarbeitung aller Blöcke den finalen Block entschlüsseln (wichtig für Padding)
-            byte[] finalBlock = null;
-            try {
-                finalBlock = cipher.doFinal();
-            } catch (IllegalBlockSizeException e) {
-                throw new RuntimeException(e);
-            } catch (BadPaddingException e) {
-                throw new RuntimeException(e);
-            }
-            if (finalBlock.length > 0) {
-                outputChannel.write(ByteBuffer.wrap(finalBlock));  // Letzte entschlüsselte Daten schreiben
             }
 
             super.updateProgressBar(this.model);
             super.calculateWorkingSpeed(this.model);
 
+            // Finalen Block entschlüsseln und schreiben
+            byte[] finalBlock = cipher.doFinal();
+            if (finalBlock != null && finalBlock.length > 0) {
+                outputChannel.write(ByteBuffer.wrap(finalBlock));
+            }
 
-        } catch (IOException e) {
+
+        } catch (IOException | IllegalBlockSizeException | BadPaddingException e) {
             throw new RuntimeException(e);
         }
     }
@@ -196,19 +195,19 @@ public class AesService extends BaseCalculationService implements ICopyService {
     }
 
 
-    // Setzen der echten Typen (SecretKey, IvParameterSpec) und deren Base64-Darstellung
     public void generateNewSecretKeyAndIVectorAndSetThem() {
-        // Generiere SecretKey und IV
+        // Generiere SecretKey und 12-Byte IV für GCM
         SecretKey secretKey = generateAESKey();
-        IvParameterSpec ivParameterSpec = generateIV();
+        byte[] genIV = generateGCMIV();
+        GCMParameterSpec iv = new GCMParameterSpec(128,genIV);
 
-        // Base64-kodierte Versionen der Schlüssel und IV erzeugen
-        String secretKeyBase64 = encodeKey(secretKey);
-        String ivBase64 = Base64.getEncoder().encodeToString(ivParameterSpec.getIV());
+        // Base64-kodierte Versionen erzeugen
+        String secretKeyBase64 = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        String ivBase64 = Base64.getEncoder().encodeToString(genIV);
 
-        // Setzen der echten Typen (SecretKey, IvParameterSpec) in TransientProperties
+        // Setzen der echten Typen (SecretKey, IV als Byte-Array) in TransientProperties
         model.TransientProperties.setSecretKey(secretKey);
-        model.TransientProperties.setInitVector(ivParameterSpec);
+        model.TransientProperties.setInitVector(iv);
 
         // Setzen der Base64-kodierten Strings im Modell
         model.setSecretKey(secretKeyBase64);
@@ -216,20 +215,28 @@ public class AesService extends BaseCalculationService implements ICopyService {
     }
 
 
-    // Auslesen der Base64-kodierten Strings und Umwandeln in echte Typen
     public void getExistingSecretKeyAndIVectorFromModel() {
         // Holen der Base64-kodierten Strings aus dem Model
         String secretKeyBase64 = model.getSecretKey();
         String ivBase64 = model.getInitVector();
 
-        // Umwandeln der Base64-Strings in die echten Typen
+        // Umwandeln der Base64-Strings in echte Typen
         byte[] decodedSecretKey = Base64.getDecoder().decode(secretKeyBase64);
-        model.TransientProperties.setSecretKey(new SecretKeySpec(decodedSecretKey, "AES"));
+        SecretKey secretKey = new SecretKeySpec(decodedSecretKey, "AES");
 
         byte[] decodedIv = Base64.getDecoder().decode(ivBase64);
-        model.TransientProperties.setInitVector(new IvParameterSpec(decodedIv));
-
-        // Jetzt hast du den SecretKey und den IvParameterSpec im richtigen Typ
-        // Du kannst damit weiterarbeiten, z.B. in einem Verschlüsselungsalgorithmus
+        GCMParameterSpec iv = new GCMParameterSpec(128, decodedIv);
+        // Setzen der echten Werte im Modell
+        model.TransientProperties.setSecretKey(secretKey);
+        model.TransientProperties.setInitVector(iv); // Byte-Array statt IvParameterSpec
     }
+
+
+    private static byte[] generateGCMIV() {
+        byte[] iv = new byte[12]; // GCM empfiehlt 12-Byte IV
+        new SecureRandom().nextBytes(iv);
+        return iv;
+    }
+
+
 }

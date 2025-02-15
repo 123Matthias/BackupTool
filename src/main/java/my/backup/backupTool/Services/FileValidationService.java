@@ -224,9 +224,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
     }
 
 
-
-
-    public boolean validate(){
+    public synchronized boolean validate(){
         if(this.model.getSourceValidationValue().equals(this.model.getTargetValidationValue())){
             return true;
         }
@@ -241,13 +239,16 @@ public class FileValidationService extends BaseCalculationService implements IFi
         super.finishCalculations(this.model);
         long crc32Source = checkAllFilesCRC32(this.model.getSource(), this.model.getTarget());
         super.finishCalculations(this.model);
-        Platform.runLater(()->this.model.setSourceValidationValue(String.valueOf(crc32Source)));
-        Platform.runLater(()->this.model.setTargetValidationValue(String.valueOf(fileTreeVisited)));
+        Platform.runLater(() -> {
+            this.model.setSourceValidationValue(String.valueOf(crc32Source));
+            this.model.setTargetValidationValue(String.valueOf(fileTreeVisited));
+            validate();
+        });
+
 
         this.model.setValidationJob(false);
         super.finishCalculations(this.model);
 
-        boolean validate = validate();
 
         App.DataStore.saveModelAsJSON(this.model);
 
