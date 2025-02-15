@@ -22,18 +22,20 @@ public abstract class BaseCalculationService {
     private long sumFileProcessedSize;
     private long lastSumFileProcessedSize;
     private long totalFileSize;
-    private long fileProcessedSize;
+
     public final long DEFAULT_BUFFERSIZE = 64*1024; // 64k Buffer initial
 
     public BaseCalculationService() {
         sumFileProcessedSize = 0;
         lastProgressStateUpdate = 0;
         lastSumFileProcessedSize= 0;
-        fileProcessedSize = 0;
         messageList = new MessageList();
     }
 
     public synchronized void finishCalculations(BaseModel model) {
+        this.sumFileProcessedSize = 0;
+        this.lastProgressStateUpdate = 0.0;
+        this.lastProcessedSize = 0.0;
         Platform.runLater(()->{ model.TransientProperties.setProgressState(0.0);
                                 model.TransientProperties.setWorkingSpeed(0);
                                 });
@@ -43,6 +45,11 @@ public abstract class BaseCalculationService {
 
     public synchronized void addFileProcessedSize(long fileProcessedSize){
         this.sumFileProcessedSize += fileProcessedSize;
+    }
+
+
+    public double getLastProcessedSize() {
+        return lastProcessedSize;
     }
 
     public synchronized void updateProgressBar(BaseModel model) {
@@ -114,6 +121,14 @@ public abstract class BaseCalculationService {
 
     public double getTotalFileSize() {
         return totalFileSize;
+    }
+
+    public long getSumFileProcessedSize() {
+        return sumFileProcessedSize;
+    }
+
+    public void setSumFileProcessedSize(long sumFileProcessedSize) {
+        this.sumFileProcessedSize = sumFileProcessedSize;
     }
 
     public void setTotalFileSize(long totalFileSize) {

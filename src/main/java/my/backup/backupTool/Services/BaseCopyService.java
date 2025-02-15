@@ -109,6 +109,9 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
                 }
 
             }
+            //update after copy for small file sizes
+            super.updateProgressBar(this.model);
+            super.calculateWorkingSpeed(this.model);
 
 
         } catch (IOException e) {

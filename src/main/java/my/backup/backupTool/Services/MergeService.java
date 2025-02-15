@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Factory.CopyServiceFactory;
 import my.backup.backupTool.Controller.MessageTYPE;
+import my.backup.backupTool.JobManagement.Hardware;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
@@ -21,15 +22,18 @@ import java.util.concurrent.TimeUnit;
 public class MergeService implements IMergeService,Runnable {
 
     private ICopyService copyService;
+    private IFileValidationService validationService;
     private IMessageList messageList;
     private volatile BaseModel model;
-    private static final int CORE_COUNT = Runtime.getRuntime().availableProcessors();
-    private static final int MAX_THREADS  = (int)(CORE_COUNT * 0.8);
-    private final ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
+    private Hardware hardware;
+    private final ExecutorService executor;
     Thread thread;
     public MergeService(BaseModel model) {
         this.copyService = CopyServiceFactory.createCopyService(model);
+        this.validationService = new FileValidationService(model);
         this.model = model;
+        this.hardware = Hardware.getHardwareInfo();
+        this.executor = Executors.newFixedThreadPool(hardware.preferredThreadCount());
         this.messageList = new MessageList();
     }
 
@@ -46,20 +50,19 @@ public class MergeService implements IMergeService,Runnable {
         }
 
         long totalSize;
-
         try {
             totalSize = this.copyService.calculateTotalSize(Paths.get(this.model.getSource()));
             copyService.setTotalFileSize(totalSize);
-            copyFileTree(this.copyService, totalSize);
+            this.copyFileTree(this.copyService, totalSize);
             executor.shutdown();
             while (!executor.isTerminated()) {
                 if(Thread.currentThread().isInterrupted()) {
                     executor.shutdownNow();
                 }
                 try {
-                    executor.awaitTermination(1, TimeUnit.SECONDS); // Wiederholt prüfen, ob alle Threads fertig sind
+                    executor.awaitTermination(1, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Sicherstellen, dass der Interrupt-Status erhalten bleibt
+                    Thread.currentThread().interrupt(); //Schalter rücksetzen verhindern Interrupt Flag
                 }
             }
 
@@ -67,20 +70,26 @@ public class MergeService implements IMergeService,Runnable {
             throw new RuntimeException(e);
         }
 
+
         this.copyService.finishCalculations(this.model);
+
+
+        /*Validation if Validation is Enabled*/
+        this.validationService.calculateAndSaveCRC32Validation();
+        /*END Validation if Validation is Enabled END*/
 
         LocalDateTime nextBackupTime = App.JobScheduler.calculateNextBackupTime(this.model);
         this.model.setNextBackupLocalDateTime(nextBackupTime);
-        //Last Backup Time muss unbedingt nach next Backup time stehn im Zeitlichen Verlauf
         LocalDateTime lastBackupTime = LocalDateTime.now();
         this.model.setLastBackupLocalDateTime(lastBackupTime);
-
 
         if(model.isRestoreMode()){
             model.setRestoreMode(false);
         }
 
         App.DataStore.saveModelAsJSON(this.model);
+
+
         App.JobScheduler.backupThreadFinished(Thread.currentThread());
 
       //  App.JobScheduler.backupThreadFinished(Thread.currentThread());

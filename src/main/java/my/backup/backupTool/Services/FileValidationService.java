@@ -2,6 +2,7 @@ package my.backup.backupTool.Services;
 
 import javafx.application.Platform;
 import my.backup.backupTool.App;
+import my.backup.backupTool.JobManagement.Hardware;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
@@ -13,6 +14,10 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.CRC32;
 
 
@@ -20,23 +25,29 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
     private long totalFileSize;
     private long progress;
-
     private IMessageList messageList;
+    private int checkedFiles;
+    AtomicInteger fileTreeVisited = new AtomicInteger(0);
     private BaseModel model;
+    private Hardware hardware;
+    CRC32ConcatWrapper crc32Wrapper = new CRC32ConcatWrapper();
+    List<CRC32> crc32List = new ArrayList<>();
 
     public FileValidationService(BaseModel model) {
         messageList = new MessageList();
         this.model = model;
-        System.out.println("Model Hash Service:" + this.model);
+        super.setTotalFileSize(super.calculateTotalSize(Paths.get(this.model.getSource()))*2);
+        this.hardware = Hardware.getHardwareInfo();
+
     }
+
 
     public byte[] calculateHash(Path file, String algorithm) {
         MessageDigest digest = null;
 
         try {
             digest = MessageDigest.getInstance(algorithm);
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
 
@@ -47,8 +58,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
             while ((bytesRead = is.read(buffer)) != -1) {
                 digest.update(buffer, 0, bytesRead);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -61,8 +71,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
         try {
             digest = MessageDigest.getInstance("SHA-256");
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
         digest.update(oldHash);
@@ -71,36 +80,6 @@ public class FileValidationService extends BaseCalculationService implements IFi
         // Gib den kombinierten Hash zurück
         return digest.digest();
     }
-
-
-    public CRC32 concatCRC32(CRC32 oldCRC32, CRC32 newCRC32) {
-        CRC32 crc32 = new CRC32();
-
-        // Hole den CRC32-Wert aus den beiden CRC32-Objekten
-        long oldValue = oldCRC32.getValue();
-        long newValue = newCRC32.getValue();
-
-        // has to be a byte[]
-        crc32.update(longToByteArray(oldValue));
-        crc32.update(longToByteArray(newValue));
-        return crc32;  // Gib das kombinierte CRC32-Objekt zurück
-    }
-
-    class CRC32Concat {
-        private CRC32 crc32 = new CRC32();
-
-        public void update(CRC32 newCRC32) {
-            this.crc32 = concatCRC32(this.crc32, newCRC32);
-        }
-
-        public CRC32 getCRC32() {
-            return crc32;
-        }
-        public void reset(){
-            this.crc32.reset();
-        }
-    }
-
 
     // Hilfsmethode, um einen long-Wert in ein Byte-Array umzuwandeln
     private byte[] longToByteArray(long value) {
@@ -116,64 +95,46 @@ public class FileValidationService extends BaseCalculationService implements IFi
         return byteArray;
     }
 
-//slow dont use this Method
-    public CRC32 calculateCRC32WithStream(File file) {
-        CRC32 crc32 = new CRC32();
-
-        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
-
-            byte[] buffer = new byte[8192];  // Puffer für Datei 8k standard Block ....
-            int bytesRead;
-            long fileProcessedSize = 0;
-
-            while ((bytesRead = bis.read(buffer)) != -1) {
-                crc32.update(buffer, 0, bytesRead);
-                fileProcessedSize += bytesRead;
-                this.progress = fileProcessedSize / this.totalFileSize;
-                super.updateProgressBar(this.model);
-             //   super.calculateWorkingSpeed(fileProcessedSize,this.model);
-            }
-
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return crc32;
-    }
-
     protected CRC32 calculateCRC32WithFileChannel(Path sourceFile) {
         CRC32 crc32 = new CRC32();
 
-        try (FileChannel sourceChannel = FileChannel.open(sourceFile, StandardOpenOption.READ)) {
-            long fileProcessedSize = 0;
-            long chunkSize = 1024 * 64; // 8K Blöcke
+        try (FileChannel inputChannel = FileChannel.open(sourceFile, StandardOpenOption.READ)) {
 
-            ByteBuffer buffer = ByteBuffer.allocateDirect((int) chunkSize);
+            ByteBuffer buffer;
 
-            while (fileProcessedSize < this.totalFileSize) {
-                buffer.clear();  // Puffer für neuen Lesevorgang zurücksetzen
-                int bytesRead = sourceChannel.read(buffer);
-
-                if (bytesRead == -1) break; // Dateiende erreicht
-
-                buffer.flip(); // In den Lesemodus wechseln
-                crc32.update(buffer); // Direkte Übergabe an CRC32 ohne Byte-Array
-
-                fileProcessedSize += bytesRead;
-                long progress = fileProcessedSize / this.totalFileSize;
-
-                super.updateProgressBar(this.model);
-           //     super.calculateWorkingSpeed(fileProcessedSize, this.model);
+            if (inputChannel.size() < 5 * 1024 * 1024) {
+                buffer = ByteBuffer.allocateDirect((int) super.DEFAULT_BUFFERSIZE);
+            } else {
+                buffer = ByteBuffer.allocate((int) super.calculateBufferSize(inputChannel.size()));
             }
+
+
+            while (inputChannel.read(buffer) > -1) {
+                buffer.flip();
+                int bytesRead = buffer.remaining();
+                crc32.update(buffer);
+                super.addFileProcessedSize(bytesRead);
+                buffer.clear();
+
+                if (inputChannel.size() < 50 * 1024 * 1024) {
+                    continue;
+                } else {
+                    System.out.println("File Processed Size= " + super.getSumFileProcessedSize());
+                    System.out.println("TotalFileSize= " + super.getTotalFileSize());
+                    super.updateProgressBar(this.model);
+                    super.calculateWorkingSpeed(this.model);
+                }
+            }
+
+            super.updateProgressBar(this.model);
+            super.calculateWorkingSpeed(this.model);
+
         } catch (IOException e) {
             super.messageList.addMessage(e.getMessage());
         }
 
         return crc32;
     }
-
-
 
     public String bytesToHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
@@ -183,52 +144,87 @@ public class FileValidationService extends BaseCalculationService implements IFi
         return sb.toString();
     }
 
+    public long checkAllFilesCRC32(String source, String target) {
+        Path sourcePath = Paths.get(source);
+        Path targetPath = Paths.get(target);
 
-    public long getCRC32FromDirectory(String path) {
-        super.updateProgressBar(this.model);
-        Path sourcePath = Paths.get(path);
-        long valueCRC32 = 0;
+        long checked = 0;
         try {
             this.totalFileSize = super.calculateTotalSize(sourcePath);
-            valueCRC32 = calculateCRC32FromPath(sourcePath);
+            checked = calculateCRC32FromPath(sourcePath, targetPath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return valueCRC32;
+        return checked;
 
     }
 
-    private long calculateCRC32FromPath(Path sourcePath) throws IOException {
+    private long calculateCRC32FromPath(Path sourcePath, Path targetPath) throws IOException {
+        ExecutorService executor = Executors.newFixedThreadPool(hardware.preferredThreadCount());
+        this.checkedFiles = 0;
 
-        CRC32Concat crc32Root = new CRC32Concat();
+        // Durchlaufe alle Dateien im Verzeichnis
+        Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path source, BasicFileAttributes attrs) {
+                fileTreeVisited.incrementAndGet();
+                executor.submit(() -> {
+                    // Berechne den relativen Pfad zwischen sourcePath und der aktuellen Datei
+                    Path relativePath = sourcePath.relativize(source);
+                    // Erstelle den Zielpfad
+                    Path target = targetPath.resolve(relativePath);
 
-            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+                        CRC32 crc32Source = calculateCRC32WithFileChannel(source);
+                        CRC32 crc32Target = calculateCRC32WithFileChannel(target);
+                      //  System.out.println("CRC32Source: " + crc32Source.getValue() + " SourcePath: " + source);
+                      //  System.out.println("CRC32Target: " + crc32Target.getValue() + " TargetPath: " + target);
+                        if (crc32Source.getValue() == crc32Target.getValue()) {
+                            addCheckedFile();  // Wenn die CRC32-Werte übereinstimmen, erhöhe den Zähler
+                        }
 
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                    CRC32 newCRC32 = calculateCRC32WithFileChannel(file);
-                    //System.out.println("next CRC32: " + newCRC32.getValue());
-                    crc32Root.update(newCRC32);
-                    //System.out.println(crc32Root.getCRC32().getValue());
-                    return FileVisitResult.CONTINUE;
+                });
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                System.err.println("Fehler beim Besuchen der Datei: " + file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                if (exc != null) {
+                    System.err.println("Fehler beim Besuchen des Verzeichnisses: " + dir);
                 }
+                return FileVisitResult.CONTINUE;
+            }
+        });
 
-                @Override
-                public FileVisitResult visitFileFailed(Path file, IOException exc) {
-                    System.err.println("Fehler beim Besuchen der Datei: " + file);
-                    return FileVisitResult.CONTINUE;
+        // Warten auf den Abschluss aller Aufgaben
+        executor.shutdown();  // Startet das Herunterfahren des Executors
+        try {
+            if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+                executor.shutdownNow();  // Zwingt den Executor zum sofortigen Herunterfahren
+                if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+                    System.err.println("Executor wurde nach 120 Sekunden nicht ordnungsgemäß beendet");
                 }
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();  // Interrupt-Flag zurücksetzen
+        }
 
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-                    if (exc != null) {
-                        System.err.println("Fehler beim Besuchen des Verzeichnisses: " + dir);
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        return crc32Root.getCRC32().getValue();
+        // Rückgabe des Zählers für die überprüften Dateien
+        return checkedFiles;
     }
+
+    private synchronized void addCheckedFile() {
+        this.checkedFiles++;  // Synchronisierte Methode zum sicheren Inkrementieren des Zählers
+    }
+
+
+
 
     public boolean validate(){
         if(this.model.getSourceValidationValue().equals(this.model.getTargetValidationValue())){
@@ -239,16 +235,15 @@ public class FileValidationService extends BaseCalculationService implements IFi
         }
     }
 
-
     public boolean calculateAndSaveCRC32Validation() {
-        System.out.println("Making CRC32");
+        System.out.println("Starting Validation Service");
+
         super.finishCalculations(this.model);
-        long crc32Source = getCRC32FromDirectory(this.model.getSource());
+        long crc32Source = checkAllFilesCRC32(this.model.getSource(), this.model.getTarget());
         super.finishCalculations(this.model);
         Platform.runLater(()->this.model.setSourceValidationValue(String.valueOf(crc32Source)));
+        Platform.runLater(()->this.model.setTargetValidationValue(String.valueOf(fileTreeVisited)));
 
-        long crc32Target = getCRC32FromDirectory(this.model.getTarget());
-        Platform.runLater(()->this.model.setTargetValidationValue(String.valueOf(crc32Target)));
         this.model.setValidationJob(false);
         super.finishCalculations(this.model);
 
