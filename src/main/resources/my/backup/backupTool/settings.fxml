@@ -15,7 +15,7 @@
       alignment="TOP_LEFT"
       styleClass="basicBackground">
 
-    <ToolBar fx:id="toolBar" styleClass="toolbar">
+    <ToolBar fx:id="toolBar" styleClass="topToolbar">
         <Button fx:id="backButton" onAction="#backToMain" styleClass="basicButton"
                 minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
             <graphic>

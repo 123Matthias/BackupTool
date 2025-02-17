@@ -315,7 +315,7 @@ public abstract class BaseDetailController {
     }
 
     @FXML
-    private void playButtonClicked(){
+    protected void playButtonClicked(){
         model.setRestoreMode(false);
         model.setBackupJob(true);
         this.setModelValues();
@@ -383,7 +383,7 @@ public abstract class BaseDetailController {
     }
 
     @FXML
-    private void saveButtonClicked(){
+    protected void saveButtonClicked(){
         this.setModelValues();
         model.setBackupJob(false);
         if(model.validate()){
@@ -478,8 +478,7 @@ public abstract class BaseDetailController {
 
     }
 
-    private void closeDetailAndReloadOverview(){
-        sceneUpdate.reloadView("baseOverview.fxml");
+    protected void closeDetailAndReloadOverview(){
         Stage stage = (Stage) stackPane.getScene().getWindow();
         stage.close();
     }

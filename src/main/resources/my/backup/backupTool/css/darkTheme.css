@@ -23,7 +23,10 @@
 
     /*---------------- Toolbar----------------------- */
     -fx-color14: white; /*Stroke and Fill SVG PATH*/
-    -fx-color15: #0f0f0f; /* TOOLBAR BACKGROUND*/
+    -fx-color15: #1e1e28; /* TOOLBAR BACKGROUND*/
+    -fx-color150: #21d8ff;
+    -fx-color40: #282832;
+    -fx-color400: #09dd94;
     -fx-color16: -fx-color3; /* Border Button */
     -fx-effect1: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 0); /*SHADOW BUTTON*/
     -fx-effect2: dropshadow(gaussian, rgba(255, 255, 255, 0.3), 5, 0, 0, 0); /*hover BASIC BUTTON*/

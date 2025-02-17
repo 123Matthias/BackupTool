@@ -1,7 +1,6 @@
 package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.paint.Color;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Theme;
 
@@ -24,7 +23,7 @@ public class SettingsController {
     @FXML
     public void backToMain(){
         //  Main.mainStage.setScene(Main.sceneMain);
-        App.Router.getMainStage().setScene(App.Router.getSceneMain());
+        App.Router.getMainStage().setScene(App.Router.getMainScene());
         App.Router.getMainStage().show();
     }
     /*

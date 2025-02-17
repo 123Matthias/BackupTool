@@ -1,80 +1,59 @@
 
-Pane {
-    -fx-padding: 10;
-}
-
-.gridPane {
-    -fx-max-width: 800px;
-    -fx-max-height: 800px;
-    -fx-padding: 30px;
-    -fx-background-color: transparent;
-    -fx-grid-lines-visible: true;
-}
 .gridPane Line {
     -fx-stroke: -fx-colorGridMain;
     -fx-stroke-width: 2;
 }
 
 .mainButton1 {
-   -fx-min-width: 30px;
-   -fx-min-height: 30px;
-   -fx-max-width: 30px;
-   -fx-max-height: 30px;
-   -fx-background-radius: 15px;
-   -fx-font-family: "Serif";
-   -fx-font-size: 24px;
+    -fx-fit-to-width: true;
+    -fx-font-family: "Serif";
     -fx-background-color: none;
-    -fx-font-style: italic;
 }
 
 
 .mainButton1Box {
     -fx-text-alignment: center;
-    -fx-spacing: 10px;
-    -fx-max-width: 60;
+    -fx-spacing: 2pt;
     -fx-alignment: center;
 }
 
+.scroll-pane{
+    -fx-border-color: none;
+}
+
+.scroll-pane:focused {
+    -fx-background-color: none;
+    -fx-focus-color: none;
+    -fx-faint-focus-color: none;
+}
+
+.flowPane{
+    -fx-padding: 0 0 0 10;
+    -fx-alignment: top-center;
+}
+
+
 .mainButton1TextLabel{
     -fx-font-family: Serif;
-    -fx-font-size: 16px;
+    -fx-font-size: 10pt;
     -fx-font-style: italic;
     -fx-font-weight: bold;  /* Text fett */
     -fx-wrap-text: true;
-    -fx-min-width: 80; /* Maximale Breite für den Zeilenumbruch */
     -fx-text-alignment: center;
 }
 
-.mainButton1Path{
-    -fx-scale-x: 2.0;
-    -fx-scale-y: 2.0;
-}
 
-.mainButton1Box:hover, .imageFee:hover  {
+.mainButton1Box:hover  {
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 
 }
 
-.mainButton2 {
-    -fx-min-width: 80px;
-    -fx-min-height: 80px;
-    -fx-max-width: 80px;
-    -fx-max-height: 80px;
-    -fx-background-radius: 40px;
-    -fx-font-family: "Serif";
-    -fx-font-size: 16px;
-    -fx-font-style: italic;
-    -fx-scale-x: 1.0;
-    -fx-scale-y: 1.0;
-
+.leftToolbar{
+    -fx-border-width: 0 1 0 0;
+    -fx-spacing: 40px;
 }
 
-.mainButton2:hover {
-    -fx-scale-x: 1.03; /* 25 % größer */
-    -fx-scale-y: 1.03; /* 25 % größer */
-    -fx-transition: all 0.7s ease-in-out;
-}
 
 
 

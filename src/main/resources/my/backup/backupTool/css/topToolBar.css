@@ -1,0 +1,19 @@
+
+.topToolbar{
+    -fx-spacing: 15;
+    -fx-border-width: 0 0 1 0;
+}
+
+.basicButton {
+-fx-background-color: none;
+-fx-border-radius: 12.5px; /* Runde Ecken */
+-fx-background-radius: 12.5px;
+-fx-min-height: 25px;
+-fx-min-width: 25px;
+-fx-transition: all 0.3s ease; /* Sanfter Übergang bei Hover */
+}
+
+.basicButton:hover {
+    -fx-translate-y: -0.6;
+    -fx-transition: all 0.5s ease; /* Sanfter Übergang bei Hover */
+}

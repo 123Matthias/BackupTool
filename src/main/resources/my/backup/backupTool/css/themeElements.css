@@ -37,13 +37,9 @@
     -fx-text-fill: -fx-color13;
 }
 
-.imageFee{
+.imageStarred{
     -fx-effect: -fx-effect18;
 }
-.imageFee:hover{
-    -fx-effect: -fx-effect3;
-}
-
 
 /*-------------------END MAIN VIEW BUTTONS--------------------------*/
 
@@ -78,9 +74,14 @@
 /*---------------- END OF COMPONENTS ---------- */
 
 
-.toolbar{
+.topToolbar{
     -fx-background-color: -fx-color15;
-    -fx-border-color: -fx-color16;
+    -fx-border-color: -fx-color150;
+}
+
+.leftToolbar{
+    -fx-background-color: -fx-color40;
+    -fx-border-color: -fx-color400;
 }
 
 

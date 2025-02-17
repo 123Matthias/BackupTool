@@ -3,10 +3,10 @@ package my.backup.backupTool;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.Controller.ExceptionController;
+import my.backup.backupTool.Controller.MainController;
 
 import java.io.IOException;
 
@@ -14,9 +14,8 @@ public class Router {
 
     private static Router Instance;
     private Stage mainStage;
-    private Scene sceneMain;
-    private SceneBuilder sceneBuilderMergeOverview;
-    private Scene sceneMergeOverview;
+    private Scene mainScene;
+    private MainController mainController;
     private Scene sceneSettings;
     private Theme theme;
     private Stage toastStage;
@@ -37,11 +36,6 @@ public class Router {
             ExceptionController.handleException(e);
         }
 
-        try {
-            setSceneMergeOverview(theme.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static Router Singleton(){
@@ -61,7 +55,7 @@ public class Router {
         mainStage.getIcons().add(icon);
         mainStage.setTitle("Memoria");
         mainStage.initStyle(StageStyle.DECORATED);
-        mainStage.setScene(sceneMain);
+        mainStage.setScene(mainScene);
     }
 
     private void setToastStage(){
@@ -80,8 +74,12 @@ public class Router {
         return mainStage;
     }
 
-    public Scene getSceneMain() {
-        return sceneMain;
+    public Scene getMainScene() {
+        return mainScene;
+    }
+
+    public MainController getMainController() {
+        return mainController;
     }
 
     public void setMainScene(String theme) throws IOException {
@@ -92,9 +90,14 @@ public class Router {
                 .addStylesheet("css/main.css")
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/themeElements.css")
+                .addStylesheet("css/topToolBar.css")
+                .addStylesheet("css/baseOverview.css")
+                .addStylesheet("css/basicComponents.css")
+                .addStylesheet("css/cards.css")
                 .addStylesheet(theme)
                 .build();
-        sceneMain = sceneBuilder.getScene();
+        mainScene = sceneBuilder.getScene();
+        mainController = sceneBuilder.getController();
     }
 
     public SceneBuilder createMergeDetail(String theme) {
@@ -103,7 +106,7 @@ public class Router {
                 .setDimensions(App.Hardware.screenWidth()*0.5,App.Hardware.screenHeight()*0.7)
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/mergeDetail.css")
-                .addStylesheet("css/toolBar.css")
+                .addStylesheet("css/topToolBar.css")
                 .addStylesheet("css/basicComponents.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet(theme)
@@ -134,29 +137,6 @@ public class Router {
                 .build();
     }
 
-    public void setSceneMergeOverview(String theme) throws IOException {
-        SceneBuilder sceneBuilder = new SceneBuilder.Builder()
-                .setFXML("baseOverview.fxml")
-                .setDimensions(App.Hardware.screenWidth()*0.8,App.Hardware.screenHeight()*0.8)
-                .addStylesheet("css/basicWindow.css")
-                .addStylesheet("css/baseOverview.css")
-                .addStylesheet("css/basicComponents.css")
-                .addStylesheet("css/cards.css")
-                .addStylesheet("css/toolBar.css")
-                .addStylesheet("css/themeElements.css")
-                .addStylesheet(theme)
-                .build();
-        sceneMergeOverview = sceneBuilder.getScene();
-    }
-
-    public SceneBuilder getSceneBuilderMergeOverview() {
-        return sceneBuilderMergeOverview;
-    }
-
-    public Scene getSceneMergeOverview() {
-        return sceneMergeOverview;
-    }
-
     public Scene getSceneSettings() {
         return sceneSettings;
     }
@@ -166,7 +146,7 @@ public class Router {
                 .setFXML("settings.fxml")
                 .setDimensions(600,600)
                 .addStylesheet("css/basicWindow.css")
-                .addStylesheet("css/toolBar.css")
+                .addStylesheet("css/topToolBar.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet("css/settings.css")
                 .addStylesheet(theme)
@@ -183,7 +163,6 @@ public class Router {
         try {
             setMainScene(theme.toString());
             setSceneSettings(theme.toString());
-            setSceneMergeOverview(theme.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -9,35 +9,40 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
 
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
-
-public abstract class BaseOverviewController {
+public abstract class BaseMainController {
 
 
     @FXML
     private ToolBar toolBar;
+
     @FXML
-    private ScrollPane scrollPane;
-    @FXML
-    private FlowPane flowPane; // Dein FlowPane
-    @FXML
-    private Pane cardId;
-    @FXML
-    private VBox cardContainer;
+    private FlowPane cardContainer;
+
+
+
     @FXML
     public void initialize() {
-
-        double toolBarHeight = toolBar.getHeight();
-        flowPane.setStyle("-fx-padding: " + (toolBarHeight + 10) + " 0 0 10; -fx-alignment: top-center;");
         addAllCardsSorted(App.DataStore.getModelList());
     }
 
+    @FXML
+    public void handleMergeButtonClicked() {
+        this.cardContainer.getChildren().clear();
+        addAllCardsSorted(App.DataStore.getModelList());
+
+    }
+
+    @FXML
+    public void handleOpenSettingsWindow() {
+        App.Router.getMainStage().setScene(App.Router.getSceneSettings());
+        App.Router.getMainStage().show();
+    }
 
     public void addNewCard(BaseModel model) {
 
@@ -58,7 +63,7 @@ public abstract class BaseOverviewController {
         }
         newCardBox.setSpacing(5);
         newCardPane.setId(uid);
-        enableDragAndDrop(newCardPane, flowPane);
+        enableDragAndDrop(newCardPane, cardContainer);
 
 // Titel (HBox)
         HBox newTitleContainer = new HBox();
@@ -118,17 +123,17 @@ public abstract class BaseOverviewController {
                 createLabeledRow("Next Backup:", nextDateLabel),
                 createLabeledRow("Source Path:", model.getSource()));
 
-                HBox row;
-                HBox rowEncType;
-                if(model.getCheckBoxEncryptionJob()){
-                    row = createLabeledRow("Target Path:", model.getTarget() + " 🔒");
-                    rowEncType = createLabeledRow("Encryprion:", model.getEncryptionType().toString());
-                    contentBox.getChildren().addAll(row,rowEncType);
-                }
-                else {
-                    row = createLabeledRow("Target Path:", model.getTarget());
-                    contentBox.getChildren().addAll(row);
-                }
+        HBox row;
+        HBox rowEncType;
+        if(model.getCheckBoxEncryptionJob()){
+            row = createLabeledRow("Target Path:", model.getTarget() + " 🔒");
+            rowEncType = createLabeledRow("Encryprion:", model.getEncryptionType().toString());
+            contentBox.getChildren().addAll(row,rowEncType);
+        }
+        else {
+            row = createLabeledRow("Target Path:", model.getTarget());
+            contentBox.getChildren().addAll(row);
+        }
 
         HBox sourceValidation;
         HBox targetValidation;
@@ -156,7 +161,7 @@ public abstract class BaseOverviewController {
             String initialStyle = initialStatus ? "-fx-text-fill: green" : "-fx-text-fill: red";
             sourceHashLabel.setStyle(initialStyle);
             targetHashLabel.setStyle(initialStyle);
-            
+
 
             // Add Content to Card
             contentBox.getChildren().addAll(sourceValidation,targetValidation, validationType);
@@ -187,7 +192,7 @@ public abstract class BaseOverviewController {
         newCardPane.getChildren().add(newCardBox);
 
         // Neue Karte in das FlowPane einfügen
-        flowPane.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
+        cardContainer.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
 
         System.out.println("...............Card Added ........................");
     }
@@ -229,8 +234,8 @@ public abstract class BaseOverviewController {
 
     @FXML
     public void backToMain(){
-      //  Main.mainStage.setScene(Main.sceneMain);
-        App.Router.getMainStage().setScene(App.Router.getSceneMain());
+        //  Main.mainStage.setScene(Main.sceneMain);
+        App.Router.getMainStage().setScene(App.Router.getMainScene());
         App.Router.getMainStage().show();
     }
 
