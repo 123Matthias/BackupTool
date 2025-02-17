@@ -3,6 +3,7 @@ package my.backup.backupTool;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.Controller.ExceptionController;
@@ -11,7 +12,7 @@ import java.io.IOException;
 
 public class Router {
 
-    private static volatile Router Instance;
+    private static Router Instance;
     private Stage mainStage;
     private Scene sceneMain;
     private SceneBuilder sceneBuilderMergeOverview;
@@ -19,6 +20,7 @@ public class Router {
     private Scene sceneSettings;
     private Theme theme;
     private Stage toastStage;
+
 
     private Router() {
         this.theme = Theme.DARK;
@@ -58,15 +60,16 @@ public class Router {
         Image icon = new Image(String.valueOf(Main.class.getResource("img/FeenFluegel.png")));
         mainStage.getIcons().add(icon);
         mainStage.setTitle("Memoria");
-        mainStage.initStyle(StageStyle.DECORATED); // Kein Hintergrund für die Scene
+        mainStage.initStyle(StageStyle.DECORATED);
         mainStage.setScene(sceneMain);
     }
 
     private void setToastStage(){
         toastStage = new Stage();
         toastStage.initStyle(StageStyle.TRANSPARENT);
-        toastStage.initModality(Modality.NONE);
+        toastStage.initModality(Modality.NONE);//No Blocking other Windows
         toastStage.setAlwaysOnTop(true);
+        toastStage.initOwner(this.mainStage); // Gehört zum Main-Window
     }
 
     public Stage getToastStage(){
@@ -82,9 +85,10 @@ public class Router {
     }
 
     public void setMainScene(String theme) throws IOException {
+
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("Main.fxml")
-                .setDimensions(800,800)
+                .setDimensions(App.Hardware.screenWidth()*0.8,App.Hardware.screenHeight()*0.8)
                 .addStylesheet("css/main.css")
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/themeElements.css")
@@ -96,7 +100,7 @@ public class Router {
     public SceneBuilder createMergeDetail(String theme) {
         return new SceneBuilder.Builder()
                 .setFXML("mergeDetail.fxml")
-                .setDimensions(800, 800)
+                .setDimensions(App.Hardware.screenWidth()*0.5,App.Hardware.screenHeight()*0.7)
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/mergeDetail.css")
                 .addStylesheet("css/toolBar.css")
@@ -109,7 +113,7 @@ public class Router {
     public SceneBuilder createMessage(String theme) {
         return new SceneBuilder.Builder()
                 .setFXML("message.fxml")
-                .setDimensions(400, 300)
+                .setDimensions(App.Hardware.screenWidth()*0.4, App.Hardware.screenHeight()*0.4)
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet("css/basicComponents.css")
@@ -121,7 +125,7 @@ public class Router {
     public SceneBuilder createToast(String theme) {
         return new SceneBuilder.Builder()
                 .setFXML("toast.fxml")
-                .setDimensions(350, 80)
+                .setDimensions(App.Hardware.screenWidth()*0.3, App.Hardware.screenHeight()*0.075)
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet("css/basicComponents.css")
@@ -133,7 +137,7 @@ public class Router {
     public void setSceneMergeOverview(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("baseOverview.fxml")
-                .setDimensions(800, 800)
+                .setDimensions(App.Hardware.screenWidth()*0.8,App.Hardware.screenHeight()*0.8)
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/baseOverview.css")
                 .addStylesheet("css/basicComponents.css")
@@ -184,4 +188,5 @@ public class Router {
             throw new RuntimeException(e);
         }
     }
+
 }

@@ -23,6 +23,8 @@ public class MainController {
 
         App.Router.getMainStage().setScene(App.Router.getSceneMergeOverview());
         App.Router.getMainStage().show();
+        App.Router.getMainStage().centerOnScreen();
+
     }
 
     @FXML

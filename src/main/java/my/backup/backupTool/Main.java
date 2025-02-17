@@ -13,8 +13,9 @@ public final App App = new App();
     @Override
     public void start(Stage stage) throws IOException {
 
-        App.Router.setMainStage(stage);  // Sicherstellen, dass app.Router hier nicht null ist
+        App.Router.setMainStage(stage);
         App.Router.getMainStage().show();
+        App.Router.getMainStage().centerOnScreen();
 
     }
 

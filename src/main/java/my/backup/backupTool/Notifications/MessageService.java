@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.MessageController;
@@ -79,7 +80,6 @@ public class MessageService {
             throw new RuntimeException(e);
         }
         MessageController controller = sceneBuilder.getController();
-
         currentStage.setScene(scene);
         controller.showToast(toastText, messageType);
 
@@ -109,8 +109,6 @@ public class MessageService {
         currentPause.play();
     }
 
-
-
     private static void centerStageOnAnother(Stage stageToCenter, Stage referenceStage) {
 
         // Verhindern, dass die Stage sofort sichtbar wird (unsichtbar machen)
@@ -127,7 +125,7 @@ public class MessageService {
         double stageHeight = stageToCenter.getHeight();
 
         double stageX = referenceX + (referenceWidth - stageWidth) / 2;
-        double stageY = referenceY + (referenceHeight - stageHeight) / 2;
+        double stageY = referenceY + (referenceHeight - stageHeight) *0.97;
 
         stageToCenter.setX(stageX);
         stageToCenter.setY(stageY);

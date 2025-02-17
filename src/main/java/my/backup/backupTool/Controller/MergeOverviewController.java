@@ -58,22 +58,21 @@ public class MergeOverviewController extends BaseOverviewController {
         }
         MergeDetailController controller = sceneBuilder.getController();
         setStageDimensions(stage, controller);
+        stage.centerOnScreen();
         stage.show();
     }
 
     private void setStageDimensions(Stage stage, MergeDetailController controller) {
 
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UTILITY);
-        stage.setMinWidth(600);
-        stage.setMaxWidth(600);
-        stage.setMinHeight(750);
-        stage.setMaxHeight(750);
+        stage.setTitle("Detail");
+        stage.initStyle(StageStyle.DECORATED);
+        stage.setMinWidth(App.Hardware.screenWidth()*0.3);
+        stage.setMinHeight(App.Hardware.screenHeight()*0.8);
 
         controller.getStackPane().setMinWidth(stage.getMinWidth());
-        controller.getStackPane().setMaxWidth(stage.getMaxWidth());
         controller.getStackPane().setMinHeight(stage.getMinHeight());
-        controller.getStackPane().setMaxHeight(stage.getMaxHeight());
+
 
     }
 
