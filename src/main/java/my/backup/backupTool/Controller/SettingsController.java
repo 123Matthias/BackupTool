@@ -9,14 +9,16 @@ public class SettingsController {
     @FXML
     public void handleLightTheme(){
         App.Router.setTheme(Theme.LIGHT);
-        App.Router.getMainStage().setScene(App.Router.getSceneSettings());
+        App.Router.getMainStage().setScene(App.Router.getMainScene());
+        App.Router.getSettigsStage().setScene(App.Router.getSceneSettings());
         App.Router.getMainStage().show();
     }
 
     @FXML
     public void handleDarkTheme(){
         App.Router.setTheme(Theme.DARK);
-        App.Router.getMainStage().setScene(App.Router.getSceneSettings());
+        App.Router.getMainStage().setScene(App.Router.getMainScene());
+        App.Router.getSettigsStage().setScene(App.Router.getSceneSettings());
         App.Router.getMainStage().show();
     }
 

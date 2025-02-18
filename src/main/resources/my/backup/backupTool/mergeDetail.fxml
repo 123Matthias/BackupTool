@@ -17,7 +17,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import java.lang.String?>
 
-<StackPane fx:id="stackPane" fx:controller="my.backup.backupTool.Controller.MergeDetailController" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+<StackPane fx:id="stackPane" fx:controller="my.backup.backupTool.Controller.Merge.MergeDetailController" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            styleClass="basicBackground" >
 
 

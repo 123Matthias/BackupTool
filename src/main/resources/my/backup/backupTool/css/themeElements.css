@@ -119,6 +119,14 @@
     -fx-fill: -fx-color8;
 }
 
+/*Dont remove becouse sometomes some small areas with no Background definition can appear*/
+AnchorPane{
+    -fx-background-color: -fx-containerBackground;
+}
+
+.cardContainer{
+    -fx-background-color: -fx-containerBackground;
+}
 
 .card {
     -fx-border-color: -fx-color1;

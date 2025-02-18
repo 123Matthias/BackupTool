@@ -1,62 +1,108 @@
 package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ToolBar;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Controller.Merge.MergeDetailController;
+import my.backup.backupTool.Controller.Merge.MergeHelperController;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.SceneBuilder;
 
-import java.io.IOException;
+public class MainController {
 
-public class MainController extends BaseMainController {
+    @FXML
+    private ToolBar toolBar;
+
+    @FXML
+    private FlowPane cardContainer;
+
+    private MergeHelperController mergeHelperController;
 
     @FXML
     public void initialize(){
-        super.initialize();
-
+        mergeHelperController = new MergeHelperController(this);
+        mergeHelperController.addAllCardsSorted(App.DataStore.getModelList());
     }
 
-    @Override
+
     @FXML
-    public void openDetailWindow(String uid) {
-        //First get the Model!! then do the rest. NullPointer
-        BaseModel model = App.DataStore.getModelById(uid);
-        System.out.println("UID Nummer: " + uid);
-        Stage stage = new Stage();
-        SceneBuilder newScene = App.Router.createMergeDetail(App.Router.getTheme().toString());
+    public void backToMain(){
+        //  Main.mainStage.setScene(Main.sceneMain);
+        App.Router.getMainStage().setScene(App.Router.getMainScene());
+        App.Router.getMainStage().show();
+    }
 
-        try {
-            stage.setScene(newScene.getScene());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void enableDragAndDrop(Pane card, FlowPane container) {
+        // Drag startet
+        card.setOnDragDetected(event -> {
+            Dragboard db = card.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(card.getId()); // ID zur Identifikation
+            db.setContent(content);
+            event.consume();
+        });
 
-        MergeDetailController controller = newScene.getController();
-        controller.openUpdateScene(model);
-        setStageDimensions(stage, controller);
+        // Drag bewegt sich über eine andere Card und ist nicht die eigene Card != card
+        card.setOnDragOver(event -> {
+            if (event.getGestureSource() != card && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        // Drag wird fallen gelassen
+        card.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                String draggedId = db.getString();
+                Pane draggedCard = (Pane) container.lookup("#" + draggedId); // Suche Karte
+                if (draggedCard != null) {
+                    int dropIndex = container.getChildren().indexOf(card); // Zielposition
+                    container.getChildren().remove(draggedCard); // Alte Karte entfernen
+                    container.getChildren().add(dropIndex, draggedCard); // Neu einfügen
+
+                    BaseModel model = App.DataStore.getModelById(card.getId());
+                    model.setFlowPanePosition(container.getChildren().indexOf(card));
+                    App.DataStore.saveModelAsJSON(model);
+
+                    success = true;
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        // Drag abgeschlossen
+        card.setOnDragDone(event -> event.consume());
+    }
+
+    @FXML
+    private void handleOpenSettingsWindow(){
+        Stage stage = App.Router.getSettigsStage();
+        stage.setScene(App.Router.getSceneSettings());
         stage.show();
     }
 
-    @Override
     @FXML
-    public void openDetailWindow() {
-
-        Stage stage = new Stage();
-        SceneBuilder sceneBuilder = App.Router.createMergeDetail(App.Router.getTheme().toString());
-        try {
-            stage.setScene(sceneBuilder.getScene());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        MergeDetailController controller = sceneBuilder.getController();
-        setStageDimensions(stage, controller);
-        stage.centerOnScreen();
-        stage.show();
+    private void openMergeDetailWindow() {
+        mergeHelperController.openMergeDetailWindow();
     }
 
-    private void setStageDimensions(Stage stage, MergeDetailController controller) {
+    @FXML
+    private void handleMergeButtonClicked(){
+        mergeHelperController.handleMergeButtonClicked();
+    }
+
+
+    public void setStageDimensions(Stage stage, MergeDetailController controller) {
 
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Detail");
@@ -70,7 +116,17 @@ public class MainController extends BaseMainController {
 
     }
 
+    public MergeHelperController getMergeHelperController() {
+        return mergeHelperController;
+    }
 
 
+    public ToolBar getToolBar() {
+        return toolBar;
+    }
+
+    public FlowPane getCardContainer() {
+        return cardContainer;
+    }
 }
 

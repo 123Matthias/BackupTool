@@ -1,8 +1,6 @@
-package my.backup.backupTool.Controller;
+package my.backup.backupTool.Controller.Merge;
 
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BackupType;
 
@@ -32,7 +30,7 @@ public class MergeDetailController extends BaseDetailController {
     @FXML
     protected void saveButtonClicked() {
         super.saveButtonClicked();
-        App.Router.getMainController().handleMergeButtonClicked();
+        App.Router.getMainController().getMergeHelperController().handleMergeButtonClicked();
         super.closeDetailAndReloadOverview();
     }
 }

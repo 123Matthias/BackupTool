@@ -1,4 +1,4 @@
-package my.backup.backupTool.Controller;
+package my.backup.backupTool.Controller.Merge;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Controller.MessageTYPE;
 import my.backup.backupTool.ServiceEncryption.EncryptionTYPE;
 import my.backup.backupTool.Model.*;
 import my.backup.backupTool.Notifications.IUpdateScene;

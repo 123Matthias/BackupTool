@@ -19,11 +19,13 @@ public class Router {
     private Scene sceneSettings;
     private Theme theme;
     private Stage toastStage;
+    private Stage settigsStage;
 
 
     private Router() {
         this.theme = Theme.DARK;
         setToastStage();
+        setSettingsStage();
 
         try {
             setMainScene(theme.toString());
@@ -35,6 +37,7 @@ public class Router {
         } catch (IOException e) {
             ExceptionController.handleException(e);
         }
+
 
     }
 
@@ -68,6 +71,18 @@ public class Router {
 
     public Stage getToastStage(){
         return toastStage;
+    }
+
+    private void setSettingsStage(){
+        settigsStage = new Stage();
+        settigsStage.initStyle(StageStyle.DECORATED);
+        settigsStage.initModality(Modality.WINDOW_MODAL);//No Blocking other Windows
+        settigsStage.setAlwaysOnTop(true);
+        settigsStage.initOwner(this.mainStage); // Gehört zum Main-Window
+    }
+
+    public Stage getSettigsStage() {
+        return settigsStage;
     }
 
     public Stage getMainStage() {

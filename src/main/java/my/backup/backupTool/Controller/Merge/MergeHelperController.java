@@ -1,47 +1,78 @@
-package my.backup.backupTool.Controller;
+package my.backup.backupTool.Controller.Merge;
 
 import javafx.beans.binding.Bindings;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Controller.MainController;
 import my.backup.backupTool.Model.BaseModel;
+import my.backup.backupTool.SceneBuilder;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class BaseMainController {
+public class MergeHelperController {
 
+    private MainController mainController;
 
-    @FXML
-    private ToolBar toolBar;
-
-    @FXML
-    private FlowPane cardContainer;
-
-
-
-    @FXML
-    public void initialize() {
-        addAllCardsSorted(App.DataStore.getModelList());
+    public MergeHelperController(MainController mainController) {
+        this.mainController = mainController;
     }
 
-    @FXML
+    public void openMergeDetailWindow(String uid) {
+        //First get the Model!! then do the rest. NullPointer
+        BaseModel model = App.DataStore.getModelById(uid);
+        System.out.println("UID Nummer: " + uid);
+        Stage stage = new Stage();
+        SceneBuilder newScene = App.Router.createMergeDetail(App.Router.getTheme().toString());
+
+        try {
+            stage.setScene(newScene.getScene());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        MergeDetailController controller = newScene.getController();
+        controller.openUpdateScene(model);
+        mainController.setStageDimensions(stage, controller);
+        stage.show();
+    }
+
+    public void openMergeDetailWindow() {
+
+        Stage stage = new Stage();
+        SceneBuilder sceneBuilder = App.Router.createMergeDetail(App.Router.getTheme().toString());
+        try {
+            stage.setScene(sceneBuilder.getScene());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        MergeDetailController controller = sceneBuilder.getController();
+        mainController.setStageDimensions(stage, controller);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    public void addAllCardsSorted(List<BaseModel> list) {
+        System.out.println("-----Im in Method addAllCardsSorted-----");
+        list.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
+        for (BaseModel entry : list) {
+            System.out.println("AddCardFromList getAllCards() " + entry.getTitle());
+            addNewCard(entry);
+        }
+    }
+
     public void handleMergeButtonClicked() {
-        this.cardContainer.getChildren().clear();
+        mainController.getCardContainer().getChildren().clear();
         addAllCardsSorted(App.DataStore.getModelList());
 
-    }
-
-    @FXML
-    public void handleOpenSettingsWindow() {
-        App.Router.getMainStage().setScene(App.Router.getSceneSettings());
-        App.Router.getMainStage().show();
     }
 
     public void addNewCard(BaseModel model) {
@@ -63,7 +94,7 @@ public abstract class BaseMainController {
         }
         newCardBox.setSpacing(5);
         newCardPane.setId(uid);
-        enableDragAndDrop(newCardPane, cardContainer);
+        mainController.enableDragAndDrop(newCardPane, mainController.getCardContainer());
 
 // Titel (HBox)
         HBox newTitleContainer = new HBox();
@@ -184,7 +215,7 @@ public abstract class BaseMainController {
         progressLabel.textProperty().bind(Bindings.format("Working speed: %.2f MB/sec", model.TransientProperties.getWorkingSpeedProperty()));
 
         //Click Listener
-        contentBox.setOnMouseClicked(event -> openDetailWindow(uid));
+        contentBox.setOnMouseClicked(event -> openMergeDetailWindow(uid));
 
         // Struktur aufbauen
         newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabel, progressBar);
@@ -192,7 +223,7 @@ public abstract class BaseMainController {
         newCardPane.getChildren().add(newCardBox);
 
         // Neue Karte in das FlowPane einfügen
-        cardContainer.getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
+        mainController.getCardContainer().getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
 
         System.out.println("...............Card Added ........................");
     }
@@ -217,71 +248,6 @@ public abstract class BaseMainController {
         HBox row = new HBox(label, valueLabel);
         row.setSpacing(5);
         return row;
-    }
-
-    private void addAllCardsSorted(List<BaseModel> list) {
-        System.out.println("-----Im in Method addAllCardsSorted-----");
-        list.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
-        for (BaseModel entry : list) {
-            System.out.println("AddCardFromList getAllCards() " + entry.getTitle());
-            addNewCard(entry);
-        }
-    }
-
-    public void openDetailWindow(String uid) {};
-
-    public void openDetailWindow() {};
-
-    @FXML
-    public void backToMain(){
-        //  Main.mainStage.setScene(Main.sceneMain);
-        App.Router.getMainStage().setScene(App.Router.getMainScene());
-        App.Router.getMainStage().show();
-    }
-
-    private void enableDragAndDrop(Pane card, FlowPane container) {
-        // Drag startet
-        card.setOnDragDetected(event -> {
-            Dragboard db = card.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.putString(card.getId()); // ID zur Identifikation
-            db.setContent(content);
-            event.consume();
-        });
-
-        // Drag bewegt sich über eine andere Card und ist nicht die eigene Card != card
-        card.setOnDragOver(event -> {
-            if (event.getGestureSource() != card && event.getDragboard().hasString()) {
-                event.acceptTransferModes(TransferMode.MOVE);
-            }
-            event.consume();
-        });
-
-        // Drag wird fallen gelassen
-        card.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasString()) {
-                String draggedId = db.getString();
-                Pane draggedCard = (Pane) container.lookup("#" + draggedId); // Suche Karte
-                if (draggedCard != null) {
-                    int dropIndex = container.getChildren().indexOf(card); // Zielposition
-                    container.getChildren().remove(draggedCard); // Alte Karte entfernen
-                    container.getChildren().add(dropIndex, draggedCard); // Neu einfügen
-
-                    BaseModel model = App.DataStore.getModelById(card.getId());
-                    model.setFlowPanePosition(container.getChildren().indexOf(card));
-                    App.DataStore.saveModelAsJSON(model);
-
-                    success = true;
-                }
-            }
-            event.setDropCompleted(success);
-            event.consume();
-        });
-
-        // Drag abgeschlossen
-        card.setOnDragDone(event -> event.consume());
     }
 
 }

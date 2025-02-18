@@ -19,5 +19,7 @@ module my.backup.backupTool {
     exports my.backup.backupTool.ServiceEncryption;
     opens my.backup.backupTool.ServiceEncryption to javafx.fxml;
     exports my.backup.backupTool.Services;
+    exports my.backup.backupTool.Controller.Merge;
+    opens my.backup.backupTool.Controller.Merge to javafx.fxml;
 }
 

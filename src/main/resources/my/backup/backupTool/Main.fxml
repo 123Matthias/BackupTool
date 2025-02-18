@@ -119,7 +119,7 @@
           </Button>
 
 
-          <Button fx:id="addButton" onAction="#openDetailWindow" styleClass="basicButton" alignment="CENTER"
+          <Button fx:id="addButton" onAction="#openMergeDetailWindow" styleClass="basicButton" alignment="CENTER"
                   minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
               <tooltip>
                   <Tooltip text="add new Backup"/>
@@ -134,14 +134,10 @@
 
 
         <ScrollPane fx:id="scrollPane"
-                    fitToWidth="true"
-                    fitToHeight="true"
-                    vbarPolicy="AS_NEEDED"
-                    pannable="true"
                     AnchorPane.topAnchor="50" AnchorPane.leftAnchor="100" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
 
             <FlowPane fx:id="cardContainer"
-                    styleClass="cardContainer, containerBackground">
+                    styleClass="cardContainer">
 
             </FlowPane>
         </ScrollPane>
