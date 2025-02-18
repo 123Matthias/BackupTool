@@ -83,6 +83,10 @@
     -fx-border-color: -fx-color400;
 }
 
+.leftToolbar .context-menu {
+    -fx-background-color: -fx-color40; /* Oder die gewünschte Farbe */
+}
+
 
 .basicButton SVGPath {
     -fx-fill: -fx-color14;
