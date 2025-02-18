@@ -17,12 +17,6 @@
     -fx-alignment: center;
 }
 
-.scroll-pane{
-    -fx-background-color: none;
-    -fx-focus-color: none;
-    -fx-faint-focus-color: none;
-}
-
 
 .mainButton1TextLabel{
     -fx-font-family: Serif;
@@ -50,12 +44,24 @@
     -fx-background-radius: 5;
 }
 
+.scroll-pane{
+    -fx-fit-to-height: true;
+    -fx-fit-to-width: true;
+    -fx-vbar-policy: "AS_NEEDED";
+    -fx-background-color: none;
+    -fx-focus-color: none;
+    -fx-faint-focus-color: none;
+    -fx-border-color: none;
+    -fx-border-width: 0 0 0 0;
+
+}
+
 .cardContainer{
     -fx-padding: 10 0 0 10;
     -fx-alignment: top-left;
     -fx-focus-color: none;
     -fx-faint-focus-color: none;
-    
+    -fx-border-color: none;
 }
 
 .progress-bar {
