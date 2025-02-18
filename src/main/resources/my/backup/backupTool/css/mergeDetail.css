@@ -7,6 +7,11 @@
 }
 */
 
+.gridPane{
+    -fx-padding: 40 0 0 0;
+    -fx-stroke-width: 2;
+}
+
 .path {
     -fx-padding: 10px;
 }

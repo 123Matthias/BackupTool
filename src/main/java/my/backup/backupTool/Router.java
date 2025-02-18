@@ -91,7 +91,6 @@ public class Router {
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet("css/topToolBar.css")
-                .addStylesheet("css/baseOverview.css")
                 .addStylesheet("css/basicComponents.css")
                 .addStylesheet("css/cards.css")
                 .addStylesheet(theme)

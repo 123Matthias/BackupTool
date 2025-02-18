@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane styleClass="mainBasicBackground" fx:controller="my.backup.backupTool.Controller.MainController" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="my.backup.backupTool.Controller.MainController" xmlns:fx="http://javafx.com/fxml/1">
 
       <ToolBar styleClass="leftToolbar" orientation="VERTICAL" prefWidth="100" minWidth="100" maxWidth="100" AnchorPane.topAnchor="50" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
       <!-- Button 1 -->
@@ -141,8 +141,7 @@
                     AnchorPane.topAnchor="50" AnchorPane.leftAnchor="100" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
 
             <FlowPane fx:id="cardContainer"
-                    styleClass="flowPane"
-                    style="-fx-background-color: transparent;">
+                    styleClass="cardContainer, containerBackground">
 
             </FlowPane>
         </ScrollPane>

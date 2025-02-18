@@ -29,8 +29,7 @@
    </HBox>
    <!-- ********************END HEADER******************************-->
 
-   <GridPane styleClass="gridPane"
-             style="-fx-padding: 40 0 0 0; -fx-background-color: transparent" >
+   <GridPane styleClass="gridPane">
       <!-- Column for Full Width -->
       <columnConstraints>
          <ColumnConstraints hgrow="ALWAYS" percentWidth="11.1" />

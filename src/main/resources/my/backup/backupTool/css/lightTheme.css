@@ -58,7 +58,7 @@
     /*------------------------ END OF Components------------------------------------- */
 
     /*----------------SCENE VIEW BACKGROUND COLOR----------------*/
-    -fx-mainBasicBackground: linear-gradient(to bottom right, rgba(255, 255, 255, 1) 20%, rgba(245, 245, 245, 1) 60%, rgba(230,230,230, 1) 80%, rgba(225,225,215, 1) 100%);
+    -fx-containerBackground: linear-gradient(to bottom right, rgba(252, 252, 252, 1) 0%, rgba(250, 250, 250, 1) 30%, rgba(248,248,248, 1) 60%, rgba(245,245,245, 1) 100%);
     -fx-basicBackground: white;
     /*----------------END SCENE VIEW BACKGROUND COLOR----------------*/
 

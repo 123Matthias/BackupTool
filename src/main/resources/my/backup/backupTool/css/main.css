@@ -18,18 +18,9 @@
 }
 
 .scroll-pane{
-    -fx-border-color: none;
-}
-
-.scroll-pane:focused {
     -fx-background-color: none;
     -fx-focus-color: none;
     -fx-faint-focus-color: none;
-}
-
-.flowPane{
-    -fx-padding: 0 0 0 10;
-    -fx-alignment: top-center;
 }
 
 
@@ -52,6 +43,33 @@
 .leftToolbar{
     -fx-border-width: 0 1 0 0;
     -fx-spacing: 40px;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-radius: 5;
+}
+
+.cardContainer{
+    -fx-padding: 10 0 0 10;
+    -fx-alignment: top-left;
+    -fx-focus-color: none;
+    -fx-faint-focus-color: none;
+    
+}
+
+.progress-bar {
+    -fx-accent: -fx-color13;
+    -fx-background-color: transparent;
+    -fx-border-radius: 1;
+    -fx-border-color: -fx-color3;
+    -fx-background-radius: 1;
+}
+
+.progress-bar .track{
+    -fx-background-color: transparent;
+    -fx-pref-height: 10;
+    -fx-background-radius: 1;
 }
 
 

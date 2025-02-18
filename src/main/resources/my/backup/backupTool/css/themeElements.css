@@ -1,8 +1,7 @@
 /*-------------------MAIN VIEW BUTTONS--------------------------*/
 
 .gridPane{
-    -fx-: 5;
-    -fx-stroke-width: 5;
+    -fx-background-color: -fx-basicBackground;
 }
 
 .mainButton2 {
@@ -94,8 +93,8 @@
     -fx-background-color: -fx-basicBackground;
 }
 
-.mainBasicBackground {
-    -fx-background-color: -fx-mainBasicBackground;
+.containerBackground {
+    -fx-background-color: -fx-containerBackground;
 }
 
 
