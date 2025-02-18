@@ -54,7 +54,7 @@ public class Router {
         mainStage = stage;
 
         // Icon setzen
-        Image icon = new Image(String.valueOf(Main.class.getResource("img/FeenFluegel.png")));
+        Image icon = new Image(String.valueOf(Main.class.getResource("img/icons/counterClock.png")));
         mainStage.getIcons().add(icon);
         mainStage.setTitle("Memoria");
         mainStage.initStyle(StageStyle.DECORATED);

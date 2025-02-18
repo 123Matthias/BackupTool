@@ -1,12 +1,17 @@
 package my.backup.backupTool.Controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -15,13 +20,18 @@ import my.backup.backupTool.Controller.Merge.MergeDetailController;
 import my.backup.backupTool.Controller.Merge.MergeHelperController;
 import my.backup.backupTool.Model.BaseModel;
 
+import javax.tools.Tool;
+
 public class MainController {
 
     @FXML
-    private ToolBar toolBar;
+    private ToolBar topToolbar;
 
     @FXML
     private FlowPane cardContainer;
+
+    @FXML
+    private ToolBar leftToolbar;
 
     private MergeHelperController mergeHelperController;
 
@@ -30,6 +40,7 @@ public class MainController {
         mergeHelperController = new MergeHelperController(this);
         mergeHelperController.addAllCardsSorted(App.DataStore.getModelList());
     }
+
 
 
     @FXML
@@ -122,11 +133,14 @@ public class MainController {
 
 
     public ToolBar getToolBar() {
-        return toolBar;
+        return topToolbar;
     }
 
     public FlowPane getCardContainer() {
         return cardContainer;
     }
-}
 
+
+
+
+}

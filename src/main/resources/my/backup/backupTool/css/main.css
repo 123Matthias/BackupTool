@@ -4,16 +4,35 @@
     -fx-stroke-width: 2;
 }
 
+
+.leftToolbar{
+    -fx-border-width: 0 1 0 0;
+    -fx-orientation:"VERTICAL";
+    -fx-pref-width: 120;
+    -fx-min-width: 120;
+    -fx-max-width: 120;
+    -fx-padding:  10 5 0 0;
+}
+
+
 .mainButton1 {
     -fx-fit-to-width: true;
     -fx-font-family: "Serif";
     -fx-background-color: none;
 }
 
+.mainButton1Path{ -fx-fit-to-width: true;
+    -fx-scale-shape: true;
+}
+
+
+
 
 .mainButton1Box {
+    -fx-padding: 5 3 5 3;
+    -fx-border-width: 1 1 1 1;
+    -fx-border-radius: 0 5 5 0;
     -fx-text-alignment: center;
-    -fx-spacing: 2pt;
     -fx-alignment: center;
 }
 
@@ -22,22 +41,15 @@
     -fx-font-family: Serif;
     -fx-font-size: 10pt;
     -fx-font-style: italic;
-    -fx-font-weight: bold;  /* Text fett */
     -fx-wrap-text: true;
     -fx-text-alignment: center;
 }
 
 
 .mainButton1Box:hover  {
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-
+    -fx-translate-x: 2;
 }
 
-.leftToolbar{
-    -fx-border-width: 0 1 0 0;
-    -fx-spacing: 40px;
-}
 
 .scroll-bar:vertical .thumb,
 .scroll-bar:horizontal .thumb {

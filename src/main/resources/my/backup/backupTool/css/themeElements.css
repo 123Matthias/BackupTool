@@ -13,9 +13,7 @@
     -fx-background-color: -fx-radialGradient2;
 }
 
-.mainButton1Box{
 
-}
 
 .mainButton1Path {
     -fx-fill: -fx-radialGradient1;
@@ -72,6 +70,14 @@
 }
 /*---------------- END OF COMPONENTS ---------- */
 
+.mainButton1Box {
+    -fx-border-color: -fx-color58;
+}
+
+
+.mainButton1Box:hover  {
+    -fx-border-color: -fx-radialGradient2;
+}
 
 .topToolbar{
     -fx-background-color: -fx-color15;
