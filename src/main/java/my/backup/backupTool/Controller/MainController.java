@@ -1,26 +1,35 @@
 package my.backup.backupTool.Controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.Merge.MergeDetailController;
 import my.backup.backupTool.Controller.Merge.MergeHelperController;
 import my.backup.backupTool.Model.BaseModel;
 
 import javax.tools.Tool;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainController {
 
@@ -33,11 +42,17 @@ public class MainController {
     @FXML
     private ToolBar leftToolbar;
 
-    private MergeHelperController mergeHelperController;
+    private final MergeHelperController mergeHelperController;
+
+    private boolean isShaking = false; // Flag, um den Shake-Status zu überwachen
+    private Timeline shakeTimeline; // Die Timeline, um das Zittern zu steuern
+
+    public MainController() {
+        mergeHelperController = new MergeHelperController(this);
+    }
 
     @FXML
     public void initialize(){
-        mergeHelperController = new MergeHelperController(this);
         mergeHelperController.addAllCardsSorted(App.DataStore.getModelList());
     }
 
@@ -50,50 +65,142 @@ public class MainController {
         App.Router.getMainStage().show();
     }
 
-    public void enableDragAndDrop(Pane card, FlowPane container) {
-        // Drag startet
-        card.setOnDragDetected(event -> {
-            Dragboard db = card.startDragAndDrop(TransferMode.MOVE);
+    public void enableDragAndDrop(Pane cardPane, FlowPane container) {
+
+
+        // Drag-Start: Initialisiert den Drag-Vorgang
+        cardPane.setOnDragDetected(event -> {
+            cardPane.getChildren().get(0).getStyleClass().add("cardColDragDrop");
+            Dragboard db = cardPane.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putString(card.getId()); // ID zur Identifikation
+            content.putString(cardPane.getId()); // Speichert die ID der gezogenen Karte
             db.setContent(content);
             event.consume();
         });
 
-        // Drag bewegt sich über eine andere Card und ist nicht die eigene Card != card
-        card.setOnDragOver(event -> {
-            if (event.getGestureSource() != card && event.getDragboard().hasString()) {
-                event.acceptTransferModes(TransferMode.MOVE);
+        // Drag-Überprüfung: Ermöglicht das Ablegen über anderen Karten
+        cardPane.setOnDragOver(event -> {
+
+            for(Node n : container.getChildren()){
+
+                Pane p = (Pane) n;
+                p.getChildren().get(0).getStyleClass().add("cardCol");
+                p.getChildren().get(0).getStyleClass().remove("cardColDragDrop");
+                Object gesSource = event.getGestureSource();
+                if (gesSource instanceof Pane) {
+                    Pane pa = (Pane) gesSource;
+
+                    // Überprüfe, ob das Zittern noch nicht läuft, bevor es gestartet wird
+                    if (!isShaking) {
+                        // Auf Platform.runLater() setzen, um UI-Updates im richtigen Thread auszuführen
+                        Platform.runLater(() -> {
+                            shake(pa);  // Starte den Shake
+                        });
+                    }
+                }
+
             }
-            event.consume();
-        });
 
-        // Drag wird fallen gelassen
-        card.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasString()) {
-                String draggedId = db.getString();
-                Pane draggedCard = (Pane) container.lookup("#" + draggedId); // Suche Karte
-                if (draggedCard != null) {
-                    int dropIndex = container.getChildren().indexOf(card); // Zielposition
-                    container.getChildren().remove(draggedCard); // Alte Karte entfernen
-                    container.getChildren().add(dropIndex, draggedCard); // Neu einfügen
-
-                    BaseModel model = App.DataStore.getModelById(card.getId());
-                    model.setFlowPanePosition(container.getChildren().indexOf(card));
-                    App.DataStore.saveModelAsJSON(model);
-
-                    success = true;
+            if (event.getGestureSource() != cardPane && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+                Object objTarget = event.getGestureTarget();
+                if(objTarget instanceof Pane){
+                    Pane p = (Pane) objTarget;
+                    p.getChildren().get(0).getStyleClass().add("cardColDragDrop");
                 }
             }
-            event.setDropCompleted(success);
+
+
+
+
             event.consume();
         });
 
-        // Drag abgeschlossen
-        card.setOnDragDone(event -> event.consume());
+
+        // Drop-Vorgang: Verschiebt die Karte an die neue Position
+        cardPane.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+
+            if (db.hasString()) {
+                Pane draggedCard = (Pane) container.lookup("#" + db.getString());
+                if (draggedCard != null) {
+                    int dropIndex = container.getChildren().indexOf(cardPane);
+                    container.getChildren().remove(draggedCard);
+                    container.getChildren().add(dropIndex, draggedCard);
+
+                    // Aktualisiert die Reihenfolge im Datenmodell
+                    List<BaseModel> models = container.getChildren().stream()
+                            .map(node -> App.DataStore.getModelById(node.getId()))
+                            .collect(Collectors.toList());
+
+                    for (int i = 0; i < models.size(); i++) {
+                        models.get(i).setFlowPanePosition(i);
+                        App.DataStore.getModelById(models.get(i).getUid()).setFlowPanePosition(i);
+                    }
+                }
+            }
+
+            Object obpSource = event.getGestureSource();
+            Object objTarget = event.getGestureTarget();
+            if(objTarget instanceof Pane paneTarget){
+                System.out.println(paneTarget);
+                paneTarget.getChildren().get(0).getStyleClass().remove("cardColDragDrop");
+                paneTarget.getChildren().get(0).getStyleClass().add("cardCol");
+
+            }
+            if(obpSource instanceof Pane paneSource){
+                System.out.println(paneSource);
+                paneSource.getChildren().get(0).getStyleClass().remove("cardColDragDrop");
+                paneSource.getChildren().get(0).getStyleClass().add("cardCol");
+            }
+            this.stopShaking();
+            App.DataStore.saveModelListAsJSON();
+            event.consume();
+
+        });
     }
+
+
+    private void shake(Pane pane) {
+        if (!isShaking) {
+            isShaking = true;  // Shake-Status auf true setzen
+
+            // Erstelle eine Timeline für das Zittern auf X- und Y-Achse
+            shakeTimeline = new Timeline(
+                    new KeyFrame(Duration.millis(60), e -> {
+                        pane.setTranslateX(-1);  // Bewege es nach links
+                        pane.setTranslateY(1);   // Bewege es nach oben
+                    }),
+                    new KeyFrame(Duration.millis(120), e -> {
+                        pane.setTranslateX(1);   // Bewege es nach rechts
+                        pane.setTranslateY(-1);  // Bewege es nach unten
+                    }),
+                    new KeyFrame(Duration.millis(180), e -> {
+                        pane.setTranslateX(-1);  // Bewege es nach links
+                        pane.setTranslateY(1);   // Bewege es nach oben
+                    }),
+                    new KeyFrame(Duration.millis(240), e -> {
+                        pane.setTranslateX(1);   // Bewege es nach rechts
+                        pane.setTranslateY(-1);  // Bewege es nach unten
+                    })
+            );
+
+            // Setze die Timeline auf unendlich
+            shakeTimeline.setCycleCount(Timeline.INDEFINITE);
+            shakeTimeline.play();  // Starte die Animation
+        }
+    }
+
+    private void stopShaking() {
+        if (isShaking && shakeTimeline != null) {
+            shakeTimeline.stop();  // Stoppe die Timeline
+            isShaking = false;  // Setze das Flag zurück
+        }
+    }
+
+
+
+
 
     @FXML
     private void handleOpenSettingsWindow(){

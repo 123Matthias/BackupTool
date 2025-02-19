@@ -134,11 +134,6 @@ AnchorPane{
     -fx-background-color: -fx-containerBackground;
 }
 
-.card {
-    -fx-border-color: -fx-color1;
-    -fx-background-color: -fx-color6;
-    -fx-effect: -fx-effect19;
-}
 
 .cardContent > Label {
     -fx-text-fill: -fx-color1;
@@ -156,9 +151,27 @@ AnchorPane{
     -fx-text-fill: -fx-color1;
 }
 
-.card:hover {
+.cardCol {
+    -fx-border-color: -fx-color1;
+    -fx-background-color: -fx-color6;
+    -fx-effect: -fx-effect19;
+}
+
+.cardCol:hover {
     -fx-border-color: -fx-color13;
     -fx-effect: -fx-effect9;
+}
+
+.cardColDragDrop:hover{
+    -fx-border-color: -fx-color400;
+    -fx-background-color: -fx-color6;
+    -fx-effect: -fx-effect3;
+}
+
+.cardColDragDrop{
+    -fx-border-color: -fx-color400;
+    -fx-background-color: -fx-color6;
+    -fx-effect: -fx-effect3;
 }
 
 Label{

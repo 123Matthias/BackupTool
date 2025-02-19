@@ -2,7 +2,6 @@ package my.backup.backupTool.DataRepository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -20,7 +19,6 @@ public class BaseDataStoreRepository implements IDataStore {
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
     private List<BaseModel> modelList;
     private BaseModel lastSelectedModel;
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private BaseDataStoreRepository() {
 
@@ -47,15 +45,7 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    /**
-     * Saves the given model as a JSON entry in a predefined storage path.
-     * If no path is defined, the default path will be used.
-     * Creates a new UUID for the model.
-     * If the model already has a UUID, it will be retained and not changed.
-     *
-     * @param model The BaseModel instance to be saved as an entry in the JSON file.
-     * @return true if the model was saved successfully, false in case of an IO-Exception.
-     */
+
     public synchronized boolean saveModelAsJSON(BaseModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -102,7 +92,7 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    private boolean saveListAsJSON() {
+    public boolean saveModelListAsJSON() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
@@ -115,12 +105,7 @@ public class BaseDataStoreRepository implements IDataStore {
         return false;
     }
 
-    /**
-     * Gets one model from the JSON File with the UUID.
-     *
-     * @param id of Type String. The auto Created UUID.
-     * @return the model with the given id in the Param.
-     */
+
     public synchronized BaseModel getModelById(String id) {
         for (BaseModel entry : this.modelList) {
             if (entry.getUid() != null && entry.getUid().equals(id)) {
@@ -132,10 +117,7 @@ public class BaseDataStoreRepository implements IDataStore {
         return null;
     }
 
-    /**
-     * Retrieves the current list of models.
-     * @return A list of models of type BaseModel.
-     */
+
     public synchronized List<BaseModel> getModelList() {
         return this.modelList;
     }
@@ -146,7 +128,7 @@ public class BaseDataStoreRepository implements IDataStore {
             BaseModel entry = this.modelList.get(i);
             if (entry.getUid() != null && entry.getUid().equals(uid)) {
                 this.modelList.remove(i);
-                return saveListAsJSON();
+                return saveModelListAsJSON();
             }
         }
         return false;
@@ -158,7 +140,7 @@ public class BaseDataStoreRepository implements IDataStore {
             if (entry.getUid() != null && entry.getUid().equals(uid)) {
                 this.deleteFolderAndContents(new File(entry.getTarget()));
                 this.modelList.remove(i);
-                return saveListAsJSON();
+                return saveModelListAsJSON();
             }
         }
         return false;

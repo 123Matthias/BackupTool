@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MergeHelperController {
 
-    private MainController mainController;
+    private final MainController mainController;
 
     public MergeHelperController(MainController mainController) {
         this.mainController = mainController;
@@ -89,10 +89,12 @@ public class MergeHelperController {
         //UUID
         String uid = model.getUid() != null && !model.getUid().isEmpty() ? model.getUid() : "";
         newCardBox.getStyleClass().add("card");
+        newCardBox.getStyleClass().add("cardCol");
         if(model.getCardWidth() != 0){
             newCardBox.setStyle("-fx-pref-width:" + model.getCardWidth());
         }
         newCardBox.setSpacing(5);
+        //Required for drag and drop feature
         newCardPane.setId(uid);
         mainController.enableDragAndDrop(newCardPane, mainController.getCardContainer());
 
