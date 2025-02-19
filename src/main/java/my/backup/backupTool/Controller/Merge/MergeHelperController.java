@@ -60,7 +60,7 @@ public class MergeHelperController {
         stage.show();
     }
 
-    public void addAllCardsSorted(List<BaseModel> list) {
+    public synchronized void addAllCardsSorted(List<BaseModel> list) {
         System.out.println("-----Im in Method addAllCardsSorted-----");
         list.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
         for (BaseModel entry : list) {
@@ -108,8 +108,7 @@ public class MergeHelperController {
         titleLabel.getStyleClass().add("cardTitle"); // Stile für den Titel setzen
 
 // Buttons
-        Button increaseWidthButton = new Button("+");
-        increaseWidthButton.setStyle("-fx-font-size: 18; -fx-padding: 0");
+        Button increaseWidthButton = new Button("»");
         increaseWidthButton.setOnMouseClicked(event -> {
             double currentWidth = newCardBox.getPrefWidth();
             newCardBox.setPrefWidth(currentWidth + 50);
@@ -118,8 +117,7 @@ public class MergeHelperController {
             App.DataStore.saveModelAsJSON(model);
         });
 
-        Button decreaseWidthButton = new Button("-");
-        decreaseWidthButton.setStyle("-fx-font-size: 18; -fx-padding: 0");
+        Button decreaseWidthButton = new Button("«");
         decreaseWidthButton.setOnMouseClicked(event -> {
             double currentWidth = newCardBox.getPrefWidth();
             if (currentWidth > 50) { // Mindestbreite beachten
@@ -130,13 +128,31 @@ public class MergeHelperController {
             }
         });
 
+        String starredString = model.isStarred() ? "★" : "☆";
+        Button starredButton = new Button(starredString);
+        starredButton.setOnMouseClicked(event -> {
+            if(model.isStarred()){
+                starredButton.setText("☆");
+                model.setStarred(false);
+
+            }
+            else{
+                starredButton.setText("★");
+                model.setStarred(true);
+
+            }
+            App.DataStore.getModelById(model.getUid());
+            App.DataStore.saveModelAsJSON(model);
+        });
+
 // Pane als Platzhalter hinzufügen
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS); // Pane dehnt sich aus, um Platz zu schaffen
-        increaseWidthButton.getStyleClass().add("basicButton");
-        decreaseWidthButton.getStyleClass().add("basicButton");
+        increaseWidthButton.getStyleClass().add("basicButtonCard");
+        decreaseWidthButton.getStyleClass().add("basicButtonCard");
+        starredButton.getStyleClass().add("basicButtonCard");
 // Buttons zur HBox hinzufügen
-        newTitleContainer.getChildren().addAll(titleLabel, spacer, increaseWidthButton, decreaseWidthButton);
+        newTitleContainer.getChildren().addAll(titleLabel, spacer, starredButton, decreaseWidthButton, increaseWidthButton);
 
 // CONTENT------------------------------------------------------------
         VBox contentBox = new VBox();

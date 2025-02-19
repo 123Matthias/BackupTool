@@ -104,6 +104,9 @@ public class BaseModel {
     @JsonProperty("secret-key")
     private String secretKey;
 
+    @JsonProperty("starred")
+    private boolean starred;
+
     @JsonIgnore
     public final TransientProperties TransientProperties;
 
@@ -233,6 +236,14 @@ public class BaseModel {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
     }
 
     public int getFlowPanePosition() {
