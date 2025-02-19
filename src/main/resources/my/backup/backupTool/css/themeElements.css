@@ -74,7 +74,6 @@
     -fx-border-color: -fx-color58;
 }
 
-
 .mainButton1Box:hover  {
     -fx-border-color: -fx-radialGradient2;
 }
@@ -118,9 +117,22 @@
     -fx-background-color: -fx-color8;
 }
 
+
 .basicButton:hover > SVGPath {
     -fx-fill: -fx-color1;
 }
+
+.basicButtonSettings {
+    -fx-text-fill: -fx-color1;
+    -fx-effect: -fx-effect1;
+    -fx-background-color: none;
+    -fx-border-color: -fx-color1;
+}
+
+.basicButtonSettings:hover {
+    -fx-background-color: -fx-color8;
+}
+
 
 /*Dont remove becouse sometomes some small areas with no Background definition can appear*/
 AnchorPane{

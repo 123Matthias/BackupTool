@@ -5,17 +5,14 @@
 }
 
 .basicButton {
-    -fx-border-width: 0;
+    -fx-min-height: 25pt;
+    -fx-min-width: 25pt;
+    -fx-background-radius: 3;
 }
 
 .basicButton > * {
     -fx-text-alignment: center;
     -fx-alignment: center;
-    -fx-padding: 0;
-    -fx-font-size: 18pt;
-}
-
-
-.basicButton:hover {
+    -fx-font-size: 12pt;
 
 }

@@ -15,23 +15,13 @@
       alignment="TOP_LEFT"
       styleClass="basicBackground">
 
-    <ToolBar fx:id="toolBar" styleClass="topToolbar">
-        <Button fx:id="backButton" onAction="#backToMain" styleClass="basicButton"
-                minWidth="25" minHeight="25" prefWidth="25" prefHeight="25">
-            <graphic>
-                <SVGPath fx:id="chevronLeftIcon"
-                         content="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"
-                         strokeWidth="8"
-                         scaleX="0.03" scaleY="0.03" />
-            </graphic>
-        </Button>
-    </ToolBar>
+
 
     <VBox style="-fx-padding: 20">
-        <Label styleClass="headerText" text="Themes"/>
+        <Label styleClass="headerText" text="Themes: "/>
         <HBox spacing="20">
-            <Button text="lightTheme" styleClass="basicButton" onAction="#handleLightTheme"/>
-            <Button text="darkTheme" styleClass="basicButton"  onAction="#handleDarkTheme"/>
+            <Button text="lightTheme" styleClass="basicButtonSettings" onAction="#handleLightTheme"/>
+            <Button text="darkTheme" styleClass="basicButtonSettings" onAction="#handleDarkTheme"/>
         </HBox>
     </VBox>
 

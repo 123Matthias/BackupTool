@@ -1,5 +1,6 @@
 package my.backup.backupTool.Controller.Merge;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -113,7 +114,7 @@ public class MergeHelperController {
             newCardBox.setPrefWidth(currentWidth + 50);
             newCardBox.setStyle("-fx-pref-width: " + (currentWidth + 50) + "px;");
             model.setCardWidth((int)newCardBox.getPrefWidth());
-            App.DataStore.saveModelAsJSON(model);
+            App.DataStore.updateModelInList(model);
         });
 
         Button decreaseWidthButton = new Button("«");
@@ -123,7 +124,7 @@ public class MergeHelperController {
                 newCardBox.setPrefWidth(currentWidth - 50);
                 newCardBox.setStyle("-fx-pref-width: " + (currentWidth - 50) + "px;");
                 model.setCardWidth((int)newCardBox.getPrefWidth());
-                App.DataStore.saveModelAsJSON(model);
+                App.DataStore.updateModelInList(model);
             }
         });
 
@@ -140,7 +141,7 @@ public class MergeHelperController {
                 model.setStarred(true);
 
             }
-            App.DataStore.saveModelAsJSON(model);
+            App.DataStore.updateModelInList(model);
         });
 
 

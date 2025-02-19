@@ -1,3 +1,9 @@
 .headerText{
+    -fx-font-size: 18pt;
+}
 
+.basicButtonSettings {
+    -fx-background-radius: 3;
+    -fx-font-size: 12pt;
+    -fx-border-radius: 3;
 }

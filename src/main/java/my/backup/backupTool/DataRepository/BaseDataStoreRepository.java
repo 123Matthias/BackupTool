@@ -2,30 +2,40 @@ package my.backup.backupTool.DataRepository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import javafx.concurrent.Task;
 import my.backup.backupTool.Model.BaseModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.*;
 
 public class BaseDataStoreRepository implements IDataStore {
 
     private static volatile BaseDataStoreRepository Instance = null;
     private String storagePath;
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
-    private volatile List<BaseModel> modelList;
+    private final List<BaseModel> modelList;
     private BaseModel lastSelectedModel;
-    ReentrantLock lockSaveJson = new ReentrantLock();
+    private Timer saveTimer;
 
     private BaseDataStoreRepository() {
-
         modelList = getJSONasList();
+        saveTimer = new Timer();
+        enableAutoSave();
+    }
+
+    private void disableAutoSave() {
+        saveTimer.cancel();
+    }
+
+    private void enableAutoSave(){
+        saveTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                saveModelListAsJSON();
+                System.out.println("AutoSaved " + modelList.size() + " models");
+            }
+        }, 60000, 60000);
     }
 
     public static BaseDataStoreRepository Singleton() {
@@ -48,19 +58,31 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    public boolean saveModelAsJSON(BaseModel model) {
+    public boolean updateModelInList(BaseModel model) {
+        synchronized (this.modelList){
+            for(int i = 0; i < modelList.size(); i++){
+                if(modelList.get(i).getUid().equals(model.getUid())){
+                    modelList.set(i, model);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public synchronized boolean saveModelAsJSON(BaseModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
 
-        lockSaveJson.lock();
         try {
             List<BaseModel> modelList = new ArrayList<>();
-
             if (file.exists() && file.length() > 0) {
-                modelList = objectMapper.readValue(file, objectMapper
-                        .getTypeFactory()
-                        .constructCollectionType(List.class, BaseModel.class));
+                synchronized (this.modelList){
+                    modelList = objectMapper.readValue(file, objectMapper
+                            .getTypeFactory()
+                            .constructCollectionType(List.class, BaseModel.class));
+                }
             }
 
             //Update oder Create wenn uid schon existiert
@@ -72,7 +94,9 @@ public class BaseDataStoreRepository implements IDataStore {
                     if (modelList.get(i).getUid().equals(model.getUid())) {
                         modelList.set(i, model);
                         //The global List has to be updated. Saved will be the local var. reloading Json after program start produces reference problems
-                        this.modelList.set(i,model);
+                        synchronized (this.modelList){
+                            this.modelList.set(i,model);
+                        }
                         break;
                     }
                 }
@@ -80,36 +104,38 @@ public class BaseDataStoreRepository implements IDataStore {
                 model.setUid(UUID.randomUUID().toString());
                 modelList.add(model);
                 //The global List has to be updated. Saved will be the local var. reloading Json after Program start produces reference problems
-                this.modelList.add(model);
+                synchronized (this.modelList){
+                    this.modelList.add(model);
+                }
+
             }
 
             objectMapper.writeValue(file, modelList);
-            lockSaveJson.unlock();
+
             //   System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
             return true;
 
         } catch (IOException e) {
-            lockSaveJson.unlock();
             System.err.println("Fehler beim Speichern des Modells als JSON: " + e.getMessage());
             return false;
         }
 
+
     }
 
 
-    public boolean saveModelListAsJSON() {
+    public synchronized boolean saveModelListAsJSON() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
-        lockSaveJson.lock();
         try {
-            objectMapper.writeValue(file, this.modelList);
-            lockSaveJson.unlock();
+            synchronized (this.modelList){
+                objectMapper.writeValue(file, this.modelList);
+            }
             return true;
         } catch (IOException e) {
             System.err.println("Fehler beim Speichern der geänderten Modell-Liste: " + e.getMessage());
         }
-        lockSaveJson.unlock();
         return false;
     }
 
@@ -131,18 +157,22 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    public boolean deleteModelById_KeepBackup(String uid) {
+    public synchronized boolean deleteModelById_KeepBackup(String uid) {
         for (int i = 0; i < this.modelList.size(); i++) {
             BaseModel entry = this.modelList.get(i);
             if (entry.getUid() != null && entry.getUid().equals(uid)) {
-                this.modelList.remove(i);
+                synchronized (this.modelList) {
+                    this.modelList.remove(i);
+
+                }
                 return saveModelListAsJSON();
             }
         }
         return false;
     }
 
-    public boolean deleteModelAndBackupById(String uid) {
+    public synchronized boolean deleteModelAndBackupById(String uid) {
+
         for (int i = 0; i < this.modelList.size(); i++) {
             BaseModel entry = this.modelList.get(i);
             if (entry.getUid() != null && entry.getUid().equals(uid)) {

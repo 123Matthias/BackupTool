@@ -111,7 +111,6 @@ public abstract class BaseMainController {
                 paneSource.getChildren().get(0).getStyleClass().add("cardCol");
             }
             this.stopShaking();
-            App.DataStore.saveModelListAsJSON();
             event.consume();
 
         });

@@ -30,4 +30,6 @@ public interface IDataStore extends ILoadData {
      * @return true or false on success
      */
     boolean saveModelListAsJSON();
+
+    boolean updateModelInList(BaseModel model);
 }

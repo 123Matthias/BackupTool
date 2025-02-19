@@ -79,13 +79,12 @@ public class MainController extends BaseMainController {
 
     @FXML
     private void handleMergeButtonClicked(){
-        mergeHelperController.handleMergeButtonClicked();
+        Platform.runLater(mergeHelperController::handleMergeButtonClicked);
     }
 
     @FXML
     private void handleStarredButtonClick(){
-        this.starredHelperController.handleStarredButtonClick();
-
+        Platform.runLater(this.starredHelperController::handleStarredButtonClick);
     }
 
     public void setStageDimensions(Stage stage, MergeDetailController controller) {
