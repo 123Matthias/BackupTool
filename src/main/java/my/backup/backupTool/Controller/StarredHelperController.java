@@ -12,19 +12,22 @@ import java.util.List;
 public class StarredHelperController {
 
     MainController mainController;
+    List<BaseModel> starredlist;
 
     public StarredHelperController(MainController mainController) {
         this.mainController = mainController;
+        this.starredlist = new ArrayList<>();
     }
 
     public void handleStarredButtonClick(){
-
+        starredlist.clear();
         mainController.getCardContainer().getChildren().clear();
         for(BaseModel baseModel : App.DataStore.getModelList()) {
-            if(baseModel.isStarred()){
-                mainController.getMergeHelperController().addNewCard(baseModel);
+            if(baseModel.isStarred()) {
+                this.starredlist.add(baseModel);
             }
         }
+        mainController.getMergeHelperController().addAllCardsSorted(starredlist,true);
 
     }
 

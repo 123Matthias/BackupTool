@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class BaseDataStoreRepository implements IDataStore {
@@ -17,8 +19,9 @@ public class BaseDataStoreRepository implements IDataStore {
     private static volatile BaseDataStoreRepository Instance = null;
     private String storagePath;
     private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
-    private List<BaseModel> modelList;
+    private volatile List<BaseModel> modelList;
     private BaseModel lastSelectedModel;
+    ReentrantLock lockSaveJson = new ReentrantLock();
 
     private BaseDataStoreRepository() {
 
@@ -45,12 +48,12 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-
-    public synchronized boolean saveModelAsJSON(BaseModel model) {
+    public boolean saveModelAsJSON(BaseModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
 
+        lockSaveJson.lock();
         try {
             List<BaseModel> modelList = new ArrayList<>();
 
@@ -81,10 +84,12 @@ public class BaseDataStoreRepository implements IDataStore {
             }
 
             objectMapper.writeValue(file, modelList);
+            lockSaveJson.unlock();
             //   System.out.println("Daten wurden erfolgreich gespeichert: " + getStoragePath());
             return true;
 
         } catch (IOException e) {
+            lockSaveJson.unlock();
             System.err.println("Fehler beim Speichern des Modells als JSON: " + e.getMessage());
             return false;
         }
@@ -96,12 +101,15 @@ public class BaseDataStoreRepository implements IDataStore {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
+        lockSaveJson.lock();
         try {
             objectMapper.writeValue(file, this.modelList);
+            lockSaveJson.unlock();
             return true;
         } catch (IOException e) {
             System.err.println("Fehler beim Speichern der geänderten Modell-Liste: " + e.getMessage());
         }
+        lockSaveJson.unlock();
         return false;
     }
 

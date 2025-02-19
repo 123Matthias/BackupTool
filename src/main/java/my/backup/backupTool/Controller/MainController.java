@@ -53,7 +53,7 @@ public class MainController extends BaseMainController {
 
     @FXML
     public void initialize(){
-        mergeHelperController.addAllCardsSorted(App.DataStore.getModelList());
+        mergeHelperController.addAllCardsSorted(App.DataStore.getModelList(),true);
     }
 
 

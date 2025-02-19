@@ -60,22 +60,22 @@ public class MergeHelperController {
         stage.show();
     }
 
-    public synchronized void addAllCardsSorted(List<BaseModel> list) {
+    public void addAllCardsSorted(List<BaseModel> list, boolean isDraggable) {
         System.out.println("-----Im in Method addAllCardsSorted-----");
         list.sort(Comparator.comparingInt(BaseModel::getFlowPanePosition));
         for (BaseModel entry : list) {
             System.out.println("AddCardFromList getAllCards() " + entry.getTitle());
-            addNewCard(entry);
+            addNewCard(entry, true);
         }
     }
 
     public void handleMergeButtonClicked() {
         mainController.getCardContainer().getChildren().clear();
-        addAllCardsSorted(App.DataStore.getModelList());
+        addAllCardsSorted(App.DataStore.getModelList(), true);
 
     }
 
-    public void addNewCard(BaseModel model) {
+    public void addNewCard(BaseModel model, boolean isDraggable) {
 
         // Randabstand
         Pane newCardPane = new Pane();
@@ -96,7 +96,6 @@ public class MergeHelperController {
         newCardBox.setSpacing(5);
         //Required for drag and drop feature
         newCardPane.setId(uid);
-        mainController.enableDragAndDrop(newCardPane, mainController.getCardContainer());
 
 // Titel (HBox)
         HBox newTitleContainer = new HBox();
@@ -141,9 +140,10 @@ public class MergeHelperController {
                 model.setStarred(true);
 
             }
-            App.DataStore.getModelById(model.getUid());
             App.DataStore.saveModelAsJSON(model);
         });
+
+
 
 // Pane als Platzhalter hinzufügen
         Region spacer = new Region();
@@ -242,6 +242,12 @@ public class MergeHelperController {
 
         // Neue Karte in das FlowPane einfügen
         mainController.getCardContainer().getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
+
+        //DragAndDrop
+        if(isDraggable){
+            mainController.enableDragAndDrop(newCardPane, mainController.getCardContainer());
+        }
+
 
         System.out.println("...............Card Added ........................");
     }
