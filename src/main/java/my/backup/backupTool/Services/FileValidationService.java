@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.JobManagement.Hardware;
 import my.backup.backupTool.Model.BaseModel;
+import my.backup.backupTool.Model.ValidationTYPE;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
 
@@ -14,6 +15,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -103,7 +105,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
             ByteBuffer buffer;
 
             if (inputChannel.size() < 5 * 1024 * 1024) {
-                buffer = ByteBuffer.allocateDirect((int) super.DEFAULT_BUFFERSIZE);
+                buffer = ByteBuffer.allocate((int) super.DEFAULT_BUFFERSIZE);
             } else {
                 buffer = ByteBuffer.allocate((int) super.calculateBufferSize(inputChannel.size()));
             }
@@ -112,15 +114,15 @@ public class FileValidationService extends BaseCalculationService implements IFi
             while (inputChannel.read(buffer) > -1) {
                 buffer.flip();
                 int bytesRead = buffer.remaining();
-                crc32.update(buffer);
-                super.addFileProcessedSize(bytesRead);
+                if (bytesRead > 0) {
+                    crc32.update(buffer.array(),0,buffer.limit());
+                    super.addFileProcessedSize(bytesRead);
+                }
                 buffer.clear();
 
                 if (inputChannel.size() < 50 * 1024 * 1024) {
                     continue;
                 } else {
-                    System.out.println("File Processed Size= " + super.getSumFileProcessedSize());
-                    System.out.println("TotalFileSize= " + super.getTotalFileSize());
                     super.updateProgressBar(this.model);
                     super.calculateWorkingSpeed(this.model);
                 }
@@ -176,12 +178,22 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
                         CRC32 crc32Source = calculateCRC32WithFileChannel(source);
                         CRC32 crc32Target = calculateCRC32WithFileChannel(target);
-                      //  System.out.println("CRC32Source: " + crc32Source.getValue() + " SourcePath: " + source);
-                      //  System.out.println("CRC32Target: " + crc32Target.getValue() + " TargetPath: " + target);
+                        System.out.println("CRC32Source: " + crc32Source.getValue() + " SourcePath: " + source);
+                        System.out.println("CRC32Target: " + crc32Target.getValue() + " TargetPath: " + target);
                         if (crc32Source.getValue() == crc32Target.getValue()) {
-                            addCheckedFile();  // Wenn die CRC32-Werte übereinstimmen, erhöhe den Zähler
+                            checkedFilesPlusPLus();
+                            // Wenn die CRC32-Werte übereinstimmen, erhöhe den Zähler
                         }
-
+                        else{
+                            String log = (String.format("%-20s%s%n", "LogTime:", LocalDateTime.now().toString()));
+                            log += String.format("%-20s%s%n","Level:", LogLevel.WARN);
+                            log += String.format("%-20s%s%n","Type:", ValidationTYPE.CRC32);
+                            log += String.format("%-20s%s%n","Source:", source.toString());
+                            log += String.format("%-20s%s%n","Source CRC32:", crc32Source.getValue());
+                            log += String.format("%-20s%s%n","Target:", target.toString());
+                            log += String.format("%-20s%s%n","Target CRC32:", crc32Target.getValue());
+                            LogFileWriterService.writeValidationLogFile(model.getUid(), LocalDateTime.now(),LogLevel.WARN, ValidationTYPE.CRC32,log);
+                        }
                 });
                 return FileVisitResult.CONTINUE;
             }
@@ -219,8 +231,9 @@ public class FileValidationService extends BaseCalculationService implements IFi
         return checkedFiles;
     }
 
-    private synchronized void addCheckedFile() {
+    private synchronized void checkedFilesPlusPLus() {
         this.checkedFiles++;  // Synchronisierte Methode zum sicheren Inkrementieren des Zählers
+        System.out.println(checkedFiles);
     }
 
 
@@ -245,10 +258,8 @@ public class FileValidationService extends BaseCalculationService implements IFi
             validate();
         });
 
-
         this.model.setValidationJob(false);
         super.finishCalculations(this.model);
-
 
         App.DataStore.saveModelAsJSON(this.model);
 

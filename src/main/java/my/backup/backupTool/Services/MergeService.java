@@ -6,6 +6,7 @@ import my.backup.backupTool.App;
 import my.backup.backupTool.Factory.CopyServiceFactory;
 import my.backup.backupTool.Controller.MessageTYPE;
 import my.backup.backupTool.JobManagement.Hardware;
+import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
@@ -120,10 +121,7 @@ public class MergeService implements IMergeService,Runnable {
         log += String.format("%-20s%s%n", "targetValidation:", this.model.getTargetValidationValue());
         log += String.format("%-20s%s%n", "encryptionType:", this.model.getEncryptionType());
 
-
-
-
-        LogFileWriterService.writeLogFile(LocalDateTime.now(),LogLevel.COPY_THREAD_SUCCESS,log);
+        LogFileWriterService.writeLogFile(LocalDateTime.now(),LogLevel.COPY_THREAD_SUCCESS, BackupType.MERGE,log);
         App.JobScheduler.backupThreadFinished(Thread.currentThread());
 
       //  App.JobScheduler.backupThreadFinished(Thread.currentThread());
