@@ -10,6 +10,15 @@ import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.Merge.MergeDetailController;
 import my.backup.backupTool.Controller.Merge.MergeHelperController;
+import my.backup.backupTool.Notifications.IMessageList;
+import my.backup.backupTool.Notifications.MessageList;
+import my.backup.backupTool.Notifications.MessageService;
+import my.backup.backupTool.Properties;
+import my.backup.backupTool.ToastTYPE;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class MainController extends BaseMainController {
 
@@ -69,6 +78,32 @@ public class MainController extends BaseMainController {
         Platform.runLater(this.starredHelperController::handleStarredButtonClick);
     }
 
+    @FXML
+    private void handleBackupLogButtonClicked(){
+        super.setLeftToolbarSelection(LeftToolbar.LogButton);
+        String logFilePath = App.Properties.getLogFilePath(); // Datei-Pfad holen
+        if (logFilePath == null || logFilePath.isEmpty()) {
+            System.out.println("Log-Dateipfad nicht gesetzt.");
+            return;
+        }
+
+        File logFile = new File(logFilePath);
+        if (!logFile.exists()) {
+            System.out.println("Log-Datei existiert nicht: " + logFilePath);
+            return;
+        }
+
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().open(logFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            MessageService.createToast("not Supported", MessageTYPE.DANGER);
+        }
+    }
+
     public void setStageDimensions(Stage stage, MergeDetailController controller) {
 
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -94,6 +129,13 @@ public class MainController extends BaseMainController {
 
     public FlowPane getCardContainer() {
         return cardContainer;
+    }
+
+    @FXML
+    public void saveAll(){
+        if(App.DataStore.saveModelListAsJSON()){
+            MessageService.createToast("Saved All", MessageTYPE.SAVE);
+        }
     }
 
 

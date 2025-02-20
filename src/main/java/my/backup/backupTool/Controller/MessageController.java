@@ -44,7 +44,7 @@ public class MessageController{
         ImageView logo = new ImageView(String.valueOf(Main.class.getResource("img/Fee.PNG")));
 
         logo.getStyleClass().add("toastLogo");
-        logo.setFitHeight(100);
+        logo.setFitHeight(85);
         logo.preserveRatioProperty().set(true);
         Label toastLabel = new Label(toastMessage);
         toastLabel.getStyleClass().add("toastLabel");

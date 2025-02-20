@@ -11,7 +11,6 @@ import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
 import my.backup.backupTool.Notifications.MessageService;
 import my.backup.backupTool.ServiceEncryption.CryptoMode;
-import my.backup.backupTool.ServiceEncryption.EncryptionTYPE;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -110,7 +109,21 @@ public class MergeService implements IMergeService,Runnable {
 
         App.DataStore.saveModelAsJSON(this.model);
 
+        String log;
+        log = String.format("%-20s%s%n", "Title:", this.model.getTitle());
+        log += String.format("%-20s%s%n", "UUID:", this.model.getUid());
+        log += String.format("%-20s%s%n", "Source:", this.model.getSource());
+        log += String.format("%-20s%s%n", "Target:", this.model.getTarget());
+        log += String.format("%-20s%s%n", "lastBackupTime:", this.model.getLastBackupLocalDateTime());
+        log += String.format("%-20s%s%n", "nextBackupTime:", this.model.getNextBackupLocalDateTime());
+        log += String.format("%-20s%s%n", "sourceValidation:", this.model.getSourceValidationValue());
+        log += String.format("%-20s%s%n", "targetValidation:", this.model.getTargetValidationValue());
+        log += String.format("%-20s%s%n", "encryptionType:", this.model.getEncryptionType());
 
+
+
+
+        LogFileWriterService.writeLogFile(LocalDateTime.now(),LogLevel.COPY_THREAD_SUCCESS,log);
         App.JobScheduler.backupThreadFinished(Thread.currentThread());
 
       //  App.JobScheduler.backupThreadFinished(Thread.currentThread());

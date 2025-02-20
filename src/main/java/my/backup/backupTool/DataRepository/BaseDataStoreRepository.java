@@ -35,7 +35,7 @@ public class BaseDataStoreRepository implements IDataStore {
                 saveModelListAsJSON();
                 System.out.println("AutoSaved " + modelList.size() + " models");
             }
-        }, 60000, 60000);
+        }, 600000, 600000);
     }
 
     public static BaseDataStoreRepository Singleton() {

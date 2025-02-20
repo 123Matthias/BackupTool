@@ -142,7 +142,7 @@ public class Router {
     public SceneBuilder createToast(String theme) {
         return new SceneBuilder.Builder()
                 .setFXML("toast.fxml")
-                .setDimensions(App.Hardware.screenWidth()*0.3, App.Hardware.screenHeight()*0.075)
+                .setDimensions(App.Hardware.screenWidth()*0.2, App.Hardware.screenHeight()*0.065)
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet("css/basicComponents.css")

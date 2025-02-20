@@ -7,5 +7,6 @@ public enum LeftToolbar {
     CloudSyncButton,
     StarredButton,
     SettingsButton,
-    HelpButton
+    HelpButton,
+    LogButton
 }

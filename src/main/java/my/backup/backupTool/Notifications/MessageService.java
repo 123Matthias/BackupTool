@@ -42,8 +42,6 @@ public class MessageService {
         controller.showMessage(messages, messageType);
     }
 
-
-
     public static void createToast(String toastText, MessageTYPE messageType) {
         if(currentStage != null) {
             stopCurrentToast();

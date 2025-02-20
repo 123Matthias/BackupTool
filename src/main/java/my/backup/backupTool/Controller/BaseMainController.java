@@ -32,7 +32,6 @@ public abstract class BaseMainController {
         List<Node> list = this.leftToolbar.getItems();
         System.out.println(list);
 
-
         for (int i = 0; i < list.size(); i++) {
             VBox vBox = (VBox) list.get(i);
             vBox.getStyleClass().add("mainButton1Box");
