@@ -134,5 +134,4 @@
    <fx:include source="toolbarDetail.fxml" fx:id="toolbar"/>
 
 
-
 </StackPane>

@@ -3,12 +3,15 @@ package my.backup.backupTool.Controller;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ToolBar;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
@@ -20,6 +23,26 @@ public abstract class BaseMainController {
 
     private boolean isShaking = false; // Flag, um den Shake-Status zu überwachen
     private Timeline shakeTimeline; // Die Timeline, um das Zittern zu steuern
+
+    @FXML
+    private ToolBar leftToolbar;
+
+    @FXML
+    public void setLeftToolbarSelection(LeftToolbar selectedButton){
+        List<Node> list = this.leftToolbar.getItems();
+        System.out.println(list);
+
+
+        for (int i = 0; i < list.size(); i++) {
+            VBox vBox = (VBox) list.get(i);
+            vBox.getStyleClass().add("mainButton1Box");
+            vBox.getStyleClass().remove("mainButton1Box-selected");
+            if (selectedButton.toString().equals(vBox.getId())){
+                vBox.getStyleClass().remove("mainButton1Box");
+                vBox.getStyleClass().add("mainButton1Box-selected");
+            }
+        }
+    }
 
 
     public void enableDragAndDrop(Pane cardPane, FlowPane container) {
@@ -156,5 +179,6 @@ public abstract class BaseMainController {
             isShaking = false;  // Setze das Flag zurück
         }
     }
+
 
 }

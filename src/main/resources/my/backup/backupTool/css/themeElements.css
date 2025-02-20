@@ -4,31 +4,30 @@
     -fx-background-color: -fx-basicBackground;
 }
 
-.mainButton2 {
-    -fx-background-color: -fx-radialGradient1;
-    -fx-effect: -fx-effect9;
+
+.mainButton1Box {
+    -fx-border-color: -fx-color58;
 }
 
-.mainButton2:hover {
-    -fx-background-color: -fx-radialGradient2;
+.mainButton1Box:hover {
+    -fx-border-color: -fx-radialGradient2;
 }
-
-
 
 .mainButton1Path {
     -fx-fill: -fx-radialGradient1;
     -fx-effect: -fx-effect9;
 }
 
-
 .mainButton1TextLabel{
     -fx-text-fill: -fx-color1;
 }
 
-.mainButton1Box:hover .mainButton1Path {
+.mainButton1Box-selected .mainButton1Path, .mainButton1Box-selected mainButton1Path {
     -fx-fill: -fx-radialGradient2;
 }
-
+.mainButton1Box-selected{
+    -fx-border-color: -fx-color13;
+}
 
 .mainButton1Box:hover .mainButton1TextLabel {
     -fx-text-fill: -fx-color1;
@@ -70,13 +69,6 @@
 }
 /*---------------- END OF COMPONENTS ---------- */
 
-.mainButton1Box {
-    -fx-border-color: -fx-color58;
-}
-
-.mainButton1Box:hover  {
-    -fx-border-color: -fx-radialGradient2;
-}
 
 .topToolbar{
     -fx-background-color: -fx-color15;
@@ -93,10 +85,7 @@
 }
 
 
-.basicButton SVGPath {
-    -fx-fill: -fx-color14;
-    -fx-stroke: -fx-color14;
-}
+
 /*------------------------ Scene and Main Scene BACKGROUND COLORS ---------------*/
 .basicBackground {
     -fx-background-color: -fx-basicBackground;
@@ -110,6 +99,9 @@
     -fx-text-fill: -fx-color1;
     -fx-effect: -fx-effect1;
     -fx-background-color: none;
+}
+.basicButtonPath{
+    -fx-fill: -fx-radialGradient3;
 }
 
 /* Hover-Effekt: Button wird größer und dunkler */

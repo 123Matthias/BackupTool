@@ -21,16 +21,22 @@
     -fx-background-color: none;
 }
 
-.mainButton1Path{ -fx-fit-to-width: true;
+.mainButton1Path{
+    -fx-fit-to-width: true;
     -fx-scale-shape: true;
 }
 
 .mainButton1Box {
     -fx-padding: 5 3 5 3;
-    -fx-border-width: 1 1 1 1;
+    -fx-border-width: 1;
     -fx-border-radius: 0 5 5 0;
     -fx-text-alignment: center;
     -fx-alignment: center;
+    -fx-translate-x: 0;
+}
+.mainButton1Box-selected{
+    -fx-translate-x: 4;
+    -fx-border-width: 2;
 }
 
 .mainButton1TextLabel{
@@ -43,7 +49,7 @@
 
 
 .mainButton1Box:hover  {
-    -fx-translate-x: 2;
+    -fx-translate-x: 4;
 }
 
 

@@ -124,7 +124,7 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    public synchronized boolean saveModelListAsJSON() {
+    public boolean saveModelListAsJSON() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         File file = new File(getStoragePath());
@@ -140,8 +140,12 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    public synchronized BaseModel getModelById(String id) {
-        for (BaseModel entry : this.modelList) {
+    public  BaseModel getModelById(String id) {
+        List<BaseModel> tmpList = null;
+        synchronized (this.modelList){
+            tmpList = new ArrayList<>(this.modelList);
+        }
+        for (BaseModel entry : tmpList) {
             if (entry.getUid() != null && entry.getUid().equals(id)) {
                 System.out.println("GetModel.ByID:" + entry.getUid());
                 lastSelectedModel = entry;
@@ -152,33 +156,35 @@ public class BaseDataStoreRepository implements IDataStore {
     }
 
 
-    public synchronized List<BaseModel> getModelList() {
-        return this.modelList;
+    public List<BaseModel> getModelList() {
+        synchronized (this.modelList){
+            return this.modelList;
+        }
     }
 
 
-    public synchronized boolean deleteModelById_KeepBackup(String uid) {
-        for (int i = 0; i < this.modelList.size(); i++) {
-            BaseModel entry = this.modelList.get(i);
-            if (entry.getUid() != null && entry.getUid().equals(uid)) {
-                synchronized (this.modelList) {
-                    this.modelList.remove(i);
-
-                }
-                return saveModelListAsJSON();
+    public boolean deleteModelById_KeepBackup(String uid) {
+        synchronized (this.modelList){
+            for (int i = 0; i < this.modelList.size(); i++) {
+                BaseModel entry = this.modelList.get(i);
+                if (entry.getUid() != null && entry.getUid().equals(uid)) {
+                        this.modelList.remove(i);
+                        return saveModelListAsJSON();
+                    }
             }
         }
         return false;
     }
 
-    public synchronized boolean deleteModelAndBackupById(String uid) {
-
-        for (int i = 0; i < this.modelList.size(); i++) {
-            BaseModel entry = this.modelList.get(i);
-            if (entry.getUid() != null && entry.getUid().equals(uid)) {
-                this.deleteFolderAndContents(new File(entry.getTarget()));
-                this.modelList.remove(i);
-                return saveModelListAsJSON();
+    public boolean deleteModelAndBackupById(String uid) {
+        synchronized (this.modelList){
+            for (int i = 0; i < this.modelList.size(); i++) {
+                BaseModel entry = this.modelList.get(i);
+                if (entry.getUid() != null && entry.getUid().equals(uid)) {
+                    this.deleteFolderAndContents(new File(entry.getTarget()));
+                    this.modelList.remove(i);
+                    return saveModelListAsJSON();
+                }
             }
         }
         return false;

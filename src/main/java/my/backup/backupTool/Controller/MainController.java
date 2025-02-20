@@ -1,35 +1,15 @@
 package my.backup.backupTool.Controller;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.Merge.MergeDetailController;
 import my.backup.backupTool.Controller.Merge.MergeHelperController;
-import my.backup.backupTool.Model.BaseModel;
-
-import javax.tools.Tool;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MainController extends BaseMainController {
 
@@ -39,8 +19,7 @@ public class MainController extends BaseMainController {
     @FXML
     private FlowPane cardContainer;
 
-    @FXML
-    private ToolBar leftToolbar;
+
 
     private final MergeHelperController mergeHelperController;
     private final StarredHelperController starredHelperController;
@@ -66,7 +45,8 @@ public class MainController extends BaseMainController {
 
 
     @FXML
-    private void handleOpenSettingsWindow(){
+    private void handleSettingsButtonClicked(){
+        super.setLeftToolbarSelection(LeftToolbar.SettingsButton);
         Stage stage = App.Router.getSettigsStage();
         stage.setScene(App.Router.getSceneSettings());
         stage.show();
@@ -79,11 +59,13 @@ public class MainController extends BaseMainController {
 
     @FXML
     private void handleMergeButtonClicked(){
+        super.setLeftToolbarSelection(LeftToolbar.MergeButton);
         Platform.runLater(mergeHelperController::handleMergeButtonClicked);
     }
 
     @FXML
     private void handleStarredButtonClick(){
+        super.setLeftToolbarSelection(LeftToolbar.StarredButton);
         Platform.runLater(this.starredHelperController::handleStarredButtonClick);
     }
 

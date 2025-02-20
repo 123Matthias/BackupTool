@@ -66,6 +66,7 @@
     /*---------------- MAIN SCENE BUTTONS------------------------------ */
     -fx-RadialGradient1: radial-gradient(center 50% 50%, radius 50%, #001c22, #00301e);/*BUTTON*/
     -fx-radialGradient2: radial-gradient(center 50% 50%, radius 50%, #0b5500, #005e3d);/*HOVER BUTTON*/
+    -fx-radialGradient3: radial-gradient(center 50% 50%, radius 50%, #4c4900, #00466c); /*TOPBAR*/
     -fx-effect3: dropshadow(gaussian, rgba(50, 50, 250, 0.98), 40, 0.0, 0.0, 0.0);/*FAIRY*/
     -fx-effect9: dropshadow(gaussian, rgba(50, 50, 250, 0.98), 10, 0.0, 0.0, 0.0);/*MAIN BUTTON 2*/
     -fx-effect18: dropshadow(gaussian, rgba(60, 200, 120, 0.98), 5, 0.0, 0.0, 0.0);

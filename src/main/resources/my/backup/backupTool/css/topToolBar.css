@@ -5,14 +5,12 @@
 }
 
 .basicButton {
-    -fx-min-height: 25pt;
-    -fx-min-width: 25pt;
     -fx-background-radius: 3;
+    -fx-fit-to-width: true;
+
 }
 
-.basicButton > * {
-    -fx-text-alignment: center;
-    -fx-alignment: center;
-    -fx-font-size: 12pt;
 
+.saveButtonPath{
+    -fx-fill: -fx-color1;
 }
