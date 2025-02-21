@@ -18,6 +18,11 @@
     -fx-effect: -fx-effect9;
 }
 
+.mainButton2Path {
+    -fx-fill: -fx-radialGradient1;
+    -fx-effect: -fx-effect9;
+}
+
 .mainButton1TextLabel{
     -fx-text-fill: -fx-color1;
 }

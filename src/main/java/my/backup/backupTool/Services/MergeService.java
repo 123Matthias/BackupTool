@@ -117,8 +117,8 @@ public class MergeService implements IMergeService,Runnable {
         log += String.format("%-20s%s%n", "Target:", this.model.getTarget());
         log += String.format("%-20s%s%n", "lastBackupTime:", this.model.getLastBackupLocalDateTime());
         log += String.format("%-20s%s%n", "nextBackupTime:", this.model.getNextBackupLocalDateTime());
-        log += String.format("%-20s%s%n", "sourceValidation:", this.model.getSourceValidationValue());
-        log += String.format("%-20s%s%n", "targetValidation:", this.model.getTargetValidationValue());
+        log += String.format("%-20s%s%n", "sourceValidation:", this.model.getValidFilesCount());
+        log += String.format("%-20s%s%n", "targetValidation:", this.model.getTotalVisitedFiles());
         log += String.format("%-20s%s%n", "encryptionType:", this.model.getEncryptionType());
 
         LogFileWriterService.writeLogFile(LocalDateTime.now(),LogLevel.COPY_THREAD_SUCCESS, BackupType.MERGE,log);

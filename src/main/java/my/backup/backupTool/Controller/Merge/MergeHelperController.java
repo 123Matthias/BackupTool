@@ -1,7 +1,9 @@
 package my.backup.backupTool.Controller.Merge;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.css.CssParser;
+import javafx.css.Style;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -9,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.MainController;
@@ -185,43 +188,51 @@ public class MergeHelperController {
             contentBox.getChildren().addAll(row);
         }
 
-        HBox sourceValidation;
-        HBox targetValidation;
+        HBox validFilesRow;
+        HBox totalFilesRow;
         HBox validationType;
         if(model.getCheckBoxValidationJob()){
             // Labels direkt erstellen
-            Label sourceHashLabel = new Label();
-            Label targetHashLabel = new Label();
-            sourceHashLabel.textProperty().bind(model.TransientProperties.getSourceValidationProperty());
-            targetHashLabel.textProperty().bind(model.TransientProperties.getTargetValidationProperty());
+            Label validFilesCount = new Label();
+            Label totalFilesCount = new Label();
+            validFilesCount.textProperty().bind(model.TransientProperties.getValidFilesCountProperty());
+            totalFilesCount.textProperty().bind(model.TransientProperties.getTotalFilesCountProperty());
+
+
+            BooleanBinding valuesEqual = model.TransientProperties.getValidFilesCountProperty()
+                    .isEqualTo(model.TransientProperties.getTotalFilesCountProperty());
+
+            validFilesCount.textFillProperty().bind(
+                    Bindings.when(valuesEqual).then(Color.GREEN).otherwise(Color.RED)
+            );
 
             // HBox mit Labels erstellen (Label direkt übergeben!)
-            sourceValidation = createLabeledRow("Valid Files: ", sourceHashLabel);
-            targetValidation = createLabeledRow("Total Files: ", targetHashLabel);
+            validFilesRow = createLabeledRow("Valid Files: ", validFilesCount);
+            totalFilesRow = createLabeledRow("Total Files: ", totalFilesCount);
             validationType = createLabeledRow("Validation: ", model.getValidationType().toString());
 
             boolean initialStatus;
-            String value = model.getSourceValidationValue();
-            if(value != null && value.equals(model.getTargetValidationValue())){
+            String value = model.getValidFilesCount();
+            if(value != null && value.equals(model.getTotalVisitedFiles())){
                 initialStatus = true;
             }
             else {
                 initialStatus = false;
             }
             String initialStyle = initialStatus ? "-fx-text-fill: green" : "-fx-text-fill: red";
-            sourceHashLabel.setStyle(initialStyle);
-            targetHashLabel.setStyle(initialStyle);
+            validFilesCount.setStyle(initialStyle);
+            totalFilesCount.setStyle("-fx-text-fill: -fx-color1");
 
 
             // Add Content to Card
-            contentBox.getChildren().addAll(sourceValidation,targetValidation, validationType);
+            contentBox.getChildren().addAll(validFilesRow,totalFilesRow, validationType);
         }
         else {
-            sourceValidation = createLabeledRow("","");
-            targetValidation = createLabeledRow("","");
+            validFilesRow = createLabeledRow("","");
+            totalFilesRow = createLabeledRow("","");
 
             // Add Content to Card spacing null row
-            contentBox.getChildren().addAll(sourceValidation,targetValidation);
+            contentBox.getChildren().addAll(validFilesRow,totalFilesRow);
         }
 
         //Progress Bar
@@ -255,7 +266,7 @@ public class MergeHelperController {
 
     private HBox createLabeledRow(String labelText, String valueText) {
         Label label = new Label(labelText);
-        label.setMinWidth(80); // Feste Breite für alle Labels
+        label.setMinWidth(100); // Feste Breite für alle Labels
         label.setAlignment(Pos.CENTER_LEFT);
 
         Label valueLabel = new Label(valueText);
@@ -267,7 +278,7 @@ public class MergeHelperController {
 
     private HBox createLabeledRow(String labelText, Label valueLabel) {
         Label label = new Label(labelText);
-        label.setMinWidth(80); // Feste Breite für alle Labels
+        label.setMinWidth(100); // Feste Breite für alle Labels
         label.setAlignment(Pos.CENTER_LEFT);
 
         HBox row = new HBox(label, valueLabel);

@@ -6,7 +6,6 @@ import my.backup.backupTool.Notifications.MessageList;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,9 +17,9 @@ public class TransientProperties {
 
     private BooleanProperty isBackupSuccessfullyProperty = new SimpleBooleanProperty(false);
 
-    private StringProperty sourceValidationProperty = new SimpleStringProperty("no value");
+    private StringProperty validFilesCountProperty = new SimpleStringProperty("no value");
 
-    private StringProperty targetValidationProperty = new SimpleStringProperty("no value");
+    private StringProperty totalFilesCountProperty = new SimpleStringProperty("no value");
 
     private StringProperty lastBackupTimeProperty = new SimpleStringProperty("no Date");
 
@@ -82,20 +81,20 @@ public class TransientProperties {
         return this.progressStateProp;
     }
 
-    public StringProperty getTargetValidationProperty(){
-        return this.targetValidationProperty;
+    public StringProperty getTotalFilesCountProperty(){
+        return this.totalFilesCountProperty;
     }
 
-    public StringProperty getSourceValidationProperty(){
-        return this.sourceValidationProperty;
+    public StringProperty getValidFilesCountProperty(){
+        return this.validFilesCountProperty;
     }
 
-    public void setTargetValidationProperty(String value){
-        this.targetValidationProperty.set(value);
+    public void setTotalFilesCountProperty(String value){
+        this.totalFilesCountProperty.set(value);
     }
 
-    public void setSourceValidationProperty(String value){
-        this.sourceValidationProperty.set(value);
+    public void setValidFilesCount(String value){
+        this.validFilesCountProperty.set(value);
     }
 
     public StringProperty getLastBackupTimeProperty() {

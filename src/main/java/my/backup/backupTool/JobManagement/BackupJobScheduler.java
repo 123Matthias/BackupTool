@@ -3,6 +3,7 @@ package my.backup.backupTool.JobManagement;
 import my.backup.backupTool.Model.BackupType;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Services.IMergeService;
+import my.backup.backupTool.Services.LogFileWriterService;
 import my.backup.backupTool.Services.MergeService;
 
 import java.time.LocalDateTime;
@@ -77,6 +78,7 @@ public class BackupJobScheduler implements IFireBackupEvent,IGetThreadMap {
     @Override
     public synchronized boolean fireBackupEvent(BaseModel model) {
         Thread thread = null;
+        LogFileWriterService.deleteOldValidationLogFile(model);
         if(threadMap.containsValue(model)) {
             return false;
         }

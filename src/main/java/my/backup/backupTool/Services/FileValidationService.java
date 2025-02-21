@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.CRC32;
 
 
@@ -28,7 +29,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
     private long totalFileSize;
     private long progress;
     private IMessageList messageList;
-    private int checkedFiles;
+    private final AtomicLong validFilesCount;
     AtomicInteger fileTreeVisited = new AtomicInteger(0);
     private BaseModel model;
     private Hardware hardware;
@@ -40,6 +41,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
         this.model = model;
         super.setTotalFileSize(super.calculateTotalSize(Paths.get(this.model.getSource()))*2);
         this.hardware = Hardware.getHardwareInfo();
+        this.validFilesCount = new AtomicLong(0);
 
     }
 
@@ -150,20 +152,20 @@ public class FileValidationService extends BaseCalculationService implements IFi
         Path sourcePath = Paths.get(source);
         Path targetPath = Paths.get(target);
 
-        long checked = 0;
+        long validFilesCount = 0;
         try {
             this.totalFileSize = super.calculateTotalSize(sourcePath);
-            checked = calculateCRC32FromPath(sourcePath, targetPath);
+            validFilesCount = calculateCRC32FromPath(sourcePath, targetPath).get();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return checked;
+        return validFilesCount;
 
     }
 
-    private long calculateCRC32FromPath(Path sourcePath, Path targetPath) throws IOException {
+    private AtomicLong calculateCRC32FromPath(Path sourcePath, Path targetPath) throws IOException {
         ExecutorService executor = Executors.newFixedThreadPool(hardware.preferredThreadCount());
-        this.checkedFiles = 0;
+        this.validFilesCount.set(0);
 
         // Durchlaufe alle Dateien im Verzeichnis
         Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
@@ -181,9 +183,11 @@ public class FileValidationService extends BaseCalculationService implements IFi
                         System.out.println("CRC32Source: " + crc32Source.getValue() + " SourcePath: " + source);
                         System.out.println("CRC32Target: " + crc32Target.getValue() + " TargetPath: " + target);
                         if (crc32Source.getValue() == crc32Target.getValue()) {
-                            checkedFilesPlusPLus();
-                            // Wenn die CRC32-Werte übereinstimmen, erhöhe den Zähler
+                            synchronized (validFilesCount){
+                                validFilesCount.addAndGet(1);
+                            }
                         }
+                        
                         else{
                             String log = (String.format("%-20s%s%n", "LogTime:", LocalDateTime.now().toString()));
                             log += String.format("%-20s%s%n","Level:", LogLevel.WARN);
@@ -194,6 +198,12 @@ public class FileValidationService extends BaseCalculationService implements IFi
                             log += String.format("%-20s%s%n","Target CRC32:", crc32Target.getValue());
                             LogFileWriterService.writeValidationLogFile(model.getUid(), LocalDateTime.now(),LogLevel.WARN, ValidationTYPE.CRC32,log);
                         }
+
+                    Platform.runLater(() -> {
+                        model.setValidFilesCount(String.valueOf(validFilesCount));
+                        model.setTotalVisitedFiles(String.valueOf(fileTreeVisited));
+                        validate(false);
+                    });
                 });
                 return FileVisitResult.CONTINUE;
             }
@@ -228,17 +238,12 @@ public class FileValidationService extends BaseCalculationService implements IFi
         }
 
         // Rückgabe des Zählers für die überprüften Dateien
-        return checkedFiles;
-    }
-
-    private synchronized void checkedFilesPlusPLus() {
-        this.checkedFiles++;  // Synchronisierte Methode zum sicheren Inkrementieren des Zählers
-        System.out.println(checkedFiles);
+        return validFilesCount;
     }
 
 
-    public synchronized boolean validate(){
-        if(this.model.getSourceValidationValue().equals(this.model.getTargetValidationValue())){
+    public synchronized boolean validate(boolean isCalculationFinished){
+        if(isCalculationFinished && this.model.getValidFilesCount().equals(this.model.getTotalVisitedFiles())){
             return true;
         }
         else {
@@ -253,9 +258,10 @@ public class FileValidationService extends BaseCalculationService implements IFi
         long crc32Source = checkAllFilesCRC32(this.model.getSource(), this.model.getTarget());
         super.finishCalculations(this.model);
         Platform.runLater(() -> {
-            this.model.setSourceValidationValue(String.valueOf(crc32Source));
-            this.model.setTargetValidationValue(String.valueOf(fileTreeVisited));
-            validate();
+            this.model.setValidFilesCount(String.valueOf(crc32Source));
+            this.model.setTotalVisitedFiles(String.valueOf(fileTreeVisited));
+            this.validate(true);
+
         });
 
         this.model.setValidationJob(false);
@@ -263,10 +269,10 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
         App.DataStore.saveModelAsJSON(this.model);
 
-        System.out.println("SOURCE HASH IS " + this.model.getSourceValidationValue());
-        System.out.println("TARGET HASH IS " + this.model.getTargetValidationValue());
+        System.out.println("SOURCE HASH IS " + this.model.getValidFilesCount());
+        System.out.println("TARGET HASH IS " + this.model.getTotalVisitedFiles());
 
-        return !this.model.getSourceValidationValue().isEmpty() && !this.model.getTargetValidationValue().isEmpty();
+        return !this.model.getValidFilesCount().isEmpty() && !this.model.getTotalVisitedFiles().isEmpty();
 
     }
 }

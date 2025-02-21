@@ -1,18 +1,12 @@
 package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.application.Platform;
 import my.backup.backupTool.ServiceEncryption.EncryptionTYPE;
 import my.backup.backupTool.Notifications.MessageList;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Base64;
 
 public class BaseModel {
 
@@ -35,11 +29,11 @@ public class BaseModel {
     @JsonProperty("target-path") // JSON Name wird geändert
     private String target;
 
-    @JsonProperty("source-validation")
-    private String sourceValidationValue;
+    @JsonProperty("valid-files-count")
+    private String validFilesCount;
 
-    @JsonProperty("target-validation")
-    private String targetValidationValue;
+    @JsonProperty("total-visited-Files")
+    private String totalVisitedFiles;
 
     @JsonProperty("checkBox-startDate")
     private boolean checkBoxStartDate;
@@ -288,22 +282,22 @@ public class BaseModel {
     }
 
 
-    public String getSourceValidationValue() {
-        return sourceValidationValue;
+    public String getValidFilesCount() {
+        return validFilesCount;
     }
 
-    public void setSourceValidationValue(String value) {
-        this.TransientProperties.setSourceValidationProperty(value);
-        this.sourceValidationValue = value;
+    public void setValidFilesCount(String value) {
+        this.TransientProperties.setValidFilesCount(value);
+        this.validFilesCount = value;
     }
 
-    public String getTargetValidationValue() {
-        return targetValidationValue;
+    public String getTotalVisitedFiles() {
+        return totalVisitedFiles;
     }
 
-    public void setTargetValidationValue(String value) {
-        this.TransientProperties.setTargetValidationProperty(value);
-        this.targetValidationValue = value;
+    public void setTotalVisitedFiles(String value) {
+        this.TransientProperties.setTotalFilesCountProperty(value);
+        this.totalVisitedFiles = value;
     }
 
     @JsonProperty("validation-job")
