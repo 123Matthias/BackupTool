@@ -6,6 +6,7 @@ import my.backup.backupTool.JobManagement.BackupJobScheduler;
 import my.backup.backupTool.JobManagement.BackupValidationScheduler;
 import my.backup.backupTool.JobManagement.Hardware;
 import my.backup.backupTool.JobManagement.JobTimeline;
+import my.backup.backupTool.Services.LogFileWriterService;
 
 
 public class App {
@@ -23,5 +24,6 @@ public class App {
         JobScheduler = BackupJobScheduler.Singleton();
         ValidationScheduler = BackupValidationScheduler.Singleton();
         Router = my.backup.backupTool.Router.Singleton();
+        LogFileWriterService.createFilePathIfNotExists();
     }
 }

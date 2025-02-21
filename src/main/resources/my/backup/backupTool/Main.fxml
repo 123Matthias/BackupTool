@@ -105,11 +105,24 @@
               <Button onAction="#handleBackupLogButtonClicked"
                       styleClass="mainButton1">
                   <graphic>
-                      <SVGPath fx:id="logFileButton1Path" content="M19 9V17.8C19 18.9201 19 19.4802 18.782 19.908C18.5903 20.2843 18.2843 20.5903 17.908 20.782C17.4802 21 16.9201 21 15.8 21H8.2C7.07989 21 6.51984 21 6.09202 20.782C5.71569 20.5903 5.40973 20.2843 5.21799 19.908C5 19.4802 5 18.9201 5 17.8V6.2C5 5.07989 5 4.51984 5.21799 4.09202C5.40973 3.71569 5.71569 3.40973 6.09202 3.21799C6.51984 3 7.0799 3 8.2 3H13M19 9L13 3M19 9H14C13.4477 9 13 8.55228 13 8V3"
+                      <SVGPath fx:id="logFileButton1Path" content="m20.25,2.75H3.75c-0.5523,0-1,0.4477-1,1v16.5c0,0.5523,0.4477,1,1,1h16.5c0.5523,0,1-0.4477,1-1V3.75c0-0.5523-0.4477-1-1-1Zm-5.75,15H5.5m13,3.4772v-2.3705h-1.1171c-0.5584,0-1.0079-0.4496-1.0079-1.0079v-0.2688c0-0.5584,0.4496-1.0079,1.0079-1.0079h1.1171v-3.3404h-1.2421c-0.5584,0-1.0079-0.4496-1.0079-1.0079v-0.2688c0-0.5584,0.4496-1.0079,1.0079-1.0079h1.2421v-3.4654h-1.2421c-0.5584,0-1.0079-0.4496-1.0079-1.0079v-0.2688c0-0.5584,0.4496-1.0079,1.0079-1.0079h1.2421v-2.4266m-4,9.4793H5.5m6.5-5.5h-6.5"
                                styleClass="mainButton1Path"/>
                   </graphic>
+
               </Button>
               <Label text="Backup log" styleClass="mainButton1TextLabel" style="-fx-wrap-text: none; -fx-alignment: center"/>
+          </VBox>
+
+          <VBox fx:id="logValidationButton" styleClass="mainButton1Box" onMouseClicked="#handleValidationLogButtonClicked">
+              <Button onAction="#handleValidationLogButtonClicked"
+                      styleClass="mainButton1">
+                  <graphic>
+                      <SVGPath fx:id="invalidLogFileButton1Path" content="m20.25,2.75H3.75c-0.5523,0-1,0.4477-1,1v16.5c0,0.5523,0.4477,1,1,1h16.5c0.5523,0,1-0.4477,1-1V3.75c0-0.5523-0.4477-1-1-1Zm-5.75,15H5.5m13,3.4772v-2.3705h-1.1171c-0.5584,0-1.0079-0.4496-1.0079-1.0079v-0.2688c0-0.5584,0.4496-1.0079,1.0079-1.0079h1.1171v-3.3404h-1.2421c-0.5584,0-1.0079-0.4496-1.0079-1.0079v-0.2688c0-0.5584,0.4496-1.0079,1.0079-1.0079h1.2421v-3.4654h-1.2421c-0.5584,0-1.0079-0.4496-1.0079-1.0079v-0.2688c0-0.5584,0.4496-1.0079,1.0079-1.0079h1.2421v-2.4266m-4,9.4793H5.5m6.5-5.5h-6.5"
+                               styleClass="mainButton2Path"/>
+                  </graphic>
+
+              </Button>
+              <Label text="Validation log" styleClass="mainButton1TextLabel" style="-fx-wrap-text: none; -fx-alignment: center"/>
           </VBox>
 
         </ToolBar>

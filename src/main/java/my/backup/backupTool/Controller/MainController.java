@@ -104,6 +104,32 @@ public class MainController extends BaseMainController {
         }
     }
 
+    @FXML
+    private void handleValidationLogButtonClicked(){
+        super.setLeftToolbarSelection(LeftToolbar.ValidationLogButton);
+        String logFilePath = App.Properties.getValidationLogFilePath(); // Datei-Pfad holen
+        if (logFilePath == null || logFilePath.isEmpty()) {
+            System.out.println("Log-Dateipfad nicht gesetzt.");
+            return;
+        }
+
+        File logFile = new File(logFilePath);
+        if (!logFile.exists()) {
+            System.out.println("Log-Datei existiert nicht: " + logFilePath);
+            return;
+        }
+
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().open(logFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            MessageService.createToast("not Supported", MessageTYPE.DANGER);
+        }
+    }
+
     public void setStageDimensions(Stage stage, MergeDetailController controller) {
 
         stage.initModality(Modality.APPLICATION_MODAL);

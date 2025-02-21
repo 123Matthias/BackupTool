@@ -8,5 +8,6 @@ public enum LeftToolbar {
     StarredButton,
     SettingsButton,
     HelpButton,
-    LogButton
+    LogButton,
+    ValidationLogButton
 }

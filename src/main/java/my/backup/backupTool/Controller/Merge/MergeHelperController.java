@@ -196,8 +196,8 @@ public class MergeHelperController {
             targetHashLabel.textProperty().bind(model.TransientProperties.getTargetValidationProperty());
 
             // HBox mit Labels erstellen (Label direkt übergeben!)
-            sourceValidation = createLabeledRow("Source: ", sourceHashLabel);
-            targetValidation = createLabeledRow("Target: ", targetHashLabel);
+            sourceValidation = createLabeledRow("Valid Files: ", sourceHashLabel);
+            targetValidation = createLabeledRow("Total Files: ", targetHashLabel);
             validationType = createLabeledRow("Validation: ", model.getValidationType().toString());
 
             boolean initialStatus;
