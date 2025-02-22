@@ -2,7 +2,9 @@ package my.backup.backupTool.Model;
 
 import com.fasterxml.jackson.annotation.*;
 import javafx.application.Platform;
-import my.backup.backupTool.ServiceEncryption.EncryptionTYPE;
+import my.backup.backupTool.Enumerations.BackupTYPE;
+import my.backup.backupTool.Enumerations.ValidationTYPE;
+import my.backup.backupTool.Enumerations.EncryptionTYPE;
 import my.backup.backupTool.Notifications.MessageList;
 
 import java.io.File;
@@ -15,7 +17,7 @@ public class BaseModel {
     private String uid;
 
     @JsonProperty("backup_type")
-    private BackupType backupType;
+    private BackupTYPE backupType;
 
     @JsonProperty("flowPane-Position")
     private int flowPanePosition;
@@ -30,10 +32,10 @@ public class BaseModel {
     private String target;
 
     @JsonProperty("valid-files-count")
-    private String validFilesCount;
+    private int validFilesCount;
 
     @JsonProperty("total-visited-Files")
-    private String totalVisitedFiles;
+    private int totalVisitedFiles;
 
     @JsonProperty("checkBox-startDate")
     private boolean checkBoxStartDate;
@@ -117,11 +119,11 @@ public class BaseModel {
         this.uid = uid;
     }
 
-    public BackupType getBackupType() {
+    public BackupTYPE getBackupType() {
         return this.backupType;
     }
 
-    public void setBackupType(BackupType backupType) {
+    public void setBackupType(BackupTYPE backupType) {
         this.backupType = backupType;
     }
 
@@ -282,20 +284,20 @@ public class BaseModel {
     }
 
 
-    public String getValidFilesCount() {
+    public int getValidFilesCount() {
         return validFilesCount;
     }
 
-    public void setValidFilesCount(String value) {
+    public void setValidFilesCount(int value) {
         this.TransientProperties.setValidFilesCount(value);
         this.validFilesCount = value;
     }
 
-    public String getTotalVisitedFiles() {
+    public int getTotalVisitedFiles() {
         return totalVisitedFiles;
     }
 
-    public void setTotalVisitedFiles(String value) {
+    public void setTotalVisitedFiles(int value) {
         this.TransientProperties.setTotalFilesCountProperty(value);
         this.totalVisitedFiles = value;
     }

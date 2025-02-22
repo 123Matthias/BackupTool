@@ -85,16 +85,16 @@ public class TransientProperties {
         return this.totalFilesCountProperty;
     }
 
+    public void setTotalFilesCountProperty(int value){
+        this.totalFilesCountProperty.set(String.valueOf(value));
+    }
+
     public StringProperty getValidFilesCountProperty(){
         return this.validFilesCountProperty;
     }
 
-    public void setTotalFilesCountProperty(String value){
-        this.totalFilesCountProperty.set(value);
-    }
-
-    public void setValidFilesCount(String value){
-        this.validFilesCountProperty.set(value);
+    public void setValidFilesCount(int value){
+        this.validFilesCountProperty.set(String.valueOf(value));
     }
 
     public StringProperty getLastBackupTimeProperty() {

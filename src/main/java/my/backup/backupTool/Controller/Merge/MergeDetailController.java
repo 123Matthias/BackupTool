@@ -2,7 +2,7 @@ package my.backup.backupTool.Controller.Merge;
 
 import javafx.fxml.FXML;
 import my.backup.backupTool.App;
-import my.backup.backupTool.Model.BackupType;
+import my.backup.backupTool.Enumerations.BackupTYPE;
 
 
 public class MergeDetailController extends BaseDetailController {
@@ -17,7 +17,7 @@ public class MergeDetailController extends BaseDetailController {
     @Override
     protected void setModelValues(){
         super.setModelValues();
-        super.getModel().setBackupType(BackupType.MERGE);
+        super.getModel().setBackupType(BackupTYPE.MERGE);
     }
 
     @Override

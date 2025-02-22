@@ -1,5 +1,6 @@
 package my.backup.backupTool.ServiceEncryption;
 
+import my.backup.backupTool.Enumerations.CryptoMODE;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Services.BaseCalculationService;
 import my.backup.backupTool.Services.ICopyService;
@@ -65,9 +66,9 @@ public class AesService extends BaseCalculationService implements ICopyService {
         }
     }
 
-    public void copyFileWithFileChannel(Path inputPath, Path outputPath, CryptoMode cryptoMode) {
+    public void copyFileWithFileChannel(Path inputPath, Path outputPath, CryptoMODE cryptoMode) {
       Cipher cipher = initCipherEncryption(model.TransientProperties.getSecretKey(), model.TransientProperties.getInitVector());
-       if(cryptoMode == CryptoMode.DECRYPTION){
+       if(cryptoMode == CryptoMODE.DECRYPTION){
            decryptFileWithFileChannel(inputPath, outputPath);
            return;
        }

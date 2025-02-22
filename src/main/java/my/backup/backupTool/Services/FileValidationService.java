@@ -2,9 +2,10 @@ package my.backup.backupTool.Services;
 
 import javafx.application.Platform;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Enumerations.LogLEVEL;
 import my.backup.backupTool.JobManagement.Hardware;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.Model.ValidationTYPE;
+import my.backup.backupTool.Enumerations.ValidationTYPE;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
 
@@ -18,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,7 +31,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
     private long totalFileSize;
     private long progress;
     private IMessageList messageList;
-    private final AtomicLong validFilesCount;
+    private final AtomicInteger validFilesCount;
     AtomicInteger fileTreeVisited = new AtomicInteger(0);
     private BaseModel model;
     private Hardware hardware;
@@ -41,7 +43,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
         this.model = model;
         super.setTotalFileSize(super.calculateTotalSize(Paths.get(this.model.getSource()))*2);
         this.hardware = Hardware.getHardwareInfo();
-        this.validFilesCount = new AtomicLong(0);
+        this.validFilesCount = new AtomicInteger(0);
 
     }
 
@@ -103,7 +105,6 @@ public class FileValidationService extends BaseCalculationService implements IFi
         CRC32 crc32 = new CRC32();
 
         try (FileChannel inputChannel = FileChannel.open(sourceFile, StandardOpenOption.READ)) {
-
             ByteBuffer buffer;
 
             if (inputChannel.size() < 5 * 1024 * 1024) {
@@ -116,10 +117,8 @@ public class FileValidationService extends BaseCalculationService implements IFi
             while (inputChannel.read(buffer) > -1) {
                 buffer.flip();
                 int bytesRead = buffer.remaining();
-                if (bytesRead > 0) {
-                    crc32.update(buffer.array(),0,buffer.limit());
-                    super.addFileProcessedSize(bytesRead);
-                }
+                crc32.update(buffer.array(),0,buffer.limit());
+                super.addFileProcessedSize(bytesRead);
                 buffer.clear();
 
                 if (inputChannel.size() < 50 * 1024 * 1024) {
@@ -148,11 +147,11 @@ public class FileValidationService extends BaseCalculationService implements IFi
         return sb.toString();
     }
 
-    public long checkAllFilesCRC32(String source, String target) {
+    public int checkAllFilesCRC32(String source, String target) {
         Path sourcePath = Paths.get(source);
         Path targetPath = Paths.get(target);
 
-        long validFilesCount = 0;
+        int validFilesCount = 0;
         try {
             this.totalFileSize = super.calculateTotalSize(sourcePath);
             validFilesCount = calculateCRC32FromPath(sourcePath, targetPath).get();
@@ -163,7 +162,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
     }
 
-    private AtomicLong calculateCRC32FromPath(Path sourcePath, Path targetPath) throws IOException {
+    private AtomicInteger calculateCRC32FromPath(Path sourcePath, Path targetPath) throws IOException {
         ExecutorService executor = Executors.newFixedThreadPool(hardware.preferredThreadCount());
         this.validFilesCount.set(0);
 
@@ -183,25 +182,20 @@ public class FileValidationService extends BaseCalculationService implements IFi
                         System.out.println("CRC32Source: " + crc32Source.getValue() + " SourcePath: " + source);
                         System.out.println("CRC32Target: " + crc32Target.getValue() + " TargetPath: " + target);
                         if (crc32Source.getValue() == crc32Target.getValue()) {
-                            synchronized (validFilesCount){
                                 validFilesCount.addAndGet(1);
-                            }
                         }
-                        
                         else{
                             String log = (String.format("%-20s%s%n", "LogTime:", LocalDateTime.now().toString()));
-                            log += String.format("%-20s%s%n","Level:", LogLevel.WARN);
-                            log += String.format("%-20s%s%n","Type:", ValidationTYPE.CRC32);
                             log += String.format("%-20s%s%n","Source:", source.toString());
-                            log += String.format("%-20s%s%n","Source CRC32:", crc32Source.getValue());
+                            log += String.format("%-20s%s%n","Source Value:", crc32Source.getValue());
                             log += String.format("%-20s%s%n","Target:", target.toString());
-                            log += String.format("%-20s%s%n","Target CRC32:", crc32Target.getValue());
-                            LogFileWriterService.writeValidationLogFile(model.getUid(), LocalDateTime.now(),LogLevel.WARN, ValidationTYPE.CRC32,log);
+                            log += String.format("%-20s%s%n","Target Value:", crc32Target.getValue());
+                            LogFileWriterService.writeValidationLogFile(model.getUid(), LocalDateTime.now(), LogLEVEL.WARN, ValidationTYPE.CRC32,log);
                         }
 
                     Platform.runLater(() -> {
-                        model.setValidFilesCount(String.valueOf(validFilesCount));
-                        model.setTotalVisitedFiles(String.valueOf(fileTreeVisited));
+                        model.setValidFilesCount(validFilesCount.intValue());
+                        model.setTotalVisitedFiles(fileTreeVisited.get());
                         validate(false);
                     });
                 });
@@ -243,7 +237,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
 
 
     public synchronized boolean validate(boolean isCalculationFinished){
-        if(isCalculationFinished && this.model.getValidFilesCount().equals(this.model.getTotalVisitedFiles())){
+        if(isCalculationFinished && this.model.getValidFilesCount() == this.model.getTotalVisitedFiles()){
             return true;
         }
         else {
@@ -255,13 +249,12 @@ public class FileValidationService extends BaseCalculationService implements IFi
         System.out.println("Starting Validation Service");
 
         super.finishCalculations(this.model);
-        long crc32Source = checkAllFilesCRC32(this.model.getSource(), this.model.getTarget());
+        int validFilesCount = checkAllFilesCRC32(this.model.getSource(), this.model.getTarget());
         super.finishCalculations(this.model);
         Platform.runLater(() -> {
-            this.model.setValidFilesCount(String.valueOf(crc32Source));
-            this.model.setTotalVisitedFiles(String.valueOf(fileTreeVisited));
+            this.model.setValidFilesCount(validFilesCount);
+            this.model.setTotalVisitedFiles(fileTreeVisited.get());
             this.validate(true);
-
         });
 
         this.model.setValidationJob(false);
@@ -272,7 +265,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
         System.out.println("SOURCE HASH IS " + this.model.getValidFilesCount());
         System.out.println("TARGET HASH IS " + this.model.getTotalVisitedFiles());
 
-        return !this.model.getValidFilesCount().isEmpty() && !this.model.getTotalVisitedFiles().isEmpty();
+        return this.model.getValidFilesCount() != 0 && (this.model.getTotalVisitedFiles() == 0 ? false : true);
 
     }
 }

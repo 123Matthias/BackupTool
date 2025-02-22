@@ -21,5 +21,7 @@ module my.backup.backupTool {
     exports my.backup.backupTool.Services;
     exports my.backup.backupTool.Controller.Merge;
     opens my.backup.backupTool.Controller.Merge to javafx.fxml;
+    exports my.backup.backupTool.Enumerations;
+    opens my.backup.backupTool.Enumerations to javafx.fxml;
 }
 

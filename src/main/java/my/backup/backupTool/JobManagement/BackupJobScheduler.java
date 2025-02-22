@@ -1,6 +1,6 @@
 package my.backup.backupTool.JobManagement;
 
-import my.backup.backupTool.Model.BackupType;
+import my.backup.backupTool.Enumerations.BackupTYPE;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Services.IMergeService;
 import my.backup.backupTool.Services.LogFileWriterService;
@@ -82,17 +82,17 @@ public class BackupJobScheduler implements IFireBackupEvent,IGetThreadMap {
         if(threadMap.containsValue(model)) {
             return false;
         }
-        if(model.getBackupType() == BackupType.MERGE){
+        if(model.getBackupType() == BackupTYPE.MERGE){
             IMergeService mergeService = new MergeService(model);
             thread = new Thread(mergeService);
             this.threadMap.put(thread,model);
             thread.start();
             return true;
         }
-        else if(model.getBackupType() == BackupType.FULL){
+        else if(model.getBackupType() == BackupTYPE.FULL){
             //TODO
         }
-        else if(model.getBackupType() == BackupType.SYNCHRONIZED){
+        else if(model.getBackupType() == BackupTYPE.SYNCHRONIZED){
             //TODO
         }
 

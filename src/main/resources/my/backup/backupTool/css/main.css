@@ -75,6 +75,9 @@
     -fx-focus-color: none;
     -fx-faint-focus-color: none;
     -fx-border-color: none;
+    -fx-background-image: url("../img/icons/counterClockLight.png");
+    -fx-background-position: right 80px bottom 80px;
+    -fx-background-repeat: no-repeat;
 }
 
 .progress-bar {

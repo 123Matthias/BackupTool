@@ -3,15 +3,16 @@ package my.backup.backupTool.Services;
 
 import javafx.application.Platform;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Enumerations.LogLEVEL;
 import my.backup.backupTool.Factory.CopyServiceFactory;
 import my.backup.backupTool.Controller.MessageTYPE;
 import my.backup.backupTool.JobManagement.Hardware;
-import my.backup.backupTool.Model.BackupType;
+import my.backup.backupTool.Enumerations.BackupTYPE;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
 import my.backup.backupTool.Notifications.MessageService;
-import my.backup.backupTool.ServiceEncryption.CryptoMode;
+import my.backup.backupTool.Enumerations.CryptoMODE;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -27,7 +28,7 @@ public class MergeService implements IMergeService,Runnable {
     private IFileValidationService validationService;
     private IMessageList messageList;
     private volatile BaseModel model;
-    private CryptoMode cryptoMode;
+    private CryptoMODE cryptoMode;
     private Hardware hardware;
     private final ExecutorService executor;
     Thread thread;
@@ -43,15 +44,15 @@ public class MergeService implements IMergeService,Runnable {
 
     private void getCryptoMode() {
         if(model.hasEncryptionJob() == false){
-            cryptoMode = CryptoMode.NONE;
+            cryptoMode = CryptoMODE.NONE;
             System.out.println("Crypto mode is " + cryptoMode);
         }
         else if(model.hasEncryptionJob() && model.isRestoreMode() == false){
-            cryptoMode = CryptoMode.ENCRYPTION;
+            cryptoMode = CryptoMODE.ENCRYPTION;
             System.out.println("Crypto mode is " + cryptoMode);
         }
         else if(model.hasEncryptionJob() && model.isRestoreMode()){
-            cryptoMode = CryptoMode.DECRYPTION;
+            cryptoMode = CryptoMODE.DECRYPTION;
             System.out.println("Crypto mode is " + cryptoMode);
         }
     }
@@ -117,11 +118,16 @@ public class MergeService implements IMergeService,Runnable {
         log += String.format("%-20s%s%n", "Target:", this.model.getTarget());
         log += String.format("%-20s%s%n", "lastBackupTime:", this.model.getLastBackupLocalDateTime());
         log += String.format("%-20s%s%n", "nextBackupTime:", this.model.getNextBackupLocalDateTime());
-        log += String.format("%-20s%s%n", "sourceValidation:", this.model.getValidFilesCount());
-        log += String.format("%-20s%s%n", "targetValidation:", this.model.getTotalVisitedFiles());
+        log += String.format("%-20s%s%n", "validFiles:", this.model.getValidFilesCount());
+        log += String.format("%-20s%s%n", "totalFiles:", this.model.getTotalVisitedFiles());
+        if(this.model.getValidFilesCount() < this.model.getTotalVisitedFiles()){
+            Path absPath = Paths.get(App.Properties.getValidationLogFilePath()).toAbsolutePath();
+            Path logFile = absPath.resolve("UUID=" + this.model.getUid() + ".log");
+            log += String.format("%-20s%s%n", "Link:", logFile);
+        }
         log += String.format("%-20s%s%n", "encryptionType:", this.model.getEncryptionType());
 
-        LogFileWriterService.writeLogFile(LocalDateTime.now(),LogLevel.COPY_THREAD_SUCCESS, BackupType.MERGE,log);
+        LogFileWriterService.writeLogFile(LocalDateTime.now(), LogLEVEL.COPY_THREAD_SUCCESS, BackupTYPE.MERGE,log);
         App.JobScheduler.backupThreadFinished(Thread.currentThread());
 
       //  App.JobScheduler.backupThreadFinished(Thread.currentThread());

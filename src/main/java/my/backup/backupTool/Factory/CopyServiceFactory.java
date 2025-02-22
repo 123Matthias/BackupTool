@@ -2,7 +2,7 @@ package my.backup.backupTool.Factory;
 
 import my.backup.backupTool.ServiceEncryption.AesService;
 import my.backup.backupTool.Model.BaseModel;
-import my.backup.backupTool.ServiceEncryption.EncryptionTYPE;
+import my.backup.backupTool.Enumerations.EncryptionTYPE;
 import my.backup.backupTool.Services.BaseCopyService;
 import my.backup.backupTool.Services.ICopyService;
 

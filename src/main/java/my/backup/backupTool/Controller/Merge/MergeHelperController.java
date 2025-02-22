@@ -212,8 +212,8 @@ public class MergeHelperController {
             validationType = createLabeledRow("Validation: ", model.getValidationType().toString());
 
             boolean initialStatus;
-            String value = model.getValidFilesCount();
-            if(value != null && value.equals(model.getTotalVisitedFiles())){
+            int value = model.getValidFilesCount();
+            if(value != 0 && value == model.getTotalVisitedFiles()){
                 initialStatus = true;
             }
             else {
@@ -235,23 +235,31 @@ public class MergeHelperController {
             contentBox.getChildren().addAll(validFilesRow,totalFilesRow);
         }
 
-        //Progress Bar
+//Progress bottom card Start--------------------------------------
+// Progress Bar
         ProgressBar progressBar = new ProgressBar(0);
         progressBar.progressProperty().bind(model.TransientProperties.getProgressStateProperty());
         progressBar.prefWidthProperty().bind(contentBox.widthProperty());
-        Label progressLabel = new Label();
-        progressLabel.setPadding(new Insets(10, 0, 0, 0));
-        progressLabel.setLabelFor(progressBar);
-        progressLabel.textProperty().bind(Bindings.format("Working speed: %.2f MB/sec", model.TransientProperties.getWorkingSpeedProperty()));
 
-        //Click Listener
-        contentBox.setOnMouseClicked(event -> openMergeDetailWindow(uid));
+// Label Progress Speed
+        Label progressLabel = new Label();
+        progressLabel.setPadding(new Insets(0, 5, 0, 0));
+        progressLabel.setStyle("-fx-font-style: italic");
+        progressLabel.setLabelFor(progressBar);
+        progressLabel.textProperty().bind(Bindings.format("%.2f MB / sec", model.TransientProperties.getWorkingSpeedProperty()));
+
+// HBox for float right
+        HBox progressLabelBox = new HBox(progressLabel);
+        progressLabelBox.setAlignment(Pos.CENTER_RIGHT); // Label rechtsbündig
+        HBox.setHgrow(progressLabelBox, Priority.ALWAYS); // Label dehnt sich auf volle Breite aus
 
         // Struktur aufbauen
-        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabel, progressBar);
+        newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabelBox, progressBar);
         newCardBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
         newCardPane.getChildren().add(newCardBox);
-
+//Progress bottom card End--------------------------------------
+        //Click Listener
+        contentBox.setOnMouseClicked(event -> openMergeDetailWindow(uid));
         // Neue Karte in das FlowPane einfügen
         mainController.getCardContainer().getChildren().add(newCardPane);  // flowPane muss vorher definiert sein
 
