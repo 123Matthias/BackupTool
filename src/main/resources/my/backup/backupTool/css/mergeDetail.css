@@ -1,15 +1,26 @@
-/*.gridPane{
+/* .gridPane{
     -fx-grid-lines-visible: true;
 }
 
 .gridPane Line{
     -fx-stroke: green;
 }
+
 */
 
 .gridPane{
-    -fx-padding: 40 0 0 0;
+    -fx-padding: 25 0 0 0;
     -fx-stroke-width: 2;
+}
+
+.checkBoxContainer{
+    -fx-alignment: top-right;
+    -fx-padding: 30px 12px 0 0;
+}
+
+.inputContainer > * {
+    -fx-alignment: top-left;
+    -fx-padding: 5px 0 0 0;
 }
 
 .path {
@@ -61,6 +72,7 @@ TextField, TextArea, TextArea .content{
     -fx-font-size: 14;
 }
 
+
 .title{
     -fx-pref-height: 15;
     -fx-font-size: 20;
@@ -97,5 +109,8 @@ TextField, TextArea, TextArea .content{
 .combo-box .cell {
     -fx-border-width: 0px; /* Entfernt den Rand der einzelnen Zellen */
 }
+
+
+
 
 

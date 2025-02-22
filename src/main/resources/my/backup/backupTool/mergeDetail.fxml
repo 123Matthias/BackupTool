@@ -17,6 +17,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import java.lang.String?>
 
+<?import javafx.scene.layout.Pane?>
 <StackPane fx:id="stackPane" fx:controller="my.backup.backupTool.Controller.Merge.MergeDetailController" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            styleClass="basicBackground" >
 
@@ -52,12 +53,12 @@
 
 
 
-      <VBox spacing="3" style="-fx-padding: 20 50 0 50;" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="6">
+      <VBox styleClass="checkBox" spacing="3" style="-fx-padding: 20 50 0 50;" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="6">
          <TextField fx:id="title" alignment="CENTER" styleClass="title" editable="true" text="Title"/>
       </VBox>
 
       <!-- Source Path -->
-      <VBox spacing="3" style="-fx-padding: 0 10 0 10;" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="6">
+      <VBox styleClass="checkBox" spacing="3" style="-fx-padding: 0 10 0 10;" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="6">
          <HBox alignment="BASELINE_LEFT">
             <Label styleClass="text" text="Source Path" />
             <Button fx:id="sourceButton" styleClass="browseButton" text="Browse..." />
@@ -65,7 +66,7 @@
          <TextArea fx:id="sourcePath" promptText="Enter source path..."></TextArea>
       </VBox>
 
-      <VBox spacing="3" style="-fx-padding: 0 10 0 10;" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
+      <VBox styleClass="checkBox" spacing="3" style="-fx-padding: 0 10 0 10;" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
          <HBox alignment="BASELINE_LEFT">
             <Label text="Target Path" />
             <Button fx:id="targetButton" styleClass="browseButton" text="Browse..." />
@@ -76,58 +77,78 @@
 
 
 
-      <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxStartDate" onAction="#toggleDate" />
-      <VBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-padding: 0 10 0 0">
-         <Label >Start Date</Label>
-         <DatePicker disable="true" fx:id="startDateDatePicker" promptText="01.01.1990"/>
-      </VBox>
+      <HBox styleClass="checkBoxContainer" GridPane.rowIndex="3" GridPane.columnIndex="0">
+         <CheckBox fx:id="checkBoxStartDate" onAction="#toggleDate" styleClass="checkBox" />
+      </HBox>
+      <HBox styleClass="inputContainer" GridPane.rowIndex="3" GridPane.columnIndex="1">
+         <VBox spacing="5">
+            <Label >Start Date</Label>
+            <DatePicker disable="true" fx:id="startDateDatePicker" promptText="01.01.1990"/>
+         </VBox>
+      </HBox>
 
-      <CheckBox fx:id="checkBoxIntervalDays" onAction="#toggleDays" GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-      <VBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
-         <Label>Days Interval</Label>
-         <TextField fx:id="daysInterval" style="-fx-alignment: center"  disable="true" editable="true" text="0" />
-      </VBox>
+      <HBox styleClass="checkBoxContainer" GridPane.rowIndex="3" GridPane.columnIndex="2">
+         <CheckBox fx:id="checkBoxIntervalDays" onAction="#toggleDays" styleClass="checkBox" />
+      </HBox>
+      <HBox styleClass="inputContainer" GridPane.rowIndex="3" GridPane.columnIndex="3">
+         <VBox spacing="5">
+            <Label>Days Interval</Label>
+            <TextField fx:id="daysInterval" disable="true" editable="true" text="0" />
+         </VBox>
+      </HBox>
 
-      <CheckBox fx:id="checkBoxIntervalHours" onAction="#toggleHours" GridPane.rowIndex="4" GridPane.columnIndex="2" GridPane.halignment="CENTER"  />
-      <VBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
-         <Label>Hours Interval</Label>
-         <TextField fx:id="hoursInterval" style="-fx-alignment: center" disable="true" editable="true" text="0"/>
-      </VBox>
+      <HBox styleClass="checkBoxContainer" GridPane.rowIndex="4" GridPane.columnIndex="2">
+         <CheckBox fx:id="checkBoxIntervalHours" onAction="#toggleHours" />
+      </HBox>
+      <HBox styleClass="inputContainer" GridPane.rowIndex="4" GridPane.columnIndex="3">
+         <VBox spacing="5">
+            <Label>Hours Interval</Label>
+            <TextField fx:id="hoursInterval" disable="true" editable="true" text="0"/>
+         </VBox>
+      </HBox>
 
-      <CheckBox fx:id="checkBoxIntervalMinutes" onAction="#toggleMinutes" GridPane.rowIndex="5" GridPane.columnIndex="2" GridPane.halignment="CENTER"  />
-      <VBox spacing="5" GridPane.rowIndex="5" GridPane.columnIndex="3" style="-fx-padding: 0 10 0 0">
-         <Label>Minutes Interval</Label>
-         <TextField fx:id="minutesInterval" style="-fx-alignment: center" disable="true" editable="true" text="0"/>
-      </VBox>
+      <HBox styleClass="checkBoxContainer" GridPane.rowIndex="5" GridPane.columnIndex="2">
+         <CheckBox fx:id="checkBoxIntervalMinutes" onAction="#toggleMinutes" />
+      </HBox>
+      <HBox styleClass="inputContainer" GridPane.rowIndex="5" GridPane.columnIndex="3">
+         <VBox spacing="5">
+            <Label>Minutes Interval</Label>
+            <TextField fx:id="minutesInterval" disable="true" editable="true" text="0"/>
+         </VBox>
+      </HBox>
 
-      <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxEncryptionJob" onAction="#toggleEncryptionJob" />
-      <VBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="5" style="-fx-padding: 0 10 0 0">
-         <Label >Encryption Algorithm</Label>
-         <ComboBox fx:id="encryptionJobDropdown" disable="true" prefWidth="Infinity">
-            <items>
-               <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="AES_CBC"/>
-               </FXCollections>
-            </items>
-         </ComboBox>
-      </VBox>
+      <HBox styleClass="checkBoxContainer" GridPane.rowIndex="3" GridPane.columnIndex="4">
+         <CheckBox fx:id="checkBoxEncryptionJob" onAction="#toggleEncryptionJob" />
+      </HBox>
+      <HBox styleClass="inputContainer" GridPane.rowIndex="3" GridPane.columnIndex="5">
+         <VBox spacing="5">
+            <Label >Encryption Algorithm</Label>
+            <ComboBox fx:id="encryptionJobDropdown" disable="true">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="AES_CBC"/>
+                  </FXCollections>
+               </items>
+            </ComboBox>
+         </VBox>
+      </HBox>
 
-      <CheckBox GridPane.rowIndex="4" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" fx:id="checkBoxValidationJob" onAction="#toggleValidationJob" />
-      <VBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="5" style="-fx-padding: 0 10 0 0">
-         <Label >Validation Algorithm</Label>
-         <ComboBox fx:id="validationJobDropdown" disable="true" prefWidth="Infinity">
-            <items>
-               <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="CRC32"/>
-               </FXCollections>
-            </items>
-         </ComboBox>
-      </VBox>
-
-
-
+      <HBox styleClass="checkBoxContainer" GridPane.rowIndex="4" GridPane.columnIndex="4" >
+         <CheckBox fx:id="checkBoxValidationJob" onAction="#toggleValidationJob" />
+      </HBox>
+      <HBox styleClass="inputContainer" GridPane.rowIndex="4" GridPane.columnIndex="5">
+         <VBox alignment="CENTER_LEFT" spacing="5">
+            <Label >Validation Algorithm</Label>
+            <ComboBox fx:id="validationJobDropdown" disable="true">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="CRC32"/>
+                  </FXCollections>
+               </items>
+            </ComboBox>
+         </VBox>
+      </HBox>
       <!-- Button -->
-
 
    </GridPane>
 
