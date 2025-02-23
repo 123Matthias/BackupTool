@@ -12,12 +12,10 @@
 ---
 
 ## Introduction
-The ccBackup Tool is designed to be simple and intuitive. Its primary goal is to allow quick and easy configuration, making it ideal for users who like it simple.
+ 
 
 ###Main Window
-![img.png](img.png)
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
+
 ---
 
 ## Features
