@@ -49,6 +49,8 @@
 
 .mainButton1Box:hover  {
     -fx-translate-x: 4;
+    -fx-cursor: hand;
+
 }
 
 

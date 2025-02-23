@@ -16,8 +16,8 @@
 }
 
 /* Card Content Styles */
-.cardContent {
-
+.cardContent:hover {
+    -fx-cursor: hand;
 }
 
 /* Card Title Container */

@@ -10,11 +10,7 @@ import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.Merge.MergeDetailController;
 import my.backup.backupTool.Controller.Merge.MergeHelperController;
-import my.backup.backupTool.Notifications.IMessageList;
-import my.backup.backupTool.Notifications.MessageList;
 import my.backup.backupTool.Notifications.MessageService;
-import my.backup.backupTool.Properties;
-import my.backup.backupTool.ToastTYPE;
 
 import java.awt.*;
 import java.io.File;
@@ -69,7 +65,7 @@ public class MainController extends BaseMainController {
     @FXML
     private void handleMergeButtonClicked(){
         super.setLeftToolbarSelection(LeftToolbar.MergeButton);
-        Platform.runLater(mergeHelperController::handleMergeButtonClicked);
+        Platform.runLater(mergeHelperController::handleMergeOverviewButtonClicked);
     }
 
     @FXML

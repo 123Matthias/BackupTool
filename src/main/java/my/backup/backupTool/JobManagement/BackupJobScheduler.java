@@ -25,8 +25,8 @@ public class BackupJobScheduler implements IFireBackupEvent,IGetThreadMap {
     }
 
     private void initTimeline(){
-        Timeline.setJobSchedulerCallback(this);
-        Timeline.setThreadMapCallback(this);
+        Timeline.setJobSchedulerBackupEvent(this);
+        Timeline.setJobSchedulerThreadMap(this);
     }
 
     public static BackupJobScheduler Singleton() {
@@ -107,6 +107,16 @@ public class BackupJobScheduler implements IFireBackupEvent,IGetThreadMap {
         this.fireBackupEvent(model);
         return true;
     }
+
+    public synchronized boolean fireRestoreButton(BaseModel model) {
+        if(model.hasBackupJob() && this.timelineThread.getState().equals(Thread.State.TIMED_WAITING)){
+            timelineThread.interrupt();
+            System.out.println("TIMED WAITING THREAD wird AUFGEWECKT. PLAY Button was Clicked");
+        }
+        this.fireBackupEvent(model);
+        return true;
+    }
+
 
     public void stopAndInterruptBackupEvent(BaseModel model) {
         model.setBackupJob(false);

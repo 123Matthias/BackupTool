@@ -39,6 +39,7 @@
 .toolBarBottom{
     -fx-alignment: center;
     -fx-spacing: 25;
+    -fx-cursor: hand;
 }
 
 .playButton,
@@ -63,6 +64,9 @@
 .browseButton{
     -fx-border-radius: 10;
     -fx-background-color: none;
+}
+.browseButton:hover{
+    -fx-cursor: hand;
 }
 
 TextField, TextArea, TextArea .content{

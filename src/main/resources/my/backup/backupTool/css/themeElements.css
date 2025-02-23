@@ -1,10 +1,5 @@
 /*-------------------MAIN VIEW BUTTONS--------------------------*/
 
-.gridPane{
-    -fx-background-color: -fx-basicBackground;
-}
-
-
 .mainButton1Box {
     -fx-border-color: -fx-color58;
 }
@@ -284,8 +279,8 @@ TextArea .content{
 }
 
 #playButtonPath {
-    -fx-fill: -fx-playButton;
-    -fx-stroke: -fx-playButton;
+    -fx-fill: -fx-playColor;
+    -fx-stroke: -fx-playColor;
 }
 
 #saveButtonPath {
@@ -294,8 +289,8 @@ TextArea .content{
 }
 
 #backupButtonPath {
-    -fx-fill: -fx-playButton;
-    -fx-stroke: -fx-playButton;
+    -fx-fill: -fx-playColor;
+    -fx-stroke: -fx-playColor;
 }
 #restoreButtonPath {
     -fx-fill: -fx-restoreColor;

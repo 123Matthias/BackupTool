@@ -9,6 +9,7 @@
     -fx-border-radius: 1em;  /* Abgerundete Ecken */
     -fx-background-radius: 1em;  /* Abgerundete Ecken */
     -fx-alignment: center;  /* Box-Inhalt zentrieren */
+    -fx-cursor: hand;
 }
 
 

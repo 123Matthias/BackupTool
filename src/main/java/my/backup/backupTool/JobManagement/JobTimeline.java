@@ -15,8 +15,8 @@ public class JobTimeline implements Runnable {
     private static final long DURATION_MAX_SECONDS = 86400;
     private final Object lockObjTimeline = new Object();
     private List<BaseModel> storedList = null;
-    private IFireBackupEvent jobSchedulerCallback;
-    private IGetThreadMap threadMapCallback;
+    private IFireBackupEvent jobSchedulerBackupEvent;
+    private IGetThreadMap jobSchedulerThreadMap;
 
     public JobTimeline() {
         this.running.set(true);
@@ -29,7 +29,7 @@ public class JobTimeline implements Runnable {
            this.fireAllScheduledBackups();
            try {
                 synchronized (lockObjTimeline) {
-                    while(!threadMapCallback.getThreadMap().isEmpty()) {
+                    while(!jobSchedulerThreadMap.getThreadMap().isEmpty()) {
                         //Every 60 Seconds check Time. This may be not necessary. Finished Threads remove themselves from Map.
                         App.JobScheduler.checkThreadStates();
                         lockObjTimeline.wait(60000);
@@ -60,7 +60,7 @@ public class JobTimeline implements Runnable {
             if (m.getNextBackupLocalDateTime() == null)
                 continue;
             if (m.hasBackupJob() && m.getNextBackupLocalDateTime().isBefore(LocalDateTime.now())) {
-                jobSchedulerCallback.fireBackupEvent(m);
+                jobSchedulerBackupEvent.fireBackupEvent(m);
             }
         }
     }
@@ -120,11 +120,11 @@ public class JobTimeline implements Runnable {
         }
     }
 
-    public void setJobSchedulerCallback(IFireBackupEvent callback) {
-        this.jobSchedulerCallback = callback;
+    public void setJobSchedulerBackupEvent(IFireBackupEvent callback) {
+        this.jobSchedulerBackupEvent = callback;
     }
 
-    public void setThreadMapCallback(IGetThreadMap threadMapCallback) {
-        this.threadMapCallback = threadMapCallback;
+    public void setJobSchedulerThreadMap(IGetThreadMap jobSchedulerThreadMap) {
+        this.jobSchedulerThreadMap = jobSchedulerThreadMap;
     }
 }

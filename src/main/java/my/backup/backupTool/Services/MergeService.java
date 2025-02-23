@@ -17,6 +17,7 @@ import my.backup.backupTool.Enumerations.CryptoMODE;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -120,6 +121,9 @@ public class MergeService implements IMergeService,Runnable {
         log += String.format("%-20s%s%n", "nextBackupTime:", this.model.getNextBackupLocalDateTime());
         log += String.format("%-20s%s%n", "validFiles:", this.model.getValidFilesCount());
         log += String.format("%-20s%s%n", "totalFiles:", this.model.getTotalVisitedFiles());
+        DecimalFormat df = new DecimalFormat("#,##0.000000000");
+        String formattedSize = df.format(totalSize / 1024.0 / 1024.0 / 1024.0) + " GiB";
+        log += String.format("%-20s%s%n", "totalSize:", formattedSize);
         if(this.model.getValidFilesCount() < this.model.getTotalVisitedFiles()){
             Path absPath = Paths.get(App.Properties.getValidationLogFilePath()).toAbsolutePath();
             Path logFile = absPath.resolve("UUID=" + this.model.getUid() + ".log");

@@ -2,8 +2,6 @@ package my.backup.backupTool.Controller.Merge;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.css.CssParser;
-import javafx.css.Style;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,12 +10,15 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.MainController;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.SceneBuilder;
 
+import javax.swing.text.html.ImageView;
+import java.awt.*;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -73,7 +74,7 @@ public class MergeHelperController {
         }
     }
 
-    public void handleMergeButtonClicked() {
+    public void handleMergeOverviewButtonClicked() {
         mainController.getCardContainer().getChildren().clear();
         addAllCardsSorted(App.DataStore.getModelList(), true);
 
@@ -176,6 +177,7 @@ public class MergeHelperController {
                 createLabeledRow("Next Backup:", nextDateLabel),
                 createLabeledRow("Source Path:", model.getSource()));
 
+
         HBox row;
         HBox rowEncType;
         if(model.getCheckBoxEncryptionJob()){
@@ -248,12 +250,37 @@ public class MergeHelperController {
         progressLabel.setLabelFor(progressBar);
         progressLabel.textProperty().bind(Bindings.format("%.2f MB / sec", model.TransientProperties.getWorkingSpeedProperty()));
 
+
 // HBox for float right
-        HBox progressLabelBox = new HBox(progressLabel);
+        HBox progressLabelBox = new HBox();
         progressLabelBox.setAlignment(Pos.CENTER_RIGHT); // Label rechtsbündig
         HBox.setHgrow(progressLabelBox, Priority.ALWAYS); // Label dehnt sich auf volle Breite aus
 
-        // Struktur aufbauen
+        // SVGPath erstellen und Inhalt setzen
+        SVGPath svgPath = new SVGPath();
+        if(model.hasBackupJob() && model.getNextBackupLocalDateTime() != null){
+            svgPath.setContent("M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z");
+            svgPath.setStyle("-fx-stroke: -fx-playColor; -fx-fill: -fx-playColor;");
+        }
+        else{
+            svgPath.setContent("M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm224-72l0 144c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-144c0-13.3 10.7-24 24-24s24 10.7 24 24zm112 0l0 144c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-144c0-13.3 10.7-24 24-24s24 10.7 24 24z");
+            svgPath.setStyle("-fx-stroke: -fx-pauseColor; -fx-fill: -fx-pauseColor;");
+        }
+
+        svgPath.setScaleX(0.06);
+        svgPath.setScaleY(0.06);
+
+// Label als Container für das SVG erstellen
+        Label svgLabel = new Label();
+        svgLabel.setGraphic(svgPath);
+
+        svgLabel.setMinSize(30, 30);
+        svgLabel.setMaxSize(30, 30);
+        svgLabel.setPadding(new Insets(0, 20, 0, 0));
+        svgLabel.setAlignment(Pos.CENTER);  // Zentriert das SVG in Label
+        progressLabelBox.getChildren().addAll(svgLabel,progressLabel);
+
+// Struktur aufbauen
         newCardBox.getChildren().addAll(newTitleContainer, contentBox, progressLabelBox, progressBar);
         newCardBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
         newCardPane.getChildren().add(newCardBox);

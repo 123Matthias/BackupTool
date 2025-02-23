@@ -23,9 +23,9 @@
 
 
    <!-- ********************HEADER******************************-->
-   <HBox  style="-fx-padding: 10 0 0 0; -fx-alignment: top-center" >
+   <HBox  style="-fx-padding: 10 0 20 0; -fx-alignment: top-center" >
       <children>
-         <Label fx:id="header" text="Backup Mode" style="-fx-font-size: 24;" />
+         <Label fx:id="header" text="Backup" style="-fx-font-size: 24;" />
       </children>
    </HBox>
    <!-- ********************END HEADER******************************-->
@@ -53,7 +53,7 @@
 
 
 
-      <VBox styleClass="checkBox" spacing="3" style="-fx-padding: 20 50 0 50;" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="6">
+      <VBox spacing="3" style="-fx-padding: 30 50 0 50;" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="6">
          <TextField fx:id="title" alignment="CENTER" styleClass="title" editable="true" text="Title"/>
       </VBox>
 

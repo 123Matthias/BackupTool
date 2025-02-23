@@ -22,15 +22,17 @@ public class MergeDetailController extends BaseDetailController {
 
     @Override
     @FXML
-    protected void playButtonClicked(){
+    protected void playButtonClicked() {
         super.playButtonClicked();
+        App.Router.getMainController().getMergeHelperController().handleMergeOverviewButtonClicked();
+        super.closeDetailAndReloadOverview();
     }
 
     @Override
     @FXML
     protected void saveButtonClicked() {
         super.saveButtonClicked();
-        App.Router.getMainController().getMergeHelperController().handleMergeButtonClicked();
+        App.Router.getMainController().getMergeHelperController().handleMergeOverviewButtonClicked();
         super.closeDetailAndReloadOverview();
     }
 }

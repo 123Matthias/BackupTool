@@ -84,7 +84,7 @@
     -fx-deleteColor: rgb(150, 0, 0);
     -fx-saveColor: rgb(0, 72, 255);
     -fx-pauseColor: rgb(99, 43, 2);
-    -fx-playButton: rgb(0, 128, 0);
+    -fx-playColor: rgb(0, 128, 0);
     -fx-restoreColor: rgb(85, 0, 128);
 
     /*----- END ACTION BUTTONS ------*/

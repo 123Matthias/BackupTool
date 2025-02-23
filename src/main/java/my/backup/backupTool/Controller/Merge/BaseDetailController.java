@@ -173,7 +173,7 @@ public abstract class BaseDetailController {
                         });
                     else if (node.getId().equals("playReverseButton"))
                         node.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            this.playReverseButtonClicked();
+                            this.playRestoreButtonClicked();
                         });
                 });
     }
@@ -216,7 +216,8 @@ public abstract class BaseDetailController {
 
     @FXML
     protected void enableRestoreMode() {
-        header.setText("Restore Target to Source");
+        header.setText("Restore");
+        title.setEditable(false);
         sourcePath.editableProperty().set(false);
         targetPath.editableProperty().set(false);
         sourceButton.setDisable(true);
@@ -239,25 +240,41 @@ public abstract class BaseDetailController {
         checkBoxEncryptionJob.setSelected(model.getCheckBoxEncryptionJob());
         validationJobDropdown.getSelectionModel().select(model.getValidationType().toString());
         encryptionJobDropdown.getSelectionModel().select(model.getEncryptionType().toString());
-        checkBoxStartDate.setSelected(false);
-        changeRestoreModeColor(true);
+        validationJobDropdown.setDisable(true);
+        encryptionJobDropdown.setDisable(true);
+        changeToRestoreModeColor(true);
         model.setRestoreMode(true);
     }
 
     @FXML
     protected void enableBackupMode() {
         header.setText("Backup");
+        title.setDisable(false);
         sourcePath.editableProperty().set(true);
         targetPath.editableProperty().set(true);
         sourceButton.setDisable(false);
         targetButton.setDisable(false);
         checkBoxIntervalDays.setDisable(false);
+        checkBoxIntervalDays.setSelected(model.getCheckBoxDaysInterval());
+        daysInterval.setDisable(false);
         checkBoxIntervalHours.setDisable(false);
+        checkBoxIntervalHours.setSelected(model.getCheckBoxHoursInterval());
         checkBoxIntervalMinutes.setDisable(false);
+        checkBoxIntervalMinutes.setSelected(model.getCheckBoxMinutesInterval());
+        hoursInterval.setDisable(false);
+        minutesInterval.setDisable(false);
         checkBoxStartDate.setDisable(false);
+        checkBoxStartDate.setSelected(model.getCheckBoxStartDate());
+        startDateDatePicker.setDisable(false);
         checkBoxEncryptionJob.setDisable(false);
         checkBoxValidationJob.setDisable(false);
-        changeRestoreModeColor(false);
+        checkBoxValidationJob.setSelected(model.getCheckBoxValidationJob());
+        checkBoxEncryptionJob.setSelected(model.getCheckBoxEncryptionJob());
+        validationJobDropdown.getSelectionModel().select(model.getValidationType().toString());
+        encryptionJobDropdown.getSelectionModel().select(model.getEncryptionType().toString());
+        validationJobDropdown.setDisable(false);
+        encryptionJobDropdown.setDisable(false);
+        changeToRestoreModeColor(false);
         model.setRestoreMode(false);
 
     }
@@ -271,9 +288,7 @@ public abstract class BaseDetailController {
         targetPath.setText(model.getTarget());
     }
 
-    private void changeRestoreModeColor(boolean restoreMode) {
-
-
+    private void changeToRestoreModeColor(boolean restoreMode) {
         stackPane.getStyleClass().removeAll("danger", "basicBackground");
 
         if (restoreMode) {
@@ -322,11 +337,12 @@ public abstract class BaseDetailController {
         model.setBackupJob(true);
         this.setModelValues();
         if(model.validate()){
-            App.DataStore.saveModelAsJSON(model);
-            App.JobScheduler.firePlayButton(model);
-            MessageService.createToast("PLAY", MessageTYPE.PLAY);
+            if(App.DataStore.saveModelAsJSON(model)){
+                App.JobScheduler.firePlayButton(model);
+                MessageService.createToast("Play Backup", MessageTYPE.PLAY);
+                System.out.println("----------playButtonClickedDoneSuccessfully-----------");
+            }
             closeDetailAndReloadOverview();
-            System.out.println("----------playButtonClickedDoneSuccessfully-----------");
         }
         else {
             MessageService.createMessage(model.TransientProperties.getMessageList(), MessageTYPE.VALIDATION);
@@ -334,18 +350,30 @@ public abstract class BaseDetailController {
     }
 
     @FXML
-    private void playReverseButtonClicked(){
+    protected void saveButtonClicked(){
+        model.setBackupJob(false);
+        this.setModelValues();
+        if(model.validate()){
+            if(App.DataStore.saveModelAsJSON(model)){
+                MessageService.createToast("Saved", MessageTYPE.SAVE);
+            }
+        }
+        else {
+            MessageService.createMessage(model.TransientProperties.getMessageList(), MessageTYPE.VALIDATION);
+        }
+    }
+
+    @FXML
+    private void playRestoreButtonClicked(){
         model.setRestoreMode(true);
         model.setBackupJob(true);
         this.setModelValues();
         if(model.validate()){
             if(App.DataStore.saveModelAsJSON(model)){
-                App.JobScheduler.firePlayButton(model);
-                MessageService.createToast("RESTORE BACKUP", MessageTYPE.PLAY);
-                closeDetailAndReloadOverview();
+                App.JobScheduler.fireRestoreButton(model);
+                MessageService.createToast("Restore Backup", MessageTYPE.PLAY);
                 System.out.println("----------playButtonClickedDoneSuccessfully-----------");
             }
-
         }
         else {
             MessageService.createMessage(model.TransientProperties.getMessageList(), MessageTYPE.VALIDATION);
@@ -384,21 +412,7 @@ public abstract class BaseDetailController {
         }
     }
 
-    @FXML
-    protected void saveButtonClicked(){
-        this.setModelValues();
-        model.setBackupJob(false);
-        if(model.validate()){
-            if(App.DataStore.saveModelAsJSON(model)){
-                MessageService.createToast("Saved", MessageTYPE.SAVE);
-            }
-            closeDetailAndReloadOverview();
 
-        }
-        else {
-            MessageService.createMessage(model.TransientProperties.getMessageList(), MessageTYPE.VALIDATION);
-        }
-    }
 
     protected void setModelValues(){
 
