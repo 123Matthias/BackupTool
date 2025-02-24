@@ -26,8 +26,6 @@ public class AesService extends BaseCalculationService implements ICopyService {
 
     private final BaseModel model;
 
-    ReentrantLock lock = new ReentrantLock();
-
     public AesService(BaseModel model) {
         this.model = model;
 
@@ -41,12 +39,9 @@ public class AesService extends BaseCalculationService implements ICopyService {
         }
         System.out.println("Secret Key: " + secretKeyBase64);
         System.out.println("IV: " + ivBase64);
-
     }
 
-
-
-    private static Cipher initCipherEncryption(SecretKey secretKey, GCMParameterSpec iv) {
+    public static Cipher initCipherEncryption(SecretKey secretKey, GCMParameterSpec iv) {
         try {
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
@@ -56,7 +51,7 @@ public class AesService extends BaseCalculationService implements ICopyService {
         }
     }
 
-    private static Cipher initCipherDecryption(SecretKey secretKey, GCMParameterSpec iv) {
+    public static Cipher initCipherDecryption(SecretKey secretKey, GCMParameterSpec iv) {
         try {
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
@@ -119,7 +114,6 @@ public class AesService extends BaseCalculationService implements ICopyService {
     }
 
 
-
     public void decryptFileWithFileChannel(Path inputPath, Path outputPath) {
 
         Cipher cipher = initCipherDecryption(model.TransientProperties.getSecretKey(), model.TransientProperties.getInitVector());
@@ -170,6 +164,7 @@ public class AesService extends BaseCalculationService implements ICopyService {
     }
 
 
+
     public static SecretKey generateAESKey() {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("AES");
@@ -179,7 +174,6 @@ public class AesService extends BaseCalculationService implements ICopyService {
             throw new RuntimeException("AES-Algorithmus nicht gefunden", e);
         }
     }
-
 
     public static IvParameterSpec generateIV() {
         byte[] iv = new byte[16]; // 16 Byte IV für AES
@@ -194,7 +188,6 @@ public class AesService extends BaseCalculationService implements ICopyService {
     public BaseModel getModel() {
         return model;
     }
-
 
     public void generateNewSecretKeyAndIVectorAndSetThem() {
         // Generiere SecretKey und 12-Byte IV für GCM
@@ -215,7 +208,6 @@ public class AesService extends BaseCalculationService implements ICopyService {
         model.setInitVector(ivBase64);
     }
 
-
     public void getExistingSecretKeyAndIVectorFromModel() {
         // Holen der Base64-kodierten Strings aus dem Model
         String secretKeyBase64 = model.getSecretKey();
@@ -231,7 +223,6 @@ public class AesService extends BaseCalculationService implements ICopyService {
         model.TransientProperties.setSecretKey(secretKey);
         model.TransientProperties.setInitVector(iv); // Byte-Array statt IvParameterSpec
     }
-
 
     private static byte[] generateGCMIV() {
         byte[] iv = new byte[12]; // GCM empfiehlt 12-Byte IV

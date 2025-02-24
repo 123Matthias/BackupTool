@@ -28,25 +28,4 @@ public class BackupValidationScheduler {
     }
 
 
-    public void fireValidationEvent(BaseModel model) {
-        model = App.DataStore.getModelById(model.getUid());
-        if(model.hasValidationJob()){
-                    IFileValidationService hashService = new FileValidationService(model);
-                    hashService.calculateAndSaveCRC32Validation();
-            }
-    }
-
-    public void fireAllValidationEvents() {
-        for(BaseModel modelInList : models) {
-            if(modelInList.hasValidationJob()){
-                if(modelInList.getValidationType() == ValidationTYPE.CRC32){
-                    IFileValidationService hashService = new FileValidationService(modelInList);
-                    hashService.calculateAndSaveCRC32Validation();
-                }
-            }
-        }
-    }
-
-
-
 }

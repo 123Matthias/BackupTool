@@ -33,6 +33,7 @@ public class MergeService implements IMergeService,Runnable {
     private Hardware hardware;
     private final ExecutorService executor;
     Thread thread;
+
     public MergeService(BaseModel model) {
         this.copyService = CopyServiceFactory.createCopyService(model);
         this.validationService = new FileValidationService(model);
@@ -40,7 +41,7 @@ public class MergeService implements IMergeService,Runnable {
         this.hardware = Hardware.getHardwareInfo();
         this.executor = Executors.newFixedThreadPool(hardware.preferredThreadCount());
         this.messageList = new MessageList();
-        getCryptoMode();
+        this.getCryptoMode();
     }
 
     private void getCryptoMode() {
@@ -97,7 +98,7 @@ public class MergeService implements IMergeService,Runnable {
 
         /*Validation if Validation is Enabled*/
         if(this.model.hasValidationJob()){
-            this.validationService.calculateAndSaveCRC32Validation();
+            this.validationService.calculateAndSaveCRC32Validation(cryptoMode);
         }
         /*END Validation if Validation is Enabled END*/
 

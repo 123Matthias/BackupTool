@@ -1,5 +1,7 @@
 package my.backup.backupTool.Services;
 
+import my.backup.backupTool.Enumerations.CryptoMODE;
+
 import java.nio.file.Path;
 
 public interface IFileValidationService {
@@ -13,6 +15,6 @@ public interface IFileValidationService {
 
     String bytesToHex(byte[] bytes);
 
-    boolean calculateAndSaveCRC32Validation();
+    boolean calculateAndSaveCRC32Validation( CryptoMODE cryptoMode);
 
 }
