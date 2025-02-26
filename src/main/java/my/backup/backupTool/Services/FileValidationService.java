@@ -9,15 +9,13 @@ import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Enumerations.ValidationTYPE;
 import my.backup.backupTool.Notifications.IMessageList;
 import my.backup.backupTool.Notifications.MessageList;
-import my.backup.backupTool.ServiceEncryption.AesService;
-
+import my.backup.backupTool.ServiceEncryption.AesGCMService;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
@@ -25,13 +23,9 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.CRC32;
-
-import static my.backup.backupTool.ServiceEncryption.AesService.initCipherEncryption;
 
 
 public class FileValidationService extends BaseCalculationService implements IFileValidationService {
@@ -145,7 +139,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
     }
 
     protected CRC32 calculateEncryptedCRC32WithFileChannel(Path filePath) {
-        Cipher cipher = AesService.initCipherEncryption(model.TransientProperties.getSecretKey(), model.TransientProperties.getInitVector());
+        Cipher cipher = AesGCMService.initCipherEncryption(model.TransientProperties.getSecretKey(), model.TransientProperties.getGCMInitVector());
         CRC32 crc32 = new CRC32();
 
         try (FileChannel inputChannel = FileChannel.open(filePath, StandardOpenOption.READ)) {
@@ -157,14 +151,21 @@ public class FileValidationService extends BaseCalculationService implements IFi
                 buffer = ByteBuffer.allocate((int) super.calculateBufferSize(inputChannel.size()));
             }
 
+            int bytesRead = 0;
             while (inputChannel.read(buffer) > -1) {
                 buffer.flip();
-                byte[] inputData = new byte[buffer.remaining()];
-                buffer.get(inputData);
-                byte[] encryptedData = cipher.update(inputData);
-                crc32.update(encryptedData,0,encryptedData.length);
-                super.addFileProcessedSize(encryptedData.length);
+                byte[] encryptedData = cipher.update(buffer.array(),0,buffer.remaining());
+                bytesRead += buffer.remaining();
+                crc32.update(encryptedData);
+                super.addFileProcessedSize(buffer.remaining());
                 buffer.clear();
+
+
+                if(bytesRead > 1024*1024*1024){
+                    byte[] finalStep = cipher.doFinal();
+                    super.addFileProcessedSize(finalStep.length);
+                    bytesRead = 0;
+                }
 
                 if (inputChannel.size() < 50 * 1024 * 1024) {
                     continue;
@@ -249,8 +250,10 @@ public class FileValidationService extends BaseCalculationService implements IFi
                             crc32Target = calculateCRC32WithFileChannel(target);
                         }
 
-                    System.out.println("CRC32Source: " + crc32Source.getValue() + " SourcePath: " + source +  "CryptoMode: " + cryptoMODE);
+                        System.out.println("Thread: " + Thread.currentThread().getName());
+                        System.out.println("CRC32Source: " + crc32Source.getValue() + " SourcePath: " + source +  "CryptoMode: " + cryptoMODE);
                         System.out.println("CRC32Target: " + crc32Target.getValue() + " TargetPath: " + "CryptoMode: " + target);
+
                         if (crc32Source.getValue() == crc32Target.getValue()) {
                                 validFilesCount.addAndGet(1);
                         }
@@ -260,7 +263,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
                             log += String.format("%-20s%s%n","Source Value:", crc32Source.getValue());
                             log += String.format("%-20s%s%n","Target:", target.toString());
                             log += String.format("%-20s%s%n","Target Value:", crc32Target.getValue());
-                            LogFileWriterService.writeValidationLogFile(model.getUid(), LocalDateTime.now(), LogLEVEL.WARN, ValidationTYPE.CRC32,log);
+                            LogFileWriterService.writeValidationLogFile(model.getUid(), LocalDateTime.now(), LogLEVEL.WARN, ValidationTYPE.CRC32, log);
                         }
 
                     Platform.runLater(() -> {

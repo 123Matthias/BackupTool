@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.MessageController;
@@ -18,7 +17,7 @@ import java.io.IOException;
 
 public class MessageService {
 
-    private static Stage currentStage;
+    private static Stage currentToastStage;
     private static FadeTransition currentFadeOut;
     private static PauseTransition currentPause;
 
@@ -43,7 +42,7 @@ public class MessageService {
     }
 
     public static void createToast(String toastText, MessageTYPE messageType) {
-        if(currentStage != null) {
+        if(currentToastStage != null) {
             stopCurrentToast();
         }
         Platform.runLater(() -> runPlatformThread(toastText, messageType));
@@ -51,7 +50,7 @@ public class MessageService {
     }
 
     private static void stopCurrentToast() {
-        if (currentStage != null) {
+        if (currentToastStage != null) {
             if (currentFadeOut != null) {
                 currentFadeOut.stop();
                 currentFadeOut = null;
@@ -60,15 +59,14 @@ public class MessageService {
                 currentPause.stop();
                 currentPause = null;
             }
-            currentStage.close();
-            currentStage = null;
+            currentToastStage.close();
+            currentToastStage = null;
         }
     }
 
     private static void runPlatformThread(String toastText, MessageTYPE messageType){
 
-
-        currentStage = App.Router.getToastStage();
+        currentToastStage = App.Router.getToastStage();
         SceneBuilder sceneBuilder = App.Router.createToast(App.Router.getTheme().toString());
 
         Scene scene = null;
@@ -78,16 +76,16 @@ public class MessageService {
             throw new RuntimeException(e);
         }
         MessageController controller = sceneBuilder.getController();
-        currentStage.setScene(scene);
+        currentToastStage.setScene(scene);
         controller.showToast(toastText, messageType);
 
         scene.setFill(Color.TRANSPARENT);
 
         // Positioniere die Toast-Stage mittig zur Main-Stage
-        centerStageOnAnother(currentStage, App.Router.getMainStage());
+        centerStageOnAnother(currentToastStage, App.Router.getMainStage());
 
         currentPause = new PauseTransition(Duration.millis(2500));
-        currentFadeOut = new FadeTransition(Duration.millis(2000), currentStage.getScene().getRoot());
+        currentFadeOut = new FadeTransition(Duration.millis(2000), currentToastStage.getScene().getRoot());
 
 
         // Animationen
@@ -100,10 +98,10 @@ public class MessageService {
         });
 
         currentFadeOut.setOnFinished(event -> {
-            currentStage.close();
+            currentToastStage.close();
         });
 
-        currentStage.show();
+        currentToastStage.show();
         currentPause.play();
     }
 

@@ -84,7 +84,6 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
         try (FileChannel inputChannel = FileChannel.open(sourceFile, StandardOpenOption.READ);
              FileChannel outputChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
 
-
             ByteBuffer buffer;
 
             if(inputChannel.size() < 5*1024*1024) {

@@ -4,6 +4,7 @@ package my.backup.backupTool.Services;
 import javafx.application.Platform;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Enumerations.LogLEVEL;
+import my.backup.backupTool.Enumerations.ValidationTYPE;
 import my.backup.backupTool.Factory.CopyServiceFactory;
 import my.backup.backupTool.Controller.MessageTYPE;
 import my.backup.backupTool.JobManagement.Hardware;
@@ -197,6 +198,7 @@ public class MergeService implements IMergeService,Runnable {
             public FileVisitResult visitFileFailed(Path file, IOException exc)  {
                 System.err.println("Fehler beim Besuchen der Datei: " + file);
                 messageList.addMessage(exc.getMessage());
+                System.out.println("Fehler beim Besuchen der Datei: " + file);
                 return FileVisitResult.CONTINUE;
             }
 

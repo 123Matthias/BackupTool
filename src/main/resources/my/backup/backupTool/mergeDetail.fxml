@@ -126,7 +126,8 @@
             <ComboBox fx:id="encryptionJobDropdown" disable="true">
                <items>
                   <FXCollections fx:factory="observableArrayList">
-                     <String fx:value="AES_CBC"/>
+                     <String fx:value="AES_GCM (file size max 2GiB)"/>
+                     <String fx:value="AES_CTR"/>
                   </FXCollections>
                </items>
             </ComboBox>

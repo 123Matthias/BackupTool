@@ -113,7 +113,7 @@ public abstract class BaseDetailController {
 
         sceneUpdate = new SceneUpdateFXMLService();
 
-        encryptionJobDropdown.getSelectionModel().select(EncryptionTYPE.AES_CBC.toString());
+        encryptionJobDropdown.getSelectionModel().select(EncryptionTYPE.AES_GCM.toString());
         validationJobDropdown.getSelectionModel().select(ValidationTYPE.CRC32.toString());
 
         //Delegate filter nur zahlen
@@ -484,7 +484,12 @@ public abstract class BaseDetailController {
 
         if (checkBoxEncryptionJob.isSelected()) {
              String selectedValueString = encryptionJobDropdown.getSelectionModel().getSelectedItem();
-            model.setEncryptionType(selectedValueString.equals(EncryptionTYPE.AES_CBC.toString()) ? EncryptionTYPE.AES_CBC : EncryptionTYPE.NONE);
+            model.setEncryptionType(
+                                    selectedValueString.contains(EncryptionTYPE.AES_GCM.toString()) ? EncryptionTYPE.AES_GCM :
+                                    selectedValueString.equals(EncryptionTYPE.AES_CTR.toString()) ? EncryptionTYPE.AES_CTR :
+                                    EncryptionTYPE.NONE
+            );
+
             model.setEncryptionJob(true);
         }
         else{
@@ -531,7 +536,7 @@ public abstract class BaseDetailController {
         checkBoxEncryptionJob.setSelected(model.getCheckBoxEncryptionJob());
         encryptionJobDropdown.getSelectionModel().select(   model.getEncryptionType() != null ?
                                                             model.getEncryptionType().toString() :
-                                                            EncryptionTYPE.AES_CBC.toString());
+                                                            EncryptionTYPE.AES_GCM.toString());
 
         this.toggleDate();
         this.toggleDays();

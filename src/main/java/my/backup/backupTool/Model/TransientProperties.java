@@ -6,6 +6,7 @@ import my.backup.backupTool.Notifications.MessageList;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,7 +30,8 @@ public class TransientProperties {
 
     private SecretKey secretKey;
 
-    private GCMParameterSpec initVector;
+    private GCMParameterSpec initGCMVector;
+    private IvParameterSpec initCTRVector;
 
 
     public TransientProperties() {
@@ -123,12 +125,20 @@ public class TransientProperties {
         this.nextBackupTimeProperty.set(dateString);
     }
 
-    public GCMParameterSpec getInitVector() {
-        return this.initVector;
+    public GCMParameterSpec getGCMInitVector() {
+        return this.initGCMVector;
     }
 
-    public void setInitVector(GCMParameterSpec initVector) {
-        this.initVector = initVector;
+    public void setGCMInitVector(GCMParameterSpec initGCMVector) {
+        this.initGCMVector = initGCMVector;
+    }
+
+    public void setCTRInitVector(IvParameterSpec initCTRVector) {
+        this.initCTRVector = initCTRVector;
+    }
+
+    public IvParameterSpec getCTRInitVector() {
+        return this.initCTRVector;
     }
 
     public SecretKey getSecretKey(){
