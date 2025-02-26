@@ -11,7 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import my.backup.backupTool.App;
-import my.backup.backupTool.Controller.MessageTYPE;
+import my.backup.backupTool.Enumerations.MessageTYPE;
 import my.backup.backupTool.Enumerations.ValidationTYPE;
 import my.backup.backupTool.Enumerations.EncryptionTYPE;
 import my.backup.backupTool.Model.*;

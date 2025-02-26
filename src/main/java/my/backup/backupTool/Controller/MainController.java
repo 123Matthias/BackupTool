@@ -10,6 +10,8 @@ import javafx.stage.StageStyle;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.Merge.MergeDetailController;
 import my.backup.backupTool.Controller.Merge.MergeHelperController;
+import my.backup.backupTool.Enumerations.LeftToolbar;
+import my.backup.backupTool.Enumerations.MessageTYPE;
 import my.backup.backupTool.Notifications.MessageService;
 
 import java.awt.*;

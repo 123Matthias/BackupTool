@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import my.backup.backupTool.Enumerations.MessageTYPE;
 import my.backup.backupTool.Main;
 import my.backup.backupTool.Notifications.IMessageList;
 

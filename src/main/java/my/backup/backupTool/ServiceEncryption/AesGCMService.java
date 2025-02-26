@@ -1,7 +1,7 @@
 package my.backup.backupTool.ServiceEncryption;
 
 import javafx.application.Platform;
-import my.backup.backupTool.Controller.MessageTYPE;
+import my.backup.backupTool.Enumerations.MessageTYPE;
 import my.backup.backupTool.Enumerations.CryptoMODE;
 import my.backup.backupTool.Enumerations.LogLEVEL;
 import my.backup.backupTool.Enumerations.ValidationTYPE;

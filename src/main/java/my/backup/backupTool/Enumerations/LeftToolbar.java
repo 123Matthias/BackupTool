@@ -1,4 +1,4 @@
-package my.backup.backupTool.Controller;
+package my.backup.backupTool.Enumerations;
 
 public enum LeftToolbar {
     MergeButton,

@@ -2,7 +2,7 @@ package my.backup.backupTool.Controller;
 
 import javafx.fxml.FXML;
 import my.backup.backupTool.App;
-import my.backup.backupTool.Theme;
+import my.backup.backupTool.Enumerations.Theme;
 
 public class SettingsController {
 

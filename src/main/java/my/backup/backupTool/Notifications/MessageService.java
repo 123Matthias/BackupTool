@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import my.backup.backupTool.App;
 import my.backup.backupTool.Controller.MessageController;
-import my.backup.backupTool.Controller.MessageTYPE;
+import my.backup.backupTool.Enumerations.MessageTYPE;
 import my.backup.backupTool.SceneBuilder;
 
 import java.io.IOException;

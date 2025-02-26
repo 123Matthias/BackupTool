@@ -1,4 +1,4 @@
-package my.backup.backupTool;
+package my.backup.backupTool.Enumerations;
 
 public enum Theme {
     LIGHT("css/lightTheme.css"),
