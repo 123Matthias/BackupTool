@@ -25,6 +25,10 @@
         </HBox>
     </VBox>
 
+    <VBox fx:id="hardware" style="-fx-padding: 20">
+
+    </VBox>
+
 
 
 </VBox>

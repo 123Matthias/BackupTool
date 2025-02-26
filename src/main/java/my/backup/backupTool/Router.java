@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import my.backup.backupTool.Controller.ExceptionController;
 import my.backup.backupTool.Controller.MainController;
+import my.backup.backupTool.Controller.SettingsController;
 import my.backup.backupTool.Enumerations.Theme;
 
 import java.io.IOException;
@@ -17,7 +18,8 @@ public class Router {
     private Stage mainStage;
     private Scene mainScene;
     private MainController mainController;
-    private Scene sceneSettings;
+    private Scene settingsScene;
+    private SettingsController settingsController;
     private Theme theme;
     private Stage toastStage;
     private Stage settigsStage;
@@ -34,7 +36,7 @@ public class Router {
             ExceptionController.handleException(e);
         }
         try{
-            setSceneSettings(theme.toString());
+            setSettingsScene(theme.toString());
         } catch (IOException e) {
             ExceptionController.handleException(e);
         }
@@ -152,21 +154,25 @@ public class Router {
                 .build();
     }
 
-    public Scene getSceneSettings() {
-        return sceneSettings;
+    public Scene getSettingsScene() {
+        return settingsScene;
     }
 
-    public void setSceneSettings(String theme) throws IOException {
+    public SettingsController getSettingsController() {
+        return settingsController;
+    }
+
+    public void setSettingsScene(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("settings.fxml")
                 .setDimensions(600,600)
                 .addStylesheet("css/basicWindow.css")
-                .addStylesheet("css/topToolBar.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet("css/settings.css")
                 .addStylesheet(theme)
                 .build();
-        sceneSettings = sceneBuilder.getScene();
+        settingsScene = sceneBuilder.getScene();
+        settingsController = sceneBuilder.getController();
     }
 
     public Theme getTheme() {
@@ -177,7 +183,7 @@ public class Router {
         this.theme = theme;
         try {
             setMainScene(theme.toString());
-            setSceneSettings(theme.toString());
+            setSettingsScene(theme.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

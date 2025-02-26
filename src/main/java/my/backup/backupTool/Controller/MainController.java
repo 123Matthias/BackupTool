@@ -54,8 +54,10 @@ public class MainController extends BaseMainController {
     @FXML
     private void handleSettingsButtonClicked(){
         super.setLeftToolbarSelection(LeftToolbar.SettingsButton);
+        SettingsController controller = App.Router.getSettingsController();
+        controller.createHWInfoRows();
         Stage stage = App.Router.getSettigsStage();
-        stage.setScene(App.Router.getSceneSettings());
+        stage.setScene(App.Router.getSettingsScene());
         stage.show();
     }
 

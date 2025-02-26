@@ -7,3 +7,8 @@
     -fx-font-size: 12pt;
     -fx-border-radius: 3;
 }
+
+TextField{
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}

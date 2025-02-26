@@ -18,8 +18,8 @@ public class App {
     public static Properties Properties;
 
     public App() {
-        Properties = my.backup.backupTool.Properties.Singleton();
         Hardware = my.backup.backupTool.JobManagement.Hardware.getHardwareInfo();
+        Properties = my.backup.backupTool.Properties.Singleton();
         DataStore = BaseDataStoreRepository.Singleton();
         JobScheduler = BackupJobScheduler.Singleton();
         ValidationScheduler = BackupValidationScheduler.Singleton();
