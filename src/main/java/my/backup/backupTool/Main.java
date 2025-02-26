@@ -18,8 +18,6 @@ public final App App = new App();
         App.Router.getMainStage().centerOnScreen();
 
     }
-
-
     public static void main(String[] args) {
         launch();
     }
