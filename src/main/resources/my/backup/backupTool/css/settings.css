@@ -1,5 +1,7 @@
-.headerText{
-    -fx-font-size: 18pt;
+.header{
+    -fx-font-size: 16pt;
+    -fx-font-style: italic;
+    -fx-text-fill: -fx-header1;
 }
 
 .basicButtonSettings {
@@ -8,7 +10,48 @@
     -fx-border-radius: 3;
 }
 
-TextField{
+
+
+VBox{
+    -fx-padding: 20;
+    -fx-spacing: 5;
+}
+
+.keyValueRow{
+    -fx-alignment: center-left;
+    -fx-font-size: 10pt;
+}
+
+.description{
+    -fx-min-width: 130;
+    -fx-max-width: 130;
+
+}
+
+.description2{
+    -fx-padding: 0 5 0 0;
+    -fx-min-width: 50;
+}
+
+.inputField2{
+     -fx-background-radius: 5;
+     -fx-border-radius: 5;
+     -fx-pref-width: 500;
+
+}
+
+.keyValueRow2{
+    -fx-pref-width: -1;
+    -fx-alignment: center-left;
+    -fx-font-size: 10pt;
+}
+
+.inputField{
     -fx-background-radius: 5;
     -fx-border-radius: 5;
+    -fx-pref-width: 40;
+    -fx-padding: 3;
+
 }
+
+

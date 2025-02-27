@@ -288,6 +288,10 @@ TextArea .content{
     -fx-stroke: -fx-saveColor;
 }
 
+.saveButtonPath{
+    -fx-fill: -fx-color1;
+}
+
 #backupButtonPath {
     -fx-fill: -fx-playColor;
     -fx-stroke: -fx-playColor;

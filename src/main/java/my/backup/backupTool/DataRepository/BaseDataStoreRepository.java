@@ -2,40 +2,34 @@ package my.backup.backupTool.DataRepository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import javafx.concurrent.Task;
+import my.backup.backupTool.App;
 import my.backup.backupTool.Model.BaseModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class BaseDataStoreRepository implements IDataStore {
 
     private static volatile BaseDataStoreRepository Instance = null;
-    private String storagePath;
-    private final String DEFAULT_STORAGE_PATH = "./data/mergeDataSettings.json"; // Standardpfad als relativer Pfad
     private final List<BaseModel> modelList;
     private BaseModel lastSelectedModel;
-    private Timer saveTimer;
 
     private BaseDataStoreRepository() {
         modelList = getJSONasList();
-        saveTimer = new Timer();
-        enableAutoSave();
     }
 
-    private void disableAutoSave() {
-        saveTimer.cancel();
-    }
-
-    private void enableAutoSave(){
-        saveTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                saveModelListAsJSON();
-                System.out.println("AutoSaved " + modelList.size() + " models");
-            }
-        }, 600000, 600000);
+    public void createSaveOnCloseMainWindowListener() {
+        App.Router.getMainStage().setOnCloseRequest(event -> {
+            // Hier speicherst du alle notwendigen Daten
+            this.saveModelListAsJSON();
+            event.consume();
+            App.Router.getMainStage().close();
+        });
     }
 
     public static BaseDataStoreRepository Singleton() {
@@ -46,17 +40,6 @@ public class BaseDataStoreRepository implements IDataStore {
         }
         return Instance;
     }
-
-
-    public void setStoragePath(String storagePath) {
-        this.storagePath = storagePath;
-    }
-
-    public String getStoragePath() {
-
-        return storagePath == null ? DEFAULT_STORAGE_PATH : storagePath;
-    }
-
 
     public boolean updateModelInList(BaseModel model) {
         synchronized (this.modelList){
@@ -73,7 +56,7 @@ public class BaseDataStoreRepository implements IDataStore {
     public synchronized boolean saveModelAsJSON(BaseModel model) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        File file = new File(getStoragePath());
+        File file = new File(App.Properties.getMergeModelsStoragePath());
 
         try {
             List<BaseModel> modelList = new ArrayList<>();
@@ -107,7 +90,6 @@ public class BaseDataStoreRepository implements IDataStore {
                 synchronized (this.modelList){
                     this.modelList.add(model);
                 }
-
             }
 
             objectMapper.writeValue(file, modelList);
@@ -119,15 +101,12 @@ public class BaseDataStoreRepository implements IDataStore {
             System.err.println("Fehler beim Speichern des Modells als JSON: " + e.getMessage());
             return false;
         }
-
-
     }
-
 
     public boolean saveModelListAsJSON() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        File file = new File(getStoragePath());
+        File file = new File(App.Properties.getMergeModelsStoragePath());
         try {
             synchronized (this.modelList){
                 objectMapper.writeValue(file, this.modelList);
@@ -138,7 +117,6 @@ public class BaseDataStoreRepository implements IDataStore {
         }
         return false;
     }
-
 
     public  BaseModel getModelById(String id) {
         List<BaseModel> tmpList = null;
@@ -155,13 +133,11 @@ public class BaseDataStoreRepository implements IDataStore {
         return null;
     }
 
-
     public List<BaseModel> getModelList() {
         synchronized (this.modelList){
             return this.modelList;
         }
     }
-
 
     public boolean deleteModelById_KeepBackup(String uid) {
         synchronized (this.modelList){
@@ -192,31 +168,6 @@ public class BaseDataStoreRepository implements IDataStore {
 
 
     /**
-     * Creates the Default Storage Path of the Model Data.
-     *
-     * @return true if a new Default Storage File was created. else false;
-     */
-    private boolean createDefaultStorageFile() {
-        try {
-            File file = new File(getStoragePath());
-            File parentDir = file.getParentFile();
-
-            if (parentDir != null && !parentDir.exists()) {
-                parentDir.mkdirs();
-            }
-
-            if (!file.exists()) {
-                return file.createNewFile();
-            } else {
-                return false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
      * Reads and returns a list of models from the JSON file.
      *
      * @return A List of BaseModel instances.
@@ -226,9 +177,8 @@ public class BaseDataStoreRepository implements IDataStore {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // JSON-Datei einlesen
-        File sourceFile = new File(getStoragePath());
+        File sourceFile = new File(App.Properties.getMergeModelsStoragePath());
         System.out.println("------Storage Path: " + sourceFile.getAbsolutePath());
-        createDefaultStorageFile();
         if (!sourceFile.exists()) {
             System.out.println("Die Datei existiert nicht: " + sourceFile.getAbsolutePath());
         }
@@ -253,7 +203,6 @@ public class BaseDataStoreRepository implements IDataStore {
         return dataList;
     }
 
-
     /**
      * Deleting all Files and then all Subfolders and then the selected Folder (param)
      * @param directory The Directory to delete recurse
@@ -277,5 +226,7 @@ public class BaseDataStoreRepository implements IDataStore {
     public BaseModel getLastSelectedModel() {
         return lastSelectedModel;
     }
+
+
 }
 

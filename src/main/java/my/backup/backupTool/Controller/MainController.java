@@ -59,6 +59,7 @@ public class MainController extends BaseMainController {
         Stage stage = App.Router.getSettigsStage();
         stage.setScene(App.Router.getSettingsScene());
         stage.show();
+        App.SettingsDataStore.createSaveOnCloseSettingsWindowListener();
     }
 
     @FXML

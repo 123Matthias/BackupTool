@@ -40,7 +40,7 @@
 
 /*Information on hover element*/
 .tooltip{
-    -fx-font-size: 12px;
+    -fx-font-size: 10pt;
     -fx-padding: 6px;
 }
 
@@ -65,4 +65,13 @@
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-border-width: 2;
+}
+
+
+.browseButton{
+    -fx-border-radius: 10;
+    -fx-background-color: none;
+}
+.browseButton:hover{
+    -fx-cursor: hand;
 }

@@ -2,6 +2,7 @@ package my.backup.backupTool;
 
 import my.backup.backupTool.DataRepository.BaseDataStoreRepository;
 import my.backup.backupTool.DataRepository.IDataStore;
+import my.backup.backupTool.DataRepository.SettingsDataStoreRepository;
 import my.backup.backupTool.JobManagement.BackupJobScheduler;
 import my.backup.backupTool.JobManagement.BackupValidationScheduler;
 import my.backup.backupTool.JobManagement.Hardware;
@@ -16,10 +17,12 @@ public class App {
     public static BackupValidationScheduler ValidationScheduler;
     public static Hardware Hardware;
     public static Properties Properties;
+    public static SettingsDataStoreRepository SettingsDataStore;
 
     public App() {
         Hardware = my.backup.backupTool.JobManagement.Hardware.getHardwareInfo();
         Properties = my.backup.backupTool.Properties.Singleton();
+        SettingsDataStore = SettingsDataStoreRepository.Singleton();
         DataStore = BaseDataStoreRepository.Singleton();
         JobScheduler = BackupJobScheduler.Singleton();
         ValidationScheduler = BackupValidationScheduler.Singleton();

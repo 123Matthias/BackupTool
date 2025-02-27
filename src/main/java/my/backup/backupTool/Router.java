@@ -41,7 +41,6 @@ public class Router {
             ExceptionController.handleException(e);
         }
 
-
     }
 
     public static Router Singleton(){
@@ -55,13 +54,13 @@ public class Router {
 
     public void setMainStage(Stage stage){
         mainStage = stage;
-
         // Icon setzen
         Image icon = new Image(String.valueOf(Main.class.getResource("img/icons/counterClock.png")));
         mainStage.getIcons().add(icon);
         mainStage.setTitle("Memoria");
         mainStage.initStyle(StageStyle.DECORATED);
         mainStage.setScene(mainScene);
+        App.DataStore.createSaveOnCloseMainWindowListener();
     }
 
     private void setToastStage(){
@@ -81,7 +80,6 @@ public class Router {
         settigsStage.initStyle(StageStyle.DECORATED);
         settigsStage.initModality(Modality.WINDOW_MODAL);//No Blocking other Windows
         settigsStage.setAlwaysOnTop(true);
-        settigsStage.initOwner(this.mainStage); // Gehört zum Main-Window
     }
 
     public Stage getSettigsStage() {
@@ -167,6 +165,7 @@ public class Router {
                 .setFXML("settings.fxml")
                 .setDimensions(600,600)
                 .addStylesheet("css/basicWindow.css")
+                .addStylesheet("css/basicComponents.css")
                 .addStylesheet("css/themeElements.css")
                 .addStylesheet("css/settings.css")
                 .addStylesheet(theme)
@@ -187,6 +186,10 @@ public class Router {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void enableSaveOnCloseMainStage(){
+        App.Router.getMainStage().setOnCloseRequest(event -> App.DataStore.saveModelListAsJSON());
     }
 
 }
