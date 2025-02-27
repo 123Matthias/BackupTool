@@ -1,26 +1,33 @@
 package my.backup.backupTool.DataRepository;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Model.BaseModel;
+import my.backup.backupTool.Properties;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class SettingsDataStoreRepository {
 
     private static SettingsDataStoreRepository Instance;
 
     public SettingsDataStoreRepository() {
+        createSettingsFilePathIfNotExists();
+        getAllAppSettingsFromJSON();
+
         createMergeModelPathIfNotExists();
         createLogFilePathIfNotExists();
         createValidationLogFilePathIfNotExists();
-        createSettingsFilePathIfNotExists();
-    }
 
+
+    }
 
     public static SettingsDataStoreRepository Singleton() {
         if(Instance == null) {
@@ -35,27 +42,43 @@ public class SettingsDataStoreRepository {
      * @return true if a new Default Storage File was created. else false;
      */
     private boolean createMergeModelPathIfNotExists() {
-        App.Properties.setMergeModelsStoragePath(App.Properties.SUB_MERGE_MODEL_STORAGE_PATH);
-        File file = new File(App.Properties.getMergeModelsStoragePath());
-        return createFile(file);
+        Path path = Paths.get(App.Properties.getMergeModelsStoragePath());
+        if (!Files.exists(path)) {
+            App.Properties.setMergeModelsStoragePath(App.Properties.SUB_MERGE_MODEL_STORAGE_PATH);
+            File file = new File(App.Properties.getMergeModelsStoragePath());
+            return createFile(file);
+        }
+        return false;
     }
 
     private boolean createLogFilePathIfNotExists() {
-        App.Properties.setLogFilePath(App.Properties.SUB_LOG_FILE_PATH);
-        File file = new File(App.Properties.getLogFilePath());
-        return createFile(file);
+        Path path = Paths.get(App.Properties.getLogFilePath());
+        if (!Files.exists(path)) {
+            App.Properties.setLogFilePath(App.Properties.SUB_LOG_FILE_PATH);
+            File file = new File(App.Properties.getLogFilePath());
+            return createFile(file);
+        }
+        return false;
     }
 
     private boolean createValidationLogFilePathIfNotExists() {
-        App.Properties.setValidationLogFilePath(App.Properties.SUB_VALIDATION_LOG_FILE_PATH);
-        File file = new File(App.Properties.getValidationLogFilePath());
-        return createFile(file);
+        Path path = Paths.get(App.Properties.getMergeModelsStoragePath());
+        if (!Files.exists(path)) {
+            App.Properties.setValidationLogFilePath(App.Properties.SUB_VALIDATION_LOG_FILE_PATH);
+            File file = new File(App.Properties.getValidationLogFilePath());
+            return createFile(file);
+        }
+        return false;
     }
 
     private boolean createSettingsFilePathIfNotExists() {
-        App.Properties.setSettingsStoragePath(App.Properties.SUB_SETTINGS_PATH);
-        File file = new File(App.Properties.getSettingsStoragePath());
-        return createFile(file);
+        Path path = Paths.get(App.Properties.getMergeModelsStoragePath());
+        if (!Files.exists(path)) {
+            App.Properties.setSettingsStoragePath(App.Properties.SUB_SETTINGS_PATH);
+            File file = new File(App.Properties.getSettingsStoragePath());
+            return createFile(file);
+        }
+        return false;
     }
 
     private boolean createFile(File file){
@@ -76,57 +99,20 @@ public class SettingsDataStoreRepository {
     }
 
     public boolean createMergeModelPathIfNotExists(String stringPath) {
-
-        Path path = Paths.get("");
-        if(stringPath != null) {
-            path = Paths.get(stringPath);
-        }
-
-        if(Files.exists(path)) {
-            App.Properties.setMergeModelsStoragePath(stringPath + App.Properties.SUB_MERGE_MODEL_STORAGE_PATH);
-        }
+        App.Properties.setMergeModelsStoragePath(stringPath + App.Properties.SUB_MERGE_MODEL_STORAGE_PATH);
         File file = new File(App.Properties.getMergeModelsStoragePath());
-
-        return createFile(file);
-    }
-
-    public boolean createSettingsFilePathIfNotExists(String stringPath) {
-
-        Path path = Paths.get("");
-        if(stringPath != null) {
-            path = Paths.get(stringPath);
-        }
-        if(Files.exists(path)) {
-            App.Properties.setSettingsStoragePath(stringPath + App.Properties.SUB_SETTINGS_PATH);
-        }
-        File file = new File(App.Properties.getSettingsStoragePath());
         return createFile(file);
     }
 
     public boolean createLogFilePathIfNotExists(String stringPath) {
-
-        Path path = Paths.get("");
-        if(stringPath != null) {
-            path = Paths.get(stringPath);
-        }
-
-        if(path.toFile().exists()) {
-            App.Properties.setLogFilePath(stringPath + App.Properties.SUB_LOG_FILE_PATH);
-        }
-        File file = new File(App.Properties.getMergeModelsStoragePath());
+        App.Properties.setLogFilePath(stringPath + App.Properties.SUB_LOG_FILE_PATH);
+        File file = new File(App.Properties.getLogFilePath());
         return createFile(file);
     }
 
     public boolean createValidationLogFilePathIfNotExists(String stringPath) {
-
-        Path path = Paths.get("");
-        if(stringPath != null) {
-            path = Paths.get(stringPath);
-        }
-        if(path.toFile().exists()) {
-            App.Properties.setValidationLogFilePath(stringPath + App.Properties.SUB_VALIDATION_LOG_FILE_PATH);
-        }
-        File file = new File(App.Properties.getMergeModelsStoragePath());
+        App.Properties.setValidationLogFilePath(stringPath + App.Properties.SUB_VALIDATION_LOG_FILE_PATH);
+        File file = new File(App.Properties.getValidationLogFilePath());
         return createFile(file);
     }
 
@@ -143,6 +129,40 @@ public class SettingsDataStoreRepository {
         return false;
     }
 
+    private boolean getAllAppSettingsFromJSON() {
+        System.out.println("getAllAppSettingsFromJSON");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        File sourceFile = new File(App.Properties.getSettingsStoragePath());
+
+        if (!sourceFile.exists()) {
+            System.out.println("Die Datei existiert nicht: " + sourceFile.getAbsolutePath());
+            return false;
+        }
+        try {
+            App.Properties.setSuperPath(mapper.readValue(sourceFile, Properties.class).getSuperPath());
+            App.Properties.setLogFilePath(mapper.readValue(sourceFile, Properties.class).getLogFilePath());
+            App.Properties.setValidationLogFilePath(mapper.readValue(sourceFile, Properties.class).getValidationLogFilePath());
+            App.Properties.setMergeModelsStoragePath(mapper.readValue(sourceFile, Properties.class).getMergeModelsStoragePath());
+            App.Properties.setSettingsStoragePath(mapper.readValue(sourceFile, Properties.class).getSettingsStoragePath());
+            App.Properties.setThreadCount(mapper.readValue(sourceFile, Properties.class).getThreadCount());
+            System.out.println();
+            System.out.println("--------------READ VALUES WITH JSON MAPPER-----------");
+            System.out.println(App.Properties.getSuperPath());
+            System.out.println(App.Properties.getLogFilePath());
+            System.out.println(App.Properties.getValidationLogFilePath());
+            System.out.println(App.Properties.getMergeModelsStoragePath());
+            System.out.println(App.Properties.getSettingsStoragePath());
+            System.out.println(App.Properties.getThreadCount());
+            System.out.println(App.Properties.getLogFilePath());
+            System.out.println("--------------END READ VALUES WITH JSON MAPPER-----------");
+            System.out.println();
+            return true;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 
     public void createSaveOnCloseSettingsWindowListener() {
         App.Router.getSettigsStage().setOnCloseRequest(event -> {

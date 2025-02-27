@@ -2,8 +2,13 @@ package my.backup.backupTool;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.nio.file.Paths;
+
+
 public class Properties {
     private static final Properties Singleton = new Properties();
+    @JsonProperty("super-path")
+    private String superPath;
     @JsonProperty("logfile-path")
     private String logFilePath;
     @JsonProperty("validation-logfile-path")
@@ -13,12 +18,12 @@ public class Properties {
     @JsonProperty("settings-path")
     private String settingsStoragePath;
     public static final String SUB_LOG_FILE_PATH = "/memoria/data/backup.log";
-    public static final String SUB_SETTINGS_PATH = "/memoria/data/settings.json";
+    public static final String SUB_SETTINGS_PATH = "./memoria/data/settings.json";
     public static final String SUB_MERGE_MODEL_STORAGE_PATH = "/memoria/data/mergeModels.json";
     public static final String SUB_VALIDATION_LOG_FILE_PATH = "/memoria/data/validation/";
     private int threadCount = 0;
 
-    private Properties() {
+    public Properties() {
         this.threadCount = App.Hardware.preferredThreadCount();
         if(threadCount <= 0){
             threadCount = 1;
@@ -68,4 +73,20 @@ public class Properties {
     public void setSettingsStoragePath(String settingsPath) {
         this.settingsStoragePath = settingsPath;
     }
+
+    public String getSuperPath() {
+        return superPath;
+    }
+
+    public void setSuperPath(String superPath) {
+        this.superPath = superPath;
+    }
+
+    public boolean validatePath(String pathString) {
+        if (pathString == null || pathString.isBlank()) {
+            return false;
+        }
+        return Paths.get(pathString).toFile().exists();
+    }
+
 }

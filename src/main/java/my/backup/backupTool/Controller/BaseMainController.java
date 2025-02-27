@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 
 public abstract class BaseMainController {
 
-    private boolean isShaking = false; // Flag, um den Shake-Status zu überwachen
-    private Timeline shakeTimeline; // Die Timeline, um das Zittern zu steuern
+    private boolean isShaking = false;
+    private Timeline shakeTimeline;
 
     @FXML
     private ToolBar leftToolbar;

@@ -32,6 +32,7 @@ public class SettingsController {
     @FXML
     private void initialize() {
         this.createHWInfoRows();
+        this.storagePath.setText(App.Properties.getSuperPath());
     }
 
     @FXML
@@ -125,12 +126,13 @@ public class SettingsController {
 
     @FXML
     private void setAllStoragePaths(){
-        App.SettingsDataStore.createLogFilePathIfNotExists(storagePath.getText());
-        App.SettingsDataStore.createMergeModelPathIfNotExists(storagePath.getText());
-        App.SettingsDataStore.createValidationLogFilePathIfNotExists(storagePath.getText());
-        App.SettingsDataStore.createSettingsFilePathIfNotExists(storagePath.getText());
+        if(App.Properties.validatePath(storagePath.getText())){
+            App.Properties.setSuperPath(storagePath.getText());
+            App.SettingsDataStore.createLogFilePathIfNotExists(storagePath.getText());
+            App.SettingsDataStore.createMergeModelPathIfNotExists(storagePath.getText());
+            App.SettingsDataStore.createValidationLogFilePathIfNotExists(storagePath.getText());
+        }
     }
-
 
     /*
     @FXML
