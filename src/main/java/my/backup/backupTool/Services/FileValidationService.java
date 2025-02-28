@@ -106,11 +106,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
         try (FileChannel inputChannel = FileChannel.open(sourceFile, StandardOpenOption.READ)) {
             ByteBuffer buffer;
 
-            if (inputChannel.size() < 5 * 1024 * 1024) {
-                buffer = ByteBuffer.allocate((int) super.DEFAULT_BUFFERSIZE);
-            } else {
-                buffer = ByteBuffer.allocate((int) super.calculateBufferSize(inputChannel.size()));
-            }
+            buffer = ByteBuffer.allocate((int) super.calculateBufferSize(inputChannel.size()));
 
             while (inputChannel.read(buffer) > -1) {
                 buffer.flip();
@@ -145,11 +141,7 @@ public class FileValidationService extends BaseCalculationService implements IFi
         try (FileChannel inputChannel = FileChannel.open(filePath, StandardOpenOption.READ)) {
             ByteBuffer buffer;
 
-            if (inputChannel.size() < 5 * 1024 * 1024) {
-                buffer = ByteBuffer.allocate((int) super.DEFAULT_BUFFERSIZE);
-            } else {
-                buffer = ByteBuffer.allocate((int) super.calculateBufferSize(inputChannel.size()));
-            }
+            buffer = ByteBuffer.allocate((int) super.calculateBufferSize(inputChannel.size()));
 
             int bytesRead = 0;
             while (inputChannel.read(buffer) > -1) {

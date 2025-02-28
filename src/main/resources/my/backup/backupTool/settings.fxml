@@ -13,7 +13,7 @@
 
     <Button fx:id="saveButton" styleClass="basicButton" alignment="CENTER" onAction="#save">
         <tooltip>
-            <Tooltip text="save all"/>
+            <Tooltip text="save settings"/>
         </tooltip>
         <graphic>
             <SVGPath fx:id="saveIcon" styleClass="saveButtonPath"
@@ -24,7 +24,7 @@
 
 
     <VBox>
-        <Label styleClass="header" text="Themes: "/>
+        <Label styleClass="header" style="-fx-padding: 15 0 0 0" text="Themes: "/>
         <HBox spacing="10">
             <Button text="lightTheme" styleClass="basicButtonSettings" onAction="#handleLightTheme"/>
             <Button text="darkTheme" styleClass="basicButtonSettings" onAction="#handleDarkTheme"/>
@@ -42,8 +42,12 @@
             <Label styleClass="description2" text="Path:"/>
             <TextField fx:id="storagePath" styleClass="inputField2"/>
         </HBox>
-        <HBox alignment="CENTER_RIGHT"> <!-- HBox für den Button mit Rechtsbündigkeit -->
+        <HBox alignment="CENTER_RIGHT" style="-fx-max-width: 550"> <!-- HBox für den Button mit Rechtsbündigkeit -->
             <Button fx:id="sourceButton" styleClass="browseButton" onAction="#openDirectoryChooser" text="Browse..." />
+        </HBox>
+        <HBox styleClass="keyValueRow">
+            <CheckBox fx:id="checkBoxSaveOnClose" onAction="#saveOnCloseWindow" styleClass="checkBox" />
+            <Label styleClass="description3" text="Save Data on close window" />
         </HBox>
     </VBox>
 

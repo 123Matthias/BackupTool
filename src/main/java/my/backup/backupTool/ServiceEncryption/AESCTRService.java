@@ -76,12 +76,7 @@ public class AESCTRService extends BaseCalculationService implements ICopyServic
 
             ByteBuffer buffer;
 
-            if(inputChannel.size() < 5*1024*1024) {
-                buffer = ByteBuffer.allocate((int)super.DEFAULT_BUFFERSIZE);
-            }
-            else{
-                buffer = ByteBuffer.allocate((int)super.calculateBufferSize(inputChannel.size()));
-            }
+            buffer = ByteBuffer.allocate((int)super.calculateBufferSize(inputChannel.size()));
 
             while (inputChannel.read(buffer) != -1) {
                 buffer.flip();
@@ -123,12 +118,7 @@ public class AESCTRService extends BaseCalculationService implements ICopyServic
 
             ByteBuffer buffer;
 
-            if(inputChannel.size() < 5*1024*1024) {
-                buffer = ByteBuffer.allocate((int)super.DEFAULT_BUFFERSIZE);
-            }
-            else{
-                buffer = ByteBuffer.allocate((int)super.calculateBufferSize(inputChannel.size()));
-            }
+            buffer = ByteBuffer.allocate((int)super.calculateBufferSize(inputChannel.size()));
 
             while (inputChannel.read(buffer) != -1) {
                 buffer.flip();

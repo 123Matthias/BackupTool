@@ -3,7 +3,9 @@ package my.backup.backupTool.Controller;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -26,13 +28,19 @@ public class SettingsController {
     private TextField storagePath;
 
     @FXML
-    private Button soragePathButton;
+    private CheckBox checkBoxSaveOnClose;
+
+    @FXML
+    private TextField executorPool;
 
 
     @FXML
     private void initialize() {
         this.createHWInfoRows();
         this.storagePath.setText(App.Properties.getSuperPath());
+        this.checkBoxSaveOnClose.setSelected(App.Properties.isSaveOnCloseWindow());
+        System.out.println(App.Properties.toString());
+
     }
 
     @FXML
@@ -50,7 +58,8 @@ public class SettingsController {
 
     @FXML
     public void handleLightTheme(){
-        App.Router.setTheme(Theme.LIGHT);
+        App.Properties.setTheme(Theme.LIGHT);
+        App.Router.setTheme(App.Properties.getTheme());
         App.Router.getMainStage().setScene(App.Router.getMainScene());
         App.Router.getSettigsStage().setScene(App.Router.getSettingsScene());
         App.Router.getMainStage().show();
@@ -58,18 +67,13 @@ public class SettingsController {
 
     @FXML
     public void handleDarkTheme(){
-        App.Router.setTheme(Theme.DARK);
+        App.Properties.setTheme(Theme.DARK);
+        App.Router.setTheme(App.Properties.getTheme());
         App.Router.getMainStage().setScene(App.Router.getMainScene());
         App.Router.getSettigsStage().setScene(App.Router.getSettingsScene());
         App.Router.getMainStage().show();
     }
 
-    @FXML
-    public void backToMain(){
-        //  Main.mainStage.setScene(Main.sceneMain);
-        App.Router.getMainStage().setScene(App.Router.getMainScene());
-        App.Router.getMainStage().show();
-    }
 
     @FXML
     public void createHWInfoRows() {
@@ -83,13 +87,35 @@ public class SettingsController {
         HBox hBox1 = createEditableTextRow("copy executor pool: ", String.valueOf(App.Properties.getThreadCount()),"executorPool");
         TextField field = (TextField) hBox1.lookup("#executorPool");
         field.getStyleClass().add("inputField");
+        field.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.isEmpty() || newValue.isBlank()){
+                return;
+            }
+            else if (newValue.matches("\\d+")) {
+                if (Integer.parseInt(newValue) < 1) {
+                    MessageService.createToast("Wrong Thread Value", MessageTYPE.VALIDATION);
+                    field.setText(oldValue);
+                }
+            }
+            else {
+                field.setText(oldValue);
+                MessageService.createToast("Only numbers are allowed", MessageTYPE.VALIDATION);
+            }
+        });
+        HBox hBox2 = createTextRow("total memory:", String.valueOf(App.Hardware.totalMemory()/1000/1000) + " MB");
+        HBox hBox3 = createTextRow("free memory:", String.valueOf(App.Hardware.freeMemory()/1000/1000) + " MB");
+        HBox hBox4 = createTextRow("screen width:", String.valueOf(App.Hardware.screenWidth()));
+        HBox hBox5 = createTextRow("screen height:", String.valueOf(App.Hardware.screenHeight()));
 
-        HBox hBox2 = createTextRow("total memory: ", String.valueOf(App.Hardware.totalMemory()/1000/1000) + " MB");
-        HBox hBox3 = createTextRow("free memory: ", String.valueOf(App.Hardware.freeMemory()/1000/1000) + " MB");
-        HBox hBox4 = createTextRow("screen width: ", String.valueOf(App.Hardware.screenWidth()));
-        HBox hBox5 = createTextRow("screen height: ", String.valueOf(App.Hardware.screenHeight()));
+        Label buffer = new Label("Copy Service Memory Buffer:");
+        buffer.getStyleClass().add("header");
+        HBox hBox6 = createBufferTextRow("if", "fileSize < 5 MiB", "THEN", "64 KiB");
+        HBox hBox7 = createBufferTextRow("else if", "fileSize < 10 MiB", "THEN", "128 KiB");
+        HBox hBox8 = createBufferTextRow("else if", "fileSize < 50 MiB", "THEN", "256 KiB");
+        HBox hBox9 = createBufferTextRow("else if", "fileSize < 1 GiB", "THEN", "1 MiB");
+        HBox hBox10 = createBufferTextRow("else", "------------------", "----", "2 MiB");
         this.hardware.getChildren().clear();
-        this.hardware.getChildren().addAll(title, hBox, hBox2, hBox3, hBox4, hBox5, hBox1);
+        this.hardware.getChildren().addAll(title, hBox, hBox2, hBox3, hBox4, hBox5, hBox1, buffer, hBox6, hBox7, hBox8, hBox9, hBox10);
     }
     private HBox createTextRow(String title, String value) {
         HBox hBox = new HBox();
@@ -118,13 +144,39 @@ public class SettingsController {
 
         return hBox;
     }
+    private HBox createBufferTextRow(String value, String value1, String value2, String value3) {
+        HBox hBox = new HBox();
+        hBox.getStyleClass().add("bufferRow");
+        Label when = new Label(value);
+        when.getStyleClass().add("description");
+        Label valueLabel1 = new Label(value1);
+        Label valueLabel2 = new Label(value2);
+        Label valueLabel3 = new Label(value3);
+        valueLabel1.getStyleClass().add("bufferLabel1");
+        valueLabel2.getStyleClass().add("bufferLabel2");
+        valueLabel3.getStyleClass().add("bufferLabel3");
 
-    @FXML
-    private void save() {
-        setAllStoragePaths();
+        hBox.getChildren().addAll(when, valueLabel1, valueLabel2, valueLabel3);
+        return hBox;
     }
 
     @FXML
+    private void save() {
+
+        setAllStoragePaths();
+        Node node = this.hardware.lookup("#executorPool");
+        if(node instanceof TextField field) {
+            if(field.getText().isEmpty() || field.getText().isBlank()) {
+                App.Properties.setThreadCount(App.Hardware.preferredThreadCount());
+            }
+            else{
+                App.Properties.setThreadCount(Integer.parseInt(field.getText()));
+            }
+        }
+        App.SettingsDataStore.saveAppSettings();
+
+    }
+
     private void setAllStoragePaths(){
         if(App.Properties.validatePath(storagePath.getText())){
             App.Properties.setSuperPath(storagePath.getText());
@@ -134,28 +186,9 @@ public class SettingsController {
         }
     }
 
-    /*
     @FXML
-    public void setLightTheme() {
-
-        App.Router.clearAllStylesheets();
-
-        // Setze den Hintergrund für das helle Thema
-      root.setStyle("-fx-background-color: linear-gradient(to bottom right, "
-                + "rgba(230,230,235, 1) 20%, "
-                + "rgba(240,240,245, 1) 60%, "
-                + "rgba(250,250,255, 1) 80%, "
-                + "rgba(255,255,255, 1) 100%);");
+    private void saveOnCloseWindow() {
+        App.Properties.setSaveOnCloseWindow(this.checkBoxSaveOnClose.isSelected());
+        System.out.println("Is save on close window enabled = " + App.Properties.isSaveOnCloseWindow());
     }
-
-    @FXML
-    public void setDarkTheme() {
-        // Setze den Hintergrund für das dunkle Thema
-        root.setStyle("-fx-background-color: linear-gradient(to bottom right, "
-                + "rgba(30,30,35, 1) 20%, "
-                + "rgba(40,40,45, 1) 60%, "
-                + "rgba(50,50,55, 1) 80%, "
-                + "rgba(60,60,65, 1) 100%);");
-    }
-*/
 }

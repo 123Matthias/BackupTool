@@ -1,6 +1,7 @@
 package my.backup.backupTool;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import my.backup.backupTool.Enumerations.Theme;
 
 import java.nio.file.Paths;
 
@@ -17,16 +18,28 @@ public class Properties {
     private String mergeModelsStoragePath;
     @JsonProperty("settings-path")
     private String settingsStoragePath;
+    //Sub Strings are final not super Strings for choosing a Path
     public static final String SUB_LOG_FILE_PATH = "/memoria/data/backup.log";
-    public static final String SUB_SETTINGS_PATH = "./memoria/data/settings.json";
+    public static final String APP_SETTINGS_PATH = "./memoria/data/settings.json";
     public static final String SUB_MERGE_MODEL_STORAGE_PATH = "/memoria/data/mergeModels.json";
     public static final String SUB_VALIDATION_LOG_FILE_PATH = "/memoria/data/validation/";
+    @JsonProperty("thread-count")
     private int threadCount = 0;
+    @JsonProperty("save-close-window")
+    private boolean saveOnCloseWindow;
+    @JsonProperty("theme")
+    private Theme theme;
 
     public Properties() {
         this.threadCount = App.Hardware.preferredThreadCount();
         if(threadCount <= 0){
             threadCount = 1;
+        }
+        if(this.theme == null){
+            this.theme = Theme.DARK;
+        }
+        if(this.saveOnCloseWindow != true){
+            this.saveOnCloseWindow = false;
         }
     }
 
@@ -89,4 +102,37 @@ public class Properties {
         return Paths.get(pathString).toFile().exists();
     }
 
+    @JsonProperty("save-close-window")
+    public boolean isSaveOnCloseWindow() {
+        return saveOnCloseWindow;
+    }
+
+    @JsonProperty("save-close-window")
+    public void setSaveOnCloseWindow(boolean saveOnCloseWindow) {
+        this.saveOnCloseWindow = saveOnCloseWindow;
+    }
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Properties{" +
+                "superPath='" + superPath + '\'' +
+                ", logFilePath='" + logFilePath + '\'' +
+                ", validationLogFilePath='" + validationLogFilePath + '\'' +
+                ", mergeModelsStoragePath='" + mergeModelsStoragePath + '\'' +
+                ", settingsStoragePath='" + settingsStoragePath + '\'' +
+                ", threadCount=" + threadCount +
+                ", saveOnCloseWindow=" + saveOnCloseWindow +
+                ", theme=" + theme +
+                '}';
+    }
 }

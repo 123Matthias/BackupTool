@@ -23,7 +23,6 @@ public abstract class BaseCalculationService {
     private long lastSumFileProcessedSize;
     private long totalFileSize;
 
-    public final long DEFAULT_BUFFERSIZE = 64*1024; // 64k Buffer initial
 
     public BaseCalculationService() {
         sumFileProcessedSize = 0;
@@ -137,7 +136,9 @@ public abstract class BaseCalculationService {
 
 
     public long calculateBufferSize(long fileSize) {
-        if (fileSize < 10 * 1024 * 1024) {
+        if(fileSize < 5 * 1024 * 1024) {
+            return 64 * 1024 * 1024; //64kiB
+        } else if (fileSize < 10 * 1024 * 1024) {
             return 128 * 1024; // 128 KiB
         } else if (fileSize < 50 * 1024 * 1024) {
             return 256 * 1024; // 256 KiB
@@ -147,5 +148,4 @@ public abstract class BaseCalculationService {
             return 2 * 1024 * 1024; // 2 MiB
         }
     }
-
 }

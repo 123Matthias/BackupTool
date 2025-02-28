@@ -26,7 +26,7 @@ public class Router {
 
 
     private Router() {
-        this.theme = Theme.DARK;
+        this.theme = App.Properties.getTheme();
         setToastStage();
         setSettingsStage();
 
@@ -163,7 +163,7 @@ public class Router {
     public void setSettingsScene(String theme) throws IOException {
         SceneBuilder sceneBuilder = new SceneBuilder.Builder()
                 .setFXML("settings.fxml")
-                .setDimensions(600,600)
+                .setDimensions(App.Hardware.screenWidth()*0.4,App.Hardware.screenHeight()*0.75)
                 .addStylesheet("css/basicWindow.css")
                 .addStylesheet("css/basicComponents.css")
                 .addStylesheet("css/themeElements.css")
@@ -186,10 +186,6 @@ public class Router {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void enableSaveOnCloseMainStage(){
-        App.Router.getMainStage().setOnCloseRequest(event -> App.DataStore.saveModelListAsJSON());
     }
 
 }

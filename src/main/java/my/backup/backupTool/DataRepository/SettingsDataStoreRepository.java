@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import my.backup.backupTool.App;
-import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Properties;
 
 import java.io.File;
@@ -12,16 +11,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 public class SettingsDataStoreRepository {
 
     private static SettingsDataStoreRepository Instance;
 
     public SettingsDataStoreRepository() {
-        createSettingsFilePathIfNotExists();
         getAllAppSettingsFromJSON();
-
         createMergeModelPathIfNotExists();
         createLogFilePathIfNotExists();
         createValidationLogFilePathIfNotExists();
@@ -66,16 +62,6 @@ public class SettingsDataStoreRepository {
         if (!Files.exists(path)) {
             App.Properties.setValidationLogFilePath(App.Properties.SUB_VALIDATION_LOG_FILE_PATH);
             File file = new File(App.Properties.getValidationLogFilePath());
-            return createFile(file);
-        }
-        return false;
-    }
-
-    private boolean createSettingsFilePathIfNotExists() {
-        Path path = Paths.get(App.Properties.getMergeModelsStoragePath());
-        if (!Files.exists(path)) {
-            App.Properties.setSettingsStoragePath(App.Properties.SUB_SETTINGS_PATH);
-            File file = new File(App.Properties.getSettingsStoragePath());
             return createFile(file);
         }
         return false;
@@ -129,11 +115,11 @@ public class SettingsDataStoreRepository {
         return false;
     }
 
-    private boolean getAllAppSettingsFromJSON() {
+    public boolean getAllAppSettingsFromJSON() {
         System.out.println("getAllAppSettingsFromJSON");
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        File sourceFile = new File(App.Properties.getSettingsStoragePath());
+        File sourceFile = new File(App.Properties.APP_SETTINGS_PATH);
 
         if (!sourceFile.exists()) {
             System.out.println("Die Datei existiert nicht: " + sourceFile.getAbsolutePath());
@@ -146,6 +132,9 @@ public class SettingsDataStoreRepository {
             App.Properties.setMergeModelsStoragePath(mapper.readValue(sourceFile, Properties.class).getMergeModelsStoragePath());
             App.Properties.setSettingsStoragePath(mapper.readValue(sourceFile, Properties.class).getSettingsStoragePath());
             App.Properties.setThreadCount(mapper.readValue(sourceFile, Properties.class).getThreadCount());
+            App.Properties.setSaveOnCloseWindow(mapper.readValue(sourceFile, Properties.class).isSaveOnCloseWindow());
+            App.Properties.setTheme(mapper.readValue(sourceFile, Properties.class).getTheme());
+
             System.out.println();
             System.out.println("--------------READ VALUES WITH JSON MAPPER-----------");
             System.out.println(App.Properties.getSuperPath());
@@ -166,8 +155,9 @@ public class SettingsDataStoreRepository {
 
     public void createSaveOnCloseSettingsWindowListener() {
         App.Router.getSettigsStage().setOnCloseRequest(event -> {
-            // Hier speicherst du alle notwendigen Daten
-            App.SettingsDataStore.saveAppSettings();
+            if(App.Properties.isSaveOnCloseWindow()){
+                App.SettingsDataStore.saveAppSettings();
+            }
             event.consume();
             App.Router.getSettigsStage().close();
         });

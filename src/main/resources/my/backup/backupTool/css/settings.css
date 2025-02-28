@@ -11,15 +11,35 @@
 }
 
 
-
 VBox{
-    -fx-padding: 20;
-    -fx-spacing: 5;
+    -fx-padding: 8;
+    -fx-spacing: 3;
+    -fx-border-width: 1 0 0 0;
+    -fx-border-color: -fx-color13;
 }
 
 .keyValueRow{
     -fx-alignment: center-left;
     -fx-font-size: 10pt;
+}
+.bufferRow{
+    -fx-font-size: 10pt;
+}
+
+
+.bufferLabel1 {
+    -fx-pref-width: 150;
+    -fx-alignment: center-left; /* Links ausgerichteter Text */
+}
+
+.bufferLabel2 {
+    -fx-pref-width: 50;
+    -fx-alignment: center; /* Links ausgerichteter Text */
+}
+
+.bufferLabel3 {
+    -fx-pref-width: 70;
+    -fx-alignment: center-right;  /* Das letzte Label rechtsbündig */
 }
 
 .description{
@@ -32,6 +52,12 @@ VBox{
     -fx-padding: 0 5 0 0;
     -fx-min-width: 50;
 }
+
+.description3{
+    -fx-padding: 10;
+    -fx-pref-width: 350;
+}
+
 
 .inputField2{
      -fx-background-radius: 5;

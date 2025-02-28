@@ -23,7 +23,9 @@ public class BaseDataStoreRepository implements IDataStore {
     public void createSaveOnCloseMainWindowListener() {
         App.Router.getMainStage().setOnCloseRequest(event -> {
             // Hier speicherst du alle notwendigen Daten
-            this.saveModelListAsJSON();
+            if(App.Properties.isSaveOnCloseWindow()){
+                this.saveModelListAsJSON();
+            }
             event.consume();
             App.Router.getMainStage().close();
         });

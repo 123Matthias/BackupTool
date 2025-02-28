@@ -3,6 +3,7 @@ package my.backup.backupTool.Services;
 import my.backup.backupTool.Model.BaseModel;
 import my.backup.backupTool.Enumerations.CryptoMODE;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,7 +54,7 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
              FileChannel targetChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
 
             long fileProcessedSize = 0;
-            long transferBufferSize = super.DEFAULT_BUFFERSIZE; // 64kiB Buffer initial
+            long transferBufferSize;
             long fileSize = sourceChannel.size();
             //If File size greater than 1MB
                transferBufferSize = super.calculateBufferSize(fileSize);
@@ -85,14 +86,7 @@ public class BaseCopyService extends BaseCalculationService implements ICopyServ
              FileChannel outputChannel = FileChannel.open(targetFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
 
             ByteBuffer buffer;
-
-            if(inputChannel.size() < 5*1024*1024) {
-                buffer = ByteBuffer.allocateDirect((int)super.DEFAULT_BUFFERSIZE);
-            }
-            else{
-                buffer = ByteBuffer.allocate((int)super.calculateBufferSize(inputChannel.size()));
-            }
-            //System.out.println("transferBufferSize: " + transferBufferSize + " fileSize: " + fileSize);
+            buffer = ByteBuffer.allocate((int)super.calculateBufferSize(inputChannel.size()));
 
             while (inputChannel.read(buffer) > -1) {
                 buffer.flip();
