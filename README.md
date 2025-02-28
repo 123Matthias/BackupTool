@@ -67,6 +67,3 @@ I copied the license from:
 https://choosealicense.com/community/ 
 
 [license.txt](license.txt)
-
-=======
->>>>>>> 69e2b85723e6be883548e8e3513e4bffa033d946
