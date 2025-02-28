@@ -1,4 +1,4 @@
-# ccBackup Tool
+# Backup Tool
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -56,6 +56,7 @@ SHA256 is not finished now.
 ## Conclusion
 Only the Merge Backup feature is ready for testing.
 An installer will be provided so you can test it without pulling.
+<<<<<<< HEAD
 
 ---
 
@@ -67,3 +68,5 @@ https://choosealicense.com/community/
 
 [license.txt](license.txt)
 
+=======
+>>>>>>> 69e2b85723e6be883548e8e3513e4bffa033d946
