@@ -19,23 +19,39 @@
 ---
 
 ## Features
+![img_4.png](img_4.png)
+![img_3.png](img_3.png)
+![img_5.png](img_5.png)
 
 ### Merge Backup
-This feature ensures that the old backup is overwritten each time, reducing memory usage compared to other backup methods.  
-It allows customization of the local date, time, source, and target paths for backups. You can create an unlimited number of backup instances, all of which are displayed in the tool's overview window.
+Creates new files and directories.
+Overrides changes using last modified Date.
+Doesn't copy any unchanged files. 
 
 ### Full Backup
-Provides a complete backup of all selected files and directories. You can adjust the Timing and Number of Backups which will kept in store.
+Feature is not finished.
+Not started.
+Creates a new Instance of the selected source directory into target directory.
 
 ### App Reinstaller
-Allows users to back up and restore application settings and data.  
-The Apps are nor saved only the Informations about them. The installer will download and install this Apps.
+Feature is not finished.
+Reinstall all Apps.
+Reloads all remembered Apps from web. 
 
 ### Cloud Synchronization
-Synchronizes in tho ways. In and from Target and Source Folder.  
-Timing can be Adjusted on creation.
+Not finished. Not started.
+
+---
+
+### AES Encryption
+The content of a File is Encrypted. Not the Metadata.
+
+### Validation
+CRC32 Checksum from each file is ready.
+SHA256 is not finished now.
 
 ---
 
 ## Conclusion
-An MSI installer link is coming.
+Only the Merge Backup feature is ready for testing.
+An installer will be provided so you can test it without pulling.
