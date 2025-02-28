@@ -8,6 +8,7 @@
    - [App Reinstaller](#app-reinstaller)
    - [Cloud Synchronization](#cloud-synchronization)
 3. [Conclusion](#conclusion)
+4. [License](#license)
 
 ---
 
@@ -55,3 +56,14 @@ SHA256 is not finished now.
 ## Conclusion
 Only the Merge Backup feature is ready for testing.
 An installer will be provided so you can test it without pulling.
+
+---
+
+## License
+
+I copied the license from:  
+
+https://choosealicense.com/community/ 
+
+[license.txt](license.txt)
+
