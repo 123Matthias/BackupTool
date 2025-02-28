@@ -45,10 +45,12 @@ Not finished. Not started.
 ---
 
 ### AES Encryption
-The content of a File is Encrypted. Not the Metadata.
+The content of a File is encrypted. Not the Metadata.
+Only Target Directories are encrypted.
+In resore Mode the target Directory is decrypted.
 
 ### Validation
-CRC32 Checksum from each file is ready.
+CRC32 Checksum is ready.
 SHA256 is not finished now.
 
 ---
@@ -56,7 +58,6 @@ SHA256 is not finished now.
 ## Conclusion
 Only the Merge Backup feature is ready for testing.
 An installer will be provided so you can test it without pulling.
-<<<<<<< HEAD
 
 ---
 
