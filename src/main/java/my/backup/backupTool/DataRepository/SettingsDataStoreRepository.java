@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Enumerations.MessageTYPE;
+import my.backup.backupTool.Notifications.MessageService;
 import my.backup.backupTool.Properties;
 
 import java.io.File;
@@ -134,18 +136,6 @@ public class SettingsDataStoreRepository {
             App.Properties.setThreadCount(mapper.readValue(sourceFile, Properties.class).getThreadCount());
             App.Properties.setSaveOnCloseWindow(mapper.readValue(sourceFile, Properties.class).isSaveOnCloseWindow());
             App.Properties.setTheme(mapper.readValue(sourceFile, Properties.class).getTheme());
-
-            System.out.println();
-            System.out.println("--------------READ VALUES WITH JSON MAPPER-----------");
-            System.out.println(App.Properties.getSuperPath());
-            System.out.println(App.Properties.getLogFilePath());
-            System.out.println(App.Properties.getValidationLogFilePath());
-            System.out.println(App.Properties.getMergeModelsStoragePath());
-            System.out.println(App.Properties.getSettingsStoragePath());
-            System.out.println(App.Properties.getThreadCount());
-            System.out.println(App.Properties.getLogFilePath());
-            System.out.println("--------------END READ VALUES WITH JSON MAPPER-----------");
-            System.out.println();
             return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -156,7 +146,12 @@ public class SettingsDataStoreRepository {
     public void createSaveOnCloseSettingsWindowListener() {
         App.Router.getSettigsStage().setOnCloseRequest(event -> {
             if(App.Properties.isSaveOnCloseWindow()){
-                App.SettingsDataStore.saveAppSettings();
+                if(App.SettingsDataStore.saveAppSettings()){
+                    MessageService.createToast("I saved your Changes", MessageTYPE.SAVE);
+                }
+                else{
+                    MessageService.createToast("i can't save your Changes",MessageTYPE.DANGER);
+                }
             }
             event.consume();
             App.Router.getSettigsStage().close();

@@ -100,6 +100,9 @@
 
     -fx-stop: rgba(140, 80, 1, 0.8);
     -fx-stopBorder: rgb(255, 144, 56);
+
+    -fx-validation: rgba(0, 150, 136, 0.8);
+    -fx-validationBorder: rgb(0, 200, 180);
 }
 
 

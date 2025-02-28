@@ -84,11 +84,11 @@ public class SettingsController {
         Label title = new Label("JVM Runtime Info:");
         title.getStyleClass().add("header");
         HBox hBox = createTextRow("available Processors: ", String.valueOf(App.Hardware.availableProcessors()));
-        HBox hBox1 = createEditableTextRow("copy executor pool: ", String.valueOf(App.Properties.getThreadCount()),"executorPool");
+        HBox hBox1 = createEditableTextRow("copyThread pool: ", String.valueOf(App.Properties.getThreadCount()),"executorPool");
         TextField field = (TextField) hBox1.lookup("#executorPool");
         field.getStyleClass().add("inputField");
         field.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue.isEmpty() || newValue.isBlank()){
+            if(newValue.isBlank()){
                 return;
             }
             else if (newValue.matches("\\d+")) {
@@ -109,13 +109,17 @@ public class SettingsController {
 
         Label buffer = new Label("Copy Service Memory Buffer:");
         buffer.getStyleClass().add("header");
-        HBox hBox6 = createBufferTextRow("if", "fileSize < 5 MiB", "THEN", "64 KiB");
-        HBox hBox7 = createBufferTextRow("else if", "fileSize < 10 MiB", "THEN", "128 KiB");
-        HBox hBox8 = createBufferTextRow("else if", "fileSize < 50 MiB", "THEN", "256 KiB");
-        HBox hBox9 = createBufferTextRow("else if", "fileSize < 1 GiB", "THEN", "1 MiB");
-        HBox hBox10 = createBufferTextRow("else", "------------------", "----", "2 MiB");
+        buffer.setStyle("-fx-padding: 10 0 0 0");
+        Label foreachLabel = new Label("foreach file:");
+        foreachLabel.setStyle("-fx-font-size: 12pt");
+        foreachLabel.getStyleClass().add("description");
+        HBox hBox6 =  createBufferTextRow("    if", "fileSize < 5 MiB", "THEN", "64 KiB");
+        HBox hBox7 =  createBufferTextRow("    else if", "fileSize < 10 MiB", "THEN", "128 KiB");
+        HBox hBox8 =  createBufferTextRow("    else if", "fileSize < 50 MiB", "THEN", "256 KiB");
+        HBox hBox9 =  createBufferTextRow("    else if", "fileSize < 1 GiB", "THEN", "1 MiB");
+        HBox hBox10 = createBufferTextRow("    else", "------------------", "----", "2 MiB");
         this.hardware.getChildren().clear();
-        this.hardware.getChildren().addAll(title, hBox, hBox2, hBox3, hBox4, hBox5, hBox1, buffer, hBox6, hBox7, hBox8, hBox9, hBox10);
+        this.hardware.getChildren().addAll(title, hBox, hBox2, hBox3, hBox4, hBox5, hBox1, buffer, foreachLabel, hBox6, hBox7, hBox8, hBox9, hBox10);
     }
     private HBox createTextRow(String title, String value) {
         HBox hBox = new HBox();
@@ -166,15 +170,18 @@ public class SettingsController {
         setAllStoragePaths();
         Node node = this.hardware.lookup("#executorPool");
         if(node instanceof TextField field) {
-            if(field.getText().isEmpty() || field.getText().isBlank()) {
+            if(field.getText().isBlank()) {
                 App.Properties.setThreadCount(App.Hardware.preferredThreadCount());
             }
             else{
                 App.Properties.setThreadCount(Integer.parseInt(field.getText()));
             }
         }
-        App.SettingsDataStore.saveAppSettings();
-
+        if (App.SettingsDataStore.saveAppSettings()) {
+            MessageService.createToast("Settings saved", MessageTYPE.SAVE);
+        } else {
+            MessageService.createToast("save Failed", MessageTYPE.DANGER);
+        }
     }
 
     private void setAllStoragePaths(){

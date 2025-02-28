@@ -3,8 +3,10 @@ package my.backup.backupTool.DataRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import my.backup.backupTool.App;
+import my.backup.backupTool.Enumerations.MessageTYPE;
 import my.backup.backupTool.Model.BaseModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import my.backup.backupTool.Notifications.MessageService;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +26,12 @@ public class BaseDataStoreRepository implements IDataStore {
         App.Router.getMainStage().setOnCloseRequest(event -> {
             // Hier speicherst du alle notwendigen Daten
             if(App.Properties.isSaveOnCloseWindow()){
-                this.saveModelListAsJSON();
+                if(this.saveModelListAsJSON()){
+                    MessageService.createToast("I saved all. Good Bye!", MessageTYPE.SAVE);
+                }
+                else{
+                    MessageService.createToast("Save and exit went wrong", MessageTYPE.DANGER);
+                }
             }
             event.consume();
             App.Router.getMainStage().close();

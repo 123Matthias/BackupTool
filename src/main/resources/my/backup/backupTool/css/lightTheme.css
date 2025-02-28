@@ -101,4 +101,8 @@
 
     -fx-stop: rgba(246, 208, 165, 0.8);
     -fx-stopBorder: rgb(255, 144, 56);
+
+    -fx-validation: rgba(178, 255, 250, 0.8); /* Helles, freundliches Türkis */
+    -fx-validationBorder: rgb(0, 200, 180); /* Etwas kräftigerer Türkis-Rand für Kontrast */
+
 }

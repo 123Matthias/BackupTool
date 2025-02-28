@@ -149,7 +149,7 @@ AnchorPane{
 }
 
 .cardTitle {
-    -fx-text-fill: -fx-color1;
+    -fx-text-fill: -fx-header1;
 }
 
 .cardCol {
@@ -377,6 +377,11 @@ TextArea .content{
 .stop{
     -fx-border-color: -fx-stopBorder;
     -fx-background-color: -fx-stop;
+}
+
+.validation{
+    -fx-border-color: -fx-validationBorder;
+    -fx-background-color: -fx-validation;
 }
 
 .toastLogo{

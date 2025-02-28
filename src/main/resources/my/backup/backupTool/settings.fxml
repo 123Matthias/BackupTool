@@ -24,7 +24,7 @@
 
 
     <VBox>
-        <Label styleClass="header" style="-fx-padding: 15 0 0 0" text="Themes: "/>
+        <Label styleClass="header" text="Themes: "/>
         <HBox spacing="10">
             <Button text="lightTheme" styleClass="basicButtonSettings" onAction="#handleLightTheme"/>
             <Button text="darkTheme" styleClass="basicButtonSettings" onAction="#handleDarkTheme"/>

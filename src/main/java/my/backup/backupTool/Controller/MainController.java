@@ -3,6 +3,7 @@ package my.backup.backupTool.Controller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -12,6 +13,7 @@ import my.backup.backupTool.Controller.Merge.MergeDetailController;
 import my.backup.backupTool.Controller.Merge.MergeHelperController;
 import my.backup.backupTool.Enumerations.LeftToolbar;
 import my.backup.backupTool.Enumerations.MessageTYPE;
+import my.backup.backupTool.Main;
 import my.backup.backupTool.Notifications.MessageService;
 
 import java.awt.*;
@@ -58,6 +60,9 @@ public class MainController extends BaseMainController {
         controller.createHWInfoRows();
         Stage stage = App.Router.getSettigsStage();
         stage.setScene(App.Router.getSettingsScene());
+        stage.setTitle("Settings");
+        javafx.scene.image.Image icon = new Image(String.valueOf(Main.class.getResource("img/Fee2.png")));
+        stage.getIcons().add(icon);
         stage.show();
         App.SettingsDataStore.createSaveOnCloseSettingsWindowListener();
     }
@@ -161,7 +166,7 @@ public class MainController extends BaseMainController {
     @FXML
     public void saveAll(){
         if(App.DataStore.saveModelListAsJSON()){
-            MessageService.createToast("Saved All", MessageTYPE.SAVE);
+            MessageService.createToast("I saved all Backup settings", MessageTYPE.SAVE);
         }
     }
 

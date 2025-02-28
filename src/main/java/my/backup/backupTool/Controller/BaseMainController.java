@@ -44,9 +44,7 @@ public abstract class BaseMainController {
         }
     }
 
-
     public void enableDragAndDrop(Pane cardPane, FlowPane container) {
-
 
         // Drag-Start: Initialisiert den Drag-Vorgang
         cardPane.setOnDragDetected(event -> {

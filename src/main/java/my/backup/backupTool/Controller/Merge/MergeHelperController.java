@@ -108,8 +108,8 @@ public class MergeHelperController {
 
 // Titel
         Label titleLabel = new Label();
-        titleLabel.setText(model.getTitle());  // Setze den Titel
-        titleLabel.getStyleClass().add("cardTitle"); // Stile für den Titel setzen
+        titleLabel.setText(model.getTitle());
+        titleLabel.getStyleClass().add("cardTitle");
 
 // Buttons
         Button increaseWidthButton = new Button("»");

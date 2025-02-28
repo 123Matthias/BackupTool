@@ -39,7 +39,7 @@ public class MergeService implements IMergeService,Runnable {
         this.validationService = new FileValidationService(model);
         this.model = model;
         this.hardware = Hardware.getHardwareInfo();
-        this.executor = Executors.newFixedThreadPool(hardware.preferredThreadCount());
+        this.executor = Executors.newFixedThreadPool(App.Properties.getThreadCount());
         this.messageList = new MessageList();
         this.getCryptoMode();
     }

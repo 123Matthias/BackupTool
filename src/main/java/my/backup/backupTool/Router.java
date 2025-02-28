@@ -69,6 +69,8 @@ public class Router {
         toastStage.initModality(Modality.NONE);//No Blocking other Windows
         toastStage.setAlwaysOnTop(true);
         toastStage.initOwner(this.mainStage); // Gehört zum Main-Window
+        Image icon = new Image(String.valueOf(Main.class.getResource("img/Fee2.png")));
+        toastStage.getIcons().add(icon);
     }
 
     public Stage getToastStage(){

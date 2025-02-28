@@ -42,8 +42,7 @@ public class MessageController{
     public void showToast(String toastMessage, MessageTYPE Type) {
         HBox toastLayout = new HBox();
 
-        ImageView logo = new ImageView(String.valueOf(Main.class.getResource("img/Fee.PNG")));
-
+        ImageView logo = new ImageView(String.valueOf(Main.class.getResource("img/Fee2.PNG")));
         logo.getStyleClass().add("toastLogo");
         logo.setFitHeight(85);
         logo.preserveRatioProperty().set(true);
@@ -59,6 +58,8 @@ public class MessageController{
             toastContainer.getStyleClass().add("play");
         if(Type == MessageTYPE.STOP)
             toastContainer.getStyleClass().add("stop");
+        if(Type == MessageTYPE.VALIDATION)
+            toastContainer.getStyleClass().add("validation");
 
         AnchorPane.setTopAnchor(toastLayout, 0.0);
         AnchorPane.setBottomAnchor(toastLayout, 0.0);
