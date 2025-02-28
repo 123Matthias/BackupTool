@@ -56,7 +56,6 @@ SHA256 is not finished now.
 ## Conclusion
 Only the Merge Backup feature is ready for testing.
 An installer will be provided so you can test it without pulling.
-<<<<<<< HEAD
 
 ---
 
