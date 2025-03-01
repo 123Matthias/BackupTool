@@ -107,6 +107,8 @@ public class AesGCMService extends BaseCalculationService implements ICopyServic
                     super.updateProgressBar(this.model);
                     super.calculateWorkingSpeed(this.model);
                 }
+
+                //buffer.clear();
             }
 
             // Finalen Block entschlüsseln und schreiben

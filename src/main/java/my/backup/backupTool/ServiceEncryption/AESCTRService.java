@@ -81,13 +81,15 @@ public class AESCTRService extends BaseCalculationService implements ICopyServic
             while (inputChannel.read(buffer) != -1) {
                 buffer.flip();
                 byte[] encryptedData = cipher.update(buffer.array(),buffer.position(),buffer.remaining());
-                int copySize = outputChannel.write(ByteBuffer.wrap(encryptedData)); // Verschlüsselte Daten schreiben
-                super.addFileProcessedSize(copySize); // Fortschritt berechnen
+                int copySize = outputChannel.write(ByteBuffer.wrap(encryptedData));
+                super.addFileProcessedSize(copySize);
 
                 if (inputChannel.size() >= 50 * 1024 * 1024) {
                     super.updateProgressBar(this.model);
                     super.calculateWorkingSpeed(this.model);
                 }
+                //buffer.clear();
+
             }
 
             // Finalen Block entschlüsseln und schreiben
