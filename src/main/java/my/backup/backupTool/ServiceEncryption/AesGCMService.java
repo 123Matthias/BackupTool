@@ -108,7 +108,7 @@ public class AesGCMService extends BaseCalculationService implements ICopyServic
                     super.calculateWorkingSpeed(this.model);
                 }
 
-                //buffer.clear();
+                buffer.clear();
             }
 
             // Finalen Block entschlüsseln und schreiben
@@ -150,6 +150,7 @@ public class AesGCMService extends BaseCalculationService implements ICopyServic
                     super.updateProgressBar(this.model);
                     super.calculateWorkingSpeed(this.model);
                 }
+                buffer.clear();
             }
 
             // Finalen Block entschlüsseln und schreiben

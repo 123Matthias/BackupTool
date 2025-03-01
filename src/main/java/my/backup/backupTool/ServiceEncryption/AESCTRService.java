@@ -88,7 +88,7 @@ public class AESCTRService extends BaseCalculationService implements ICopyServic
                     super.updateProgressBar(this.model);
                     super.calculateWorkingSpeed(this.model);
                 }
-                //buffer.clear();
+                buffer.clear();
 
             }
 
@@ -133,6 +133,7 @@ public class AESCTRService extends BaseCalculationService implements ICopyServic
                     super.updateProgressBar(this.model);
                     super.calculateWorkingSpeed(this.model);
                 }
+                buffer.clear();
             }
 
             // Finalen Block entschlüsseln und schreiben

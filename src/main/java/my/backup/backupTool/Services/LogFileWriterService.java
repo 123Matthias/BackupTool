@@ -15,13 +15,15 @@ import java.time.LocalDateTime;
 public class LogFileWriterService {
 
     public static boolean createFilePathIfNotExists() {
-        File logDirectory = new File(App.Properties.getValidationLogFilePath()); // Das ist das Verzeichnis!
-        if (!logDirectory.exists()) {
-            System.out.println("Log file does not exist: " + logDirectory.getAbsolutePath());
+        String validationLogFilePath = App.Properties.getValidationLogFilePath();
+        if (validationLogFilePath == null || !new File(validationLogFilePath).exists()) {
+            System.out.println("Log file does not exist: " + validationLogFilePath);
+            File logDirectory = new File(validationLogFilePath); // Das ist das Verzeichnis!
             return logDirectory.mkdirs(); // Erstellt alle fehlenden Verzeichnisse
         }
         return false;
     }
+
 
 
     public synchronized static boolean writeLogFile(LocalDateTime dateTime, LogLEVEL logLevel, BackupTYPE backupType, String logMessage) {

@@ -40,18 +40,19 @@ public class SettingsDataStoreRepository {
      * @return true if a new Default Storage File was created. else false;
      */
     private boolean createMergeModelPathIfNotExists() {
-        Path path = Paths.get(App.Properties.getMergeModelsStoragePath());
-        if (!Files.exists(path)) {
+        String mergeModelsStoragePath = App.Properties.getMergeModelsStoragePath();
+        if (mergeModelsStoragePath == null || !Files.exists(Paths.get(mergeModelsStoragePath))) {
             App.Properties.setMergeModelsStoragePath(App.Properties.SUB_MERGE_MODEL_STORAGE_PATH);
             File file = new File(App.Properties.getMergeModelsStoragePath());
             return createFile(file);
         }
         return false;
+
     }
 
     private boolean createLogFilePathIfNotExists() {
-        Path path = Paths.get(App.Properties.getLogFilePath());
-        if (!Files.exists(path)) {
+        String logFilePath = App.Properties.getLogFilePath();
+        if (logFilePath == null || !Files.exists(Paths.get(logFilePath))) {
             App.Properties.setLogFilePath(App.Properties.SUB_LOG_FILE_PATH);
             File file = new File(App.Properties.getLogFilePath());
             return createFile(file);
@@ -60,14 +61,15 @@ public class SettingsDataStoreRepository {
     }
 
     private boolean createValidationLogFilePathIfNotExists() {
-        Path path = Paths.get(App.Properties.getMergeModelsStoragePath());
-        if (!Files.exists(path)) {
+        String validationLogFilePath = App.Properties.getValidationLogFilePath();
+        if (validationLogFilePath == null || !Files.exists(Paths.get(validationLogFilePath))) {
             App.Properties.setValidationLogFilePath(App.Properties.SUB_VALIDATION_LOG_FILE_PATH);
             File file = new File(App.Properties.getValidationLogFilePath());
             return createFile(file);
         }
         return false;
     }
+
 
     private boolean createFile(File file){
         try {
